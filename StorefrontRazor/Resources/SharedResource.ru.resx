@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="0" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+
+  <!-- ===== Навигация ===== -->
+  <data name="Nav_Home" xml:space="preserve"><value>Главная</value></data>
+  <data name="Nav_Products" xml:space="preserve"><value>Товары</value></data>
+  <data name="Nav_Cart" xml:space="preserve"><value>Корзина</value></data>
+  <data name="Nav_Orders" xml:space="preserve"><value>Заказы</value></data>
+  <data name="Nav_Account" xml:space="preserve"><value>Аккаунт</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>Войти</value></data>
+  <data name="Nav_Register" xml:space="preserve"><value>Регистрация</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>Выйти</value></data>
+  <data name="Nav_Admin" xml:space="preserve"><value>Панель управления</value></data>
+  <data name="Nav_Contact" xml:space="preserve"><value>Контакты</value></data>
+  <data name="Nav_FAQ" xml:space="preserve"><value>Вопросы и ответы</value></data>
+  <data name="Nav_Wishlist" xml:space="preserve"><value>Избранное</value></data>
+  <data name="Nav_Search" xml:space="preserve"><value>Поиск товаров...</value></data>
+
+  <!-- ===== Кнопки ===== -->
+  <data name="Btn_AddToCart" xml:space="preserve"><value>В корзину</value></data>
+  <data name="Btn_BuyNow" xml:space="preserve"><value>Купить сейчас</value></data>
+  <data name="Btn_Checkout" xml:space="preserve"><value>Оформить заказ</value></data>
+  <data name="Btn_ContinueShopping" xml:space="preserve"><value>Продолжить покупки</value></data>
+  <data name="Btn_ViewDetails" xml:space="preserve"><value>Подробнее</value></data>
+  <data name="Btn_Remove" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Btn_ViewProduct" xml:space="preserve"><value>Посмотреть товар</value></data>
+  <data name="Btn_Update" xml:space="preserve"><value>Обновить</value></data>
+  <data name="Btn_Save" xml:space="preserve"><value>Сохранить</value></data>
+  <data name="Btn_Cancel" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Btn_Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Btn_Edit" xml:space="preserve"><value>Редактировать</value></data>
+  <data name="Btn_Create" xml:space="preserve"><value>Создать</value></data>
+  <data name="Btn_Back" xml:space="preserve"><value>Назад</value></data>
+  <data name="Btn_Submit" xml:space="preserve"><value>Отправить</value></data>
+  <data name="Btn_Apply" xml:space="preserve"><value>Применить</value></data>
+  <data name="Btn_Reset" xml:space="preserve"><value>Сбросить</value></data>
+  <data name="Btn_Search" xml:space="preserve"><value>Поиск</value></data>
+  <data name="Btn_Filter" xml:space="preserve"><value>Фильтр</value></data>
+  <data name="Btn_SortBy" xml:space="preserve"><value>Сортировка</value></data>
+  <data name="Btn_LoadMore" xml:space="preserve"><value>Загрузить ещё</value></data>
+  <data name="Btn_PlaceOrder" xml:space="preserve"><value>Оформить заказ</value></data>
+  <data name="Btn_PayNow" xml:space="preserve"><value>Оплатить</value></data>
+  <data name="Btn_ViewOrder" xml:space="preserve"><value>Посмотреть заказ</value></data>
+  <data name="Btn_WriteReview" xml:space="preserve"><value>Написать отзыв</value></data>
+  <data name="Btn_AddToWishlist" xml:space="preserve"><value>В избранное</value></data>
+  <data name="Btn_RemoveFromWishlist" xml:space="preserve"><value>Убрать из избранного</value></data>
+
+  <!-- ===== Главная страница ===== -->
+  <data name="Home_FeaturedProducts" xml:space="preserve"><value>Рекомендуемые товары</value></data>
+  <data name="Home_NewArrivals" xml:space="preserve"><value>Новинки</value></data>
+  <data name="Home_BestSellers" xml:space="preserve"><value>Бестселлеры</value></data>
+  <data name="Home_Recommendations" xml:space="preserve"><value>Рекомендовано для вас</value></data>
+  <data name="Home_ExploreCollection" xml:space="preserve"><value>Смотреть коллекцию</value></data>
+  <data name="Home_ShopNow" xml:space="preserve"><value>Купить сейчас</value></data>
+  <data name="Home_ViewAll" xml:space="preserve"><value>Смотреть все</value></data>
+  <data name="Home_Categories" xml:space="preserve"><value>Категории товаров</value></data>
+  <data name="Home_TrendingNow" xml:space="preserve"><value>Популярное сейчас</value></data>
+
+  <!-- ===== Товары ===== -->
+  <data name="Products_Title" xml:space="preserve"><value>Каталог товаров</value></data>
+  <data name="Products_Filters" xml:space="preserve"><value>Фильтры</value></data>
+  <data name="Products_AllCategories" xml:space="preserve"><value>Все категории</value></data>
+  <data name="Products_AllBrands" xml:space="preserve"><value>Все бренды</value></data>
+  <data name="Products_AllTypes" xml:space="preserve"><value>Все типы</value></data>
+  <data name="Products_Price" xml:space="preserve"><value>Цена</value></data>
+  <data name="Products_PriceRange" xml:space="preserve"><value>Диапазон цен</value></data>
+  <data name="Products_SortNameAsc" xml:space="preserve"><value>По названию (А-Я)</value></data>
+  <data name="Products_SortNameDesc" xml:space="preserve"><value>По названию (Я-А)</value></data>
+  <data name="Products_SortPriceAsc" xml:space="preserve"><value>По цене (возрастание)</value></data>
+  <data name="Products_SortPriceDesc" xml:space="preserve"><value>По цене (убывание)</value></data>
+  <data name="Products_NoResults" xml:space="preserve"><value>Товары, соответствующие вашим критериям, не найдены.</value></data>
+  <data name="Products_ShowingResults" xml:space="preserve"><value>Показано {0} из {1} товаров</value></data>
+  <data name="Products_InStock" xml:space="preserve"><value>В наличии</value></data>
+  <data name="Products_OutOfStock" xml:space="preserve"><value>Нет в наличии</value></data>
+  <data name="Products_SimilarProducts" xml:space="preserve"><value>Похожие товары</value></data>
+  <data name="Products_YouMayAlsoLike" xml:space="preserve"><value>Вам может понравиться</value></data>
+  <data name="Products_Reviews" xml:space="preserve"><value>Отзывы</value></data>
+  <data name="Products_Description" xml:space="preserve"><value>Описание</value></data>
+  <data name="Products_Specifications" xml:space="preserve"><value>Характеристики</value></data>
+  <data name="Products_Brand" xml:space="preserve"><value>Бренд</value></data>
+  <data name="Products_Type" xml:space="preserve"><value>Тип</value></data>
+  <data name="Products_Category" xml:space="preserve"><value>Категория</value></data>
+  <data name="Products_Quantity" xml:space="preserve"><value>Количество</value></data>
+
+  <!-- ===== Корзина ===== -->
+  <data name="Cart_Title" xml:space="preserve"><value>Корзина</value></data>
+  <data name="Cart_Empty" xml:space="preserve"><value>Ваша корзина пуста</value></data>
+  <data name="Cart_EmptyMessage" xml:space="preserve"><value>Похоже, вы ещё не добавили товары в корзину.</value></data>
+  <data name="Cart_Subtotal" xml:space="preserve"><value>Подитог</value></data>
+  <data name="Cart_Shipping" xml:space="preserve"><value>Доставка</value></data>
+  <data name="Cart_Discount" xml:space="preserve"><value>Скидка</value></data>
+  <data name="Cart_Total" xml:space="preserve"><value>Итого</value></data>
+  <data name="Cart_Item" xml:space="preserve"><value>Товар</value></data>
+  <data name="Cart_Items" xml:space="preserve"><value>Товары</value></data>
+  <data name="Cart_CouponCode" xml:space="preserve"><value>Промокод</value></data>
+  <data name="Cart_ApplyCoupon" xml:space="preserve"><value>Применить промокод</value></data>
+  <data name="Cart_RemoveItem" xml:space="preserve"><value>Удалить товар</value></data>
+  <data name="Cart_UpdateQuantity" xml:space="preserve"><value>Изменить количество</value></data>
+  <data name="Cart_ProceedToCheckout" xml:space="preserve"><value>Перейти к оформлению</value></data>
+
+  <!-- ===== Оформление заказа ===== -->
+  <data name="Checkout_Title" xml:space="preserve"><value>Оформление заказа</value></data>
+  <data name="Checkout_DeliveryAddress" xml:space="preserve"><value>Адрес доставки</value></data>
+  <data name="Checkout_DeliveryMethod" xml:space="preserve"><value>Способ доставки</value></data>
+  <data name="Checkout_PaymentMethod" xml:space="preserve"><value>Способ оплаты</value></data>
+  <data name="Checkout_OrderSummary" xml:space="preserve"><value>Итог заказа</value></data>
+  <data name="Checkout_ReviewOrder" xml:space="preserve"><value>Проверьте ваш заказ</value></data>
+  <data name="Checkout_FirstName" xml:space="preserve"><value>Имя</value></data>
+  <data name="Checkout_LastName" xml:space="preserve"><value>Фамилия</value></data>
+  <data name="Checkout_Street" xml:space="preserve"><value>Адрес (улица, дом)</value></data>
+  <data name="Checkout_City" xml:space="preserve"><value>Город</value></data>
+  <data name="Checkout_State" xml:space="preserve"><value>Область / Регион</value></data>
+  <data name="Checkout_PostalCode" xml:space="preserve"><value>Почтовый индекс</value></data>
+  <data name="Checkout_Country" xml:space="preserve"><value>Страна</value></data>
+  <data name="Checkout_Phone" xml:space="preserve"><value>Номер телефона</value></data>
+  <data name="Checkout_StepAddress" xml:space="preserve"><value>Адрес</value></data>
+  <data name="Checkout_StepDelivery" xml:space="preserve"><value>Доставка</value></data>
+  <data name="Checkout_StepReview" xml:space="preserve"><value>Проверка</value></data>
+  <data name="Checkout_StepPayment" xml:space="preserve"><value>Оплата</value></data>
+  <data name="Checkout_ShippingAddress" xml:space="preserve"><value>Адрес доставки</value></data>
+  <data name="Checkout_PhoneOptional" xml:space="preserve"><value>Номер телефона (необязательно)</value></data>
+  <data name="Checkout_Province" xml:space="preserve"><value>Область / Край</value></data>
+  <data name="Checkout_StreetAddress" xml:space="preserve"><value>Улица</value></data>
+  <data name="Checkout_Apartment" xml:space="preserve"><value>Квартира, офис и т.д. (необязательно)</value></data>
+  <data name="Checkout_DeliveryNotes" xml:space="preserve"><value>Примечания к доставке (необязательно)</value></data>
+  <data name="Checkout_DeliveryNotesPlaceholder" xml:space="preserve"><value>например, доступен после 17:00...</value></data>
+  <data name="Checkout_SaveAddress" xml:space="preserve"><value>Сохранить адрес в профиле</value></data>
+  <data name="Checkout_BackToCart" xml:space="preserve"><value>Назад в корзину</value></data>
+  <data name="Checkout_NextDelivery" xml:space="preserve"><value>Далее: Способ доставки</value></data>
+  <data name="Checkout_NextReview" xml:space="preserve"><value>Далее: Проверка заказа</value></data>
+  <data name="Checkout_BackToAddress" xml:space="preserve"><value>Назад к адресу</value></data>
+  <data name="Checkout_BackToDelivery" xml:space="preserve"><value>Назад к доставке</value></data>
+  <data name="Checkout_PlaceOrder" xml:space="preserve"><value>Оформить заказ</value></data>
+  <data name="Checkout_Subtotal" xml:space="preserve"><value>Подытог</value></data>
+  <data name="Checkout_Shipping" xml:space="preserve"><value>Доставка</value></data>
+  <data name="Checkout_Discount" xml:space="preserve"><value>Скидка</value></data>
+  <data name="Checkout_Total" xml:space="preserve"><value>Итого</value></data>
+  <data name="Checkout_ApplyCoupon" xml:space="preserve"><value>Применить купон</value></data>
+  <data name="Checkout_CouponPlaceholder" xml:space="preserve"><value>Введите код купона</value></data>
+  <data name="Checkout_CouponApplied" xml:space="preserve"><value>Купон применён!</value></data>
+
+  <!-- ===== Заказы ===== -->
+  <data name="Orders_Title" xml:space="preserve"><value>Мои заказы</value></data>
+  <data name="Orders_OrderNumber" xml:space="preserve"><value>Заказ №</value></data>
+  <data name="Orders_Date" xml:space="preserve"><value>Дата</value></data>
+  <data name="Orders_Status" xml:space="preserve"><value>Статус</value></data>
+  <data name="Orders_Total" xml:space="preserve"><value>Сумма</value></data>
+  <data name="Orders_NoOrders" xml:space="preserve"><value>У вас пока нет заказов.</value></data>
+  <data name="Orders_Details" xml:space="preserve"><value>Детали заказа</value></data>
+  <data name="Orders_Items" xml:space="preserve"><value>Состав заказа</value></data>
+  <data name="Orders_ShippingAddress" xml:space="preserve"><value>Адрес доставки</value></data>
+  <data name="Orders_Confirmation" xml:space="preserve"><value>Заказ подтверждён!</value></data>
+  <data name="Orders_ConfirmationMessage" xml:space="preserve"><value>Спасибо за ваш заказ. Вы получите подтверждение на электронную почту.</value></data>
+  <data name="Orders_Failed" xml:space="preserve"><value>Ошибка оплаты</value></data>
+  <data name="Orders_FailedMessage" xml:space="preserve"><value>К сожалению, не удалось обработать ваш платёж. Пожалуйста, попробуйте снова.</value></data>
+  <data name="Orders_StatusPending" xml:space="preserve"><value>Ожидает оплаты</value></data>
+  <data name="Orders_StatusPaymentReceived" xml:space="preserve"><value>Оплата получена</value></data>
+  <data name="Orders_StatusShipped" xml:space="preserve"><value>Отправлен</value></data>
+  <data name="Orders_StatusDelivered" xml:space="preserve"><value>Доставлен</value></data>
+  <data name="Orders_BackToOrders" xml:space="preserve"><value>Назад к заказам</value></data>
+  <data name="Orders_PlacedOn" xml:space="preserve"><value>Оформлен</value></data>
+  <data name="Orders_ItemsOrdered" xml:space="preserve"><value>Заказанные товары</value></data>
+  <data name="Orders_DeliveryHistory" xml:space="preserve"><value>История доставки</value></data>
+  <data name="Orders_ShippingTo" xml:space="preserve"><value>Адрес доставки</value></data>
+  <data name="Orders_ContactPhone" xml:space="preserve"><value>Контактный телефон</value></data>
+  <data name="Orders_RetryPayment" xml:space="preserve"><value>Повторить оплату</value></data>
+  <data name="Orders_PaymentPending" xml:space="preserve"><value>Оплата по данному заказу ожидается или не прошла.</value></data>
+
+  <!-- ===== Аккаунт ===== -->
+  <data name="Account_Login" xml:space="preserve"><value>Войти</value></data>
+  <data name="Account_Register" xml:space="preserve"><value>Регистрация</value></data>
+  <data name="Account_Email" xml:space="preserve"><value>Электронная почта</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>Пароль</value></data>
+  <data name="Account_ConfirmPassword" xml:space="preserve"><value>Подтвердите пароль</value></data>
+  <data name="Account_FirstName" xml:space="preserve"><value>Имя</value></data>
+  <data name="Account_LastName" xml:space="preserve"><value>Фамилия</value></data>
+  <data name="Account_ForgotPassword" xml:space="preserve"><value>Забыли пароль?</value></data>
+  <data name="Account_ResetPassword" xml:space="preserve"><value>Сбросить пароль</value></data>
+  <data name="Account_NoAccount" xml:space="preserve"><value>Нет аккаунта?</value></data>
+  <data name="Account_HasAccount" xml:space="preserve"><value>Уже есть аккаунт?</value></data>
+  <data name="Account_RememberMe" xml:space="preserve"><value>Запомнить меня</value></data>
+  <data name="Account_LoginTitle" xml:space="preserve"><value>Вход в аккаунт</value></data>
+  <data name="Account_RegisterTitle" xml:space="preserve"><value>Создать новый аккаунт</value></data>
+  <data name="Account_ForgotHeading" xml:space="preserve"><value>Забыли пароль?</value></data>
+  <data name="Account_ForgotSubtitle" xml:space="preserve"><value>Ничего страшного. Введите ваш email, и мы отправим вам ссылку для сброса пароля.</value></data>
+  <data name="Account_SendResetLink" xml:space="preserve"><value>Отправить ссылку</value></data>
+  <data name="Account_BackToLogin" xml:space="preserve"><value>Назад к входу</value></data>
+  <data name="Account_ReturnToLogin" xml:space="preserve"><value>Вернуться к входу</value></data>
+  <data name="Account_MyWishlist" xml:space="preserve"><value>Избранное</value></data>
+  <data name="Account_WishlistEmpty" xml:space="preserve"><value>Ваш список избранного пуст.</value></data>
+
+  <!-- ===== Подвал ===== -->
+  <data name="Footer_About" xml:space="preserve"><value>О нас</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Политика конфиденциальности</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>Условия использования</value></data>
+  <data name="Footer_Contact" xml:space="preserve"><value>Связаться с нами</value></data>
+  <data name="Footer_Support" xml:space="preserve"><value>Поддержка</value></data>
+  <data name="Footer_AllRightsReserved" xml:space="preserve"><value>Все права защищены.</value></data>
+  <data name="Footer_FollowUs" xml:space="preserve"><value>Мы в соцсетях</value></data>
+  <data name="Footer_Shop" xml:space="preserve"><value>Магазин</value></data>
+  <data name="Footer_Products" xml:space="preserve"><value>Товары</value></data>
+  <data name="Footer_MyOrders" xml:space="preserve"><value>Мои заказы</value></data>
+  <data name="Footer_ShoppingCart" xml:space="preserve"><value>Корзина</value></data>
+  <data name="Footer_UsefulLinks" xml:space="preserve"><value>Полезные ссылки</value></data>
+  <data name="Footer_ReturnPolicy" xml:space="preserve"><value>Политика возврата</value></data>
+  <data name="Footer_HelpFaq" xml:space="preserve"><value>Помощь/FAQ</value></data>
+  <data name="Footer_Newsletter" xml:space="preserve"><value>Рассылка</value></data>
+  <data name="Footer_SubscribeMessage" xml:space="preserve"><value>Подпишитесь, чтобы получать информацию о новых товарах и акциях.</value></data>
+
+  <!-- ===== Общие метки ===== -->
+  <data name="Label_Loading" xml:space="preserve"><value>Загрузка...</value></data>
+  <data name="Label_Error" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Label_Success" xml:space="preserve"><value>Успешно</value></data>
+  <data name="Label_Warning" xml:space="preserve"><value>Внимание</value></data>
+  <data name="Label_Confirm" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="Label_Yes" xml:space="preserve"><value>Да</value></data>
+  <data name="Label_No" xml:space="preserve"><value>Нет</value></data>
+  <data name="Label_Or" xml:space="preserve"><value>или</value></data>
+  <data name="Label_And" xml:space="preserve"><value>и</value></data>
+  <data name="Label_Of" xml:space="preserve"><value>из</value></data>
+  <data name="Label_Free" xml:space="preserve"><value>Бесплатно</value></data>
+  <data name="Label_New" xml:space="preserve"><value>Новинка</value></data>
+  <data name="Label_Sale" xml:space="preserve"><value>Акция</value></data>
+  <data name="Label_Language" xml:space="preserve"><value>Язык</value></data>
+  <data name="Label_English" xml:space="preserve"><value>English</value></data>
+  <data name="Label_Russian" xml:space="preserve"><value>Русский</value></data>
+
+  <!-- ===== Админ: Навигация ===== -->
+  <data name="Admin_Dashboard" xml:space="preserve"><value>Панель управления</value></data>
+  <data name="Admin_Products" xml:space="preserve"><value>Товары</value></data>
+  <data name="Admin_Orders" xml:space="preserve"><value>Заказы</value></data>
+  <data name="Admin_Customers" xml:space="preserve"><value>Покупатели</value></data>
+  <data name="Admin_Categories" xml:space="preserve"><value>Категории</value></data>
+  <data name="Admin_Brands" xml:space="preserve"><value>Бренды</value></data>
+  <data name="Admin_Types" xml:space="preserve"><value>Типы</value></data>
+  <data name="Admin_Coupons" xml:space="preserve"><value>Купоны</value></data>
+  <data name="Admin_Settings" xml:space="preserve"><value>Настройки</value></data>
+  <data name="Admin_DeliveryMethods" xml:space="preserve"><value>Способы доставки</value></data>
+  <data name="Admin_HeroSlides" xml:space="preserve"><value>Слайды баннера</value></data>
+  <data name="Admin_Users" xml:space="preserve"><value>Пользователи</value></data>
+  <data name="Admin_Marketing" xml:space="preserve"><value>Маркетинг</value></data>
+  <data name="Admin_Content" xml:space="preserve"><value>Контент</value></data>
+  <data name="Admin_AIInsights" xml:space="preserve"><value>AI-аналитика</value></data>
+  <data name="Admin_Recommendations" xml:space="preserve"><value>Рекомендации</value></data>
+  <data name="Admin_OfflineEvaluation" xml:space="preserve"><value>Офлайн-оценка</value></data>
+  <data name="Admin_FAQs" xml:space="preserve"><value>Вопросы и ответы</value></data>
+  <data name="Admin_ProductOptions" xml:space="preserve"><value>Опции товаров</value></data>
+  <data name="Admin_TopSelling" xml:space="preserve"><value>Лидеры продаж</value></data>
+
+  <!-- ===== Админ: Общие ===== -->
+  <data name="Admin_Create" xml:space="preserve"><value>Создать</value></data>
+  <data name="Admin_Actions" xml:space="preserve"><value>Действия</value></data>
+  <data name="Admin_Name" xml:space="preserve"><value>Название</value></data>
+  <data name="Admin_Description" xml:space="preserve"><value>Описание</value></data>
+  <data name="Admin_Status" xml:space="preserve"><value>Статус</value></data>
+  <data name="Admin_Active" xml:space="preserve"><value>Активен</value></data>
+  <data name="Admin_Inactive" xml:space="preserve"><value>Неактивен</value></data>
+  <data name="Admin_CreatedAt" xml:space="preserve"><value>Создан</value></data>
+  <data name="Admin_ConfirmDelete" xml:space="preserve"><value>Вы уверены, что хотите удалить этот элемент?</value></data>
+  <data name="Admin_NoData" xml:space="preserve"><value>Данные отсутствуют.</value></data>
+  <data name="Admin_Catalog" xml:space="preserve"><value>Каталог</value></data>
+  <data name="Admin_Sales" xml:space="preserve"><value>Продажи</value></data>
+  <data name="Admin_Intelligence" xml:space="preserve"><value>Интеллект</value></data>
+  <data name="Admin_TotalSales" xml:space="preserve"><value>Общие продажи</value></data>
+  <data name="Admin_TotalOrders" xml:space="preserve"><value>Всего заказов</value></data>
+  <data name="Admin_OutOfStock" xml:space="preserve"><value>Нет в наличии</value></data>
+  <data name="Admin_QuickActions" xml:space="preserve"><value>Быстрые действия</value></data>
+  <data name="Admin_ManageProducts" xml:space="preserve"><value>Управление товарами</value></data>
+  <data name="Admin_ManageCoupons" xml:space="preserve"><value>Управление купонами</value></data>
+  <data name="Admin_ViewOrders" xml:space="preserve"><value>Просмотр заказов</value></data>
+  <data name="Admin_ManageCategories" xml:space="preserve"><value>Управление категориями</value></data>
+  <data name="Admin_ManageBrands" xml:space="preserve"><value>Управление брендами</value></data>
+  <data name="Admin_ManageTypes" xml:space="preserve"><value>Управление типами</value></data>
+  <data name="Admin_ManageDelivery" xml:space="preserve"><value>Управление доставкой</value></data>
+  <data name="Admin_ManageContent" xml:space="preserve"><value>Управление контентом</value></data>
+  <data name="Admin_TopSelling10" xml:space="preserve"><value>Топ-10 продаж</value></data>
+  <data name="Admin_ViewAll" xml:space="preserve"><value>Посмотреть все</value></data>
+  <data name="Admin_RecentCustomers" xml:space="preserve"><value>Недавние покупатели</value></data>
+  <data name="Admin_ViewAllCustomers" xml:space="preserve"><value>Все покупатели</value></data>
+  <data name="Admin_ViewAllTopSelling" xml:space="preserve"><value>Все популярные товары</value></data>
+  <data name="Admin_Sold" xml:space="preserve"><value>Продано</value></data>
+  <data name="Admin_ProductManagement" xml:space="preserve"><value>Управление товарами</value></data>
+  <data name="Admin_OrderManagement" xml:space="preserve"><value>Управление заказами</value></data>
+  <data name="Admin_CreateNewProduct" xml:space="preserve"><value>Создать новый товар</value></data>
+  <data name="Admin_SetupRequired" xml:space="preserve"><value>Необходима начальная настройка</value></data>
+  <data name="Admin_SetupMessage" xml:space="preserve"><value>Вы не можете добавить товар, пока не создадите хотя бы по одному из следующего:</value></data>
+  <data name="Admin_Manage" xml:space="preserve"><value>Управление</value></data>
+  <data name="Admin_ID" xml:space="preserve"><value>ID</value></data>
+  <data name="Admin_Image" xml:space="preserve"><value>Изображение</value></data>
+  <data name="Admin_Price" xml:space="preserve"><value>Цена</value></data>
+  <data name="Admin_Stock" xml:space="preserve"><value>Наличие</value></data>
+  <data name="Admin_Edit" xml:space="preserve"><value>Редактировать</value></data>
+  <data name="Admin_Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Admin_Save" xml:space="preserve"><value>Сохранить</value></data>
+  <data name="Admin_Cancel" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Admin_Back" xml:space="preserve"><value>Назад</value></data>
+  <data name="Admin_NoOrders" xml:space="preserve"><value>Заказы не найдены</value></data>
+  <data name="Admin_SortMostRecent" xml:space="preserve"><value>По дате: Новые</value></data>
+  <data name="Admin_SortTotalHigh" xml:space="preserve"><value>По сумме: Убывание</value></data>
+  <data name="Admin_SortTotalLow" xml:space="preserve"><value>По сумме: Возрастание</value></data>
+  <data name="Admin_ShowingOrdersFor" xml:space="preserve"><value>Показаны заказы для:</value></data>
+  <data name="Admin_ClearFilter" xml:space="preserve"><value>Сбросить фильтр</value></data>
+  <data name="Admin_PaymentCancelled" xml:space="preserve"><value>Оплата отменена или не прошла</value></data>
+  <data name="Admin_PaymentNotCompleted" xml:space="preserve"><value>Оплата не была завершена. Вы можете повторить оформление из корзины.</value></data>
+  <data name="Admin_OrderSaved" xml:space="preserve"><value>Заказ сохранён со статусом «Ожидает». Вы можете повторить оплату в любой момент из истории заказов.</value></data>
+  <data name="Admin_ViewOrderRetry" xml:space="preserve"><value>Просмотр заказа и повтор оплаты</value></data>
+  <data name="Admin_ContinueShopping" xml:space="preserve"><value>Продолжить покупки</value></data>
+  <data name="Admin_Faq_Title" xml:space="preserve"><value>Часто задаваемые вопросы</value></data>
+  <data name="Admin_Faq_Subtitle" xml:space="preserve"><value>Найдите ответы на частые вопросы о наших товарах, доставке и возвратах.</value></data>
+  <data name="Admin_Faq_NoFaqs" xml:space="preserve"><value>Вопросы не найдены</value></data>
+  <data name="Admin_Faq_NoFaqsMsg" xml:space="preserve"><value>Мы работаем над наполнением этого раздела. Загляните позже!</value></data>
+  <data name="Admin_ResetPassword" xml:space="preserve"><value>Сбросить пароль</value></data>
+  <data name="Admin_ResetSubtitle" xml:space="preserve"><value>Выберите новый надёжный пароль для защиты аккаунта.</value></data>
+  <data name="Admin_ResetSuccess" xml:space="preserve"><value>Ваш пароль успешно изменён.</value></data>
+  <data name="Admin_ResetClickLogin" xml:space="preserve"><value>Нажмите здесь, чтобы войти</value></data>
+  <data name="Admin_NewPassword" xml:space="preserve"><value>Новый пароль</value></data>
+  <data name="Admin_ConfirmNewPassword" xml:space="preserve"><value>Подтвердите пароль</value></data>
+  <data name="Admin_PrivacyPolicy" xml:space="preserve"><value>Политика конфиденциальности</value></data>
+  <data name="Admin_ReturnPolicy" xml:space="preserve"><value>Политика возврата</value></data>
+  <data name="Admin_ContentNotAvailable" xml:space="preserve"><value>Контент недоступен. Обратитесь в службу поддержки.</value></data>
+
+  <!-- ===== Рекомендации / A/B тестирование ===== -->
+  <data name="Rec_Title" xml:space="preserve"><value>Система рекомендаций и A/B-тестирование</value></data>
+  <data name="Rec_Description" xml:space="preserve"><value>Метрики адаптивной системы рекомендаций, управление A/B-тестами и экспериментальная оценка.</value></data>
+  <data name="Rec_TotalInteractions" xml:space="preserve"><value>Всего взаимодействий</value></data>
+  <data name="Rec_TrackedUsers" xml:space="preserve"><value>Отслеживаемых пользователей</value></data>
+  <data name="Rec_Experiments" xml:space="preserve"><value>Эксперименты</value></data>
+  <data name="Rec_OverallCTR" xml:space="preserve"><value>Общий CTR (30 дн.)</value></data>
+  <data name="Rec_SystemMetrics" xml:space="preserve"><value>Системные метрики (последние 30 дней)</value></data>
+  <data name="Rec_Impressions" xml:space="preserve"><value>Показы</value></data>
+  <data name="Rec_Clicks" xml:space="preserve"><value>Клики</value></data>
+  <data name="Rec_AddToCart" xml:space="preserve"><value>Добавлено в корзину</value></data>
+  <data name="Rec_Purchases" xml:space="preserve"><value>Покупки</value></data>
+  <data name="Rec_PerformanceByStrategy" xml:space="preserve"><value>Показатели по стратегиям</value></data>
+  <data name="Rec_Strategy" xml:space="preserve"><value>Стратегия</value></data>
+  <data name="Rec_CTR" xml:space="preserve"><value>CTR</value></data>
+  <data name="Rec_ABTestExperiment" xml:space="preserve"><value>A/B-тест (эксперимент)</value></data>
+  <data name="Rec_NewExperiment" xml:space="preserve"><value>Новый эксперимент</value></data>
+  <data name="Rec_EndExperiment" xml:space="preserve"><value>Завершить эксперимент</value></data>
+  <data name="Rec_Control" xml:space="preserve"><value>Контрольная группа</value></data>
+  <data name="Rec_Treatment" xml:space="preserve"><value>Тестовая группа</value></data>
+  <data name="Rec_Lift" xml:space="preserve"><value>Прирост</value></data>
+  <data name="Rec_ConversionRate" xml:space="preserve"><value>Коэффициент конверсии</value></data>
+  <data name="Rec_AOV" xml:space="preserve"><value>Средний чек (AOV)</value></data>
+  <data name="Rec_Revenue" xml:space="preserve"><value>Выручка</value></data>
+  <data name="Rec_Users" xml:space="preserve"><value>Пользователи</value></data>
+  <data name="Rec_StatSignificant" xml:space="preserve"><value>Результаты статистически значимы</value></data>
+  <data name="Rec_NotSignificant" xml:space="preserve"><value>Пока не значимы. Требуется больше данных.</value></data>
+  <data name="Rec_NoActiveExperiment" xml:space="preserve"><value>Нет активных экспериментов. Создайте новый для запуска A/B-теста.</value></data>
+  <data name="Rec_AvailableStrategies" xml:space="preserve"><value>Доступные стратегии</value></data>
+  <data name="Rec_Popular" xml:space="preserve"><value>Популярные</value></data>
+  <data name="Rec_PopularDesc" xml:space="preserve"><value>Рекомендует наиболее покупаемые товары. Базовая линия для тестирования.</value></data>
+  <data name="Rec_CF" xml:space="preserve"><value>Коллаборативная фильтрация</value></data>
+  <data name="Rec_CFDesc" xml:space="preserve"><value>На основе покупок похожих пользователей.</value></data>
+  <data name="Rec_ContentBased" xml:space="preserve"><value>На основе контента</value></data>
+  <data name="Rec_ContentBasedDesc" xml:space="preserve"><value>Схожесть товаров через AI-эмбеддинги.</value></data>
+  <data name="Rec_Adaptive" xml:space="preserve"><value>Адаптивная (гибридная)</value></data>
+  <data name="Rec_AdaptiveDesc" xml:space="preserve"><value>Комбинирует КФ + контент + тренды + категории. Модель диссертации.</value></data>
+  <data name="Rec_RunOfflineEval" xml:space="preserve"><value>Запустить офлайн-оценку</value></data>
+  <data name="Rec_ExperimentResults" xml:space="preserve"><value>Результаты эксперимента</value></data>
+  <data name="Rec_CreateExperiment" xml:space="preserve"><value>Создать A/B-тест</value></data>
+  <data name="Rec_ExperimentName" xml:space="preserve"><value>Название эксперимента</value></data>
+  <data name="Rec_ControlStrategy" xml:space="preserve"><value>Стратегия контрольной группы</value></data>
+  <data name="Rec_TreatmentStrategy" xml:space="preserve"><value>Стратегия тестовой группы</value></data>
+  <data name="Rec_TreatmentPercent" xml:space="preserve"><value>% тестовой группы</value></data>
+  <data name="Rec_StartExperiment" xml:space="preserve"><value>Запустить эксперимент</value></data>
+
+  <!-- ===== Офлайн-оценка ===== -->
+  <data name="Eval_Title" xml:space="preserve"><value>Офлайн-оценка — метрики качества моделей</value></data>
+  <data name="Eval_Parameters" xml:space="preserve"><value>Параметры оценки</value></data>
+  <data name="Eval_TimePeriod" xml:space="preserve"><value>Период (дней)</value></data>
+  <data name="Eval_TopK" xml:space="preserve"><value>Top-K</value></data>
+  <data name="Eval_TrainTestSplit" xml:space="preserve"><value>Разбиение обуч./тест</value></data>
+  <data name="Eval_RunEvaluation" xml:space="preserve"><value>Запустить оценку</value></data>
+  <data name="Eval_Complete" xml:space="preserve"><value>Оценка завершена.</value></data>
+  <data name="Eval_TrainPeriod" xml:space="preserve"><value>Обучающий период</value></data>
+  <data name="Eval_TestPeriod" xml:space="preserve"><value>Тестовый период</value></data>
+  <data name="Eval_UsersEvaluated" xml:space="preserve"><value>Оценено пользователей</value></data>
+  <data name="Eval_StrategyComparison" xml:space="preserve"><value>Сравнение стратегий — офлайн-метрики</value></data>
+  <data name="Eval_Precision" xml:space="preserve"><value>Точность (Precision)</value></data>
+  <data name="Eval_Recall" xml:space="preserve"><value>Полнота (Recall)</value></data>
+  <data name="Eval_F1" xml:space="preserve"><value>F1-мера</value></data>
+  <data name="Eval_NDCG" xml:space="preserve"><value>NDCG</value></data>
+  <data name="Eval_MRR" xml:space="preserve"><value>MRR</value></data>
+  <data name="Eval_HitRate" xml:space="preserve"><value>Hit Rate</value></data>
+  <data name="Eval_Coverage" xml:space="preserve"><value>Покрытие</value></data>
+  <data name="Eval_Best" xml:space="preserve"><value>Лучший</value></data>
+  <data name="Eval_MetricDefinitions" xml:space="preserve"><value>Определения метрик</value></data>
+  <data name="Eval_OnlineMetrics" xml:space="preserve"><value>Онлайн-метрики</value></data>
+  <data name="Eval_OverallCTR" xml:space="preserve"><value>Общий CTR</value></data>
+  <data name="Eval_AddToCartRate" xml:space="preserve"><value>Конверсия в корзину</value></data>
+  <data name="Eval_PurchaseRate" xml:space="preserve"><value>Конверсия в покупку</value></data>
+  <data name="Eval_TotalImpressions" xml:space="preserve"><value>Всего показов</value></data>
+  <data name="Eval_HowItWorks" xml:space="preserve"><value>Офлайн-оценка использует временное разбиение на обуч./тест. Взаимодействия до даты разделения «обучают» модель, а взаимодействия после (покупки/добавления в корзину) служат эталоном.</value></data>
+
+  <!-- ===== Отзывы ===== -->
+  <data name="Review_Title" xml:space="preserve"><value>Отзывы покупателей</value></data>
+  <data name="Review_Write" xml:space="preserve"><value>Написать отзыв</value></data>
+  <data name="Review_Rating" xml:space="preserve"><value>Оценка</value></data>
+  <data name="Review_Comment" xml:space="preserve"><value>Ваш отзыв</value></data>
+  <data name="Review_NoReviews" xml:space="preserve"><value>Отзывов пока нет. Будьте первым, кто оценит этот товар!</value></data>
+  <data name="Review_SubmitReview" xml:space="preserve"><value>Отправить отзыв</value></data>
+  <data name="Review_ThankYou" xml:space="preserve"><value>Спасибо!</value></data>
+  <data name="Review_AlreadySubmitted" xml:space="preserve"><value>Вы уже оставили отзыв об этом товаре.</value></data>
+  <data name="Review_MustPurchase" xml:space="preserve"><value>Оставить отзыв можно только о купленных товарах.</value></data>
+  <data name="Review_MustLogin" xml:space="preserve"><value>Чтобы написать отзыв, необходимо {0}.</value></data>
+  <data name="Review_LoggedIn" xml:space="preserve"><value>войти в систему</value></data>
+  <data name="Review_YourRating" xml:space="preserve"><value>Ваша оценка</value></data>
+  <data name="Review_YourComment" xml:space="preserve"><value>Ваш комментарий</value></data>
+  <data name="Review_ReviewedOn" xml:space="preserve"><value>Отзыв от</value></data>
+  <data name="Review_BasedOn" xml:space="preserve"><value>На основе {0} отзыв(ов)</value></data>
+  <data name="Review_AIWhatLove" xml:space="preserve"><value>Что нравится покупателям</value></data>
+  <data name="Review_AIImprove" xml:space="preserve"><value>Области для улучшения</value></data>
+  <data name="Review_AIPowered" xml:space="preserve"><value>На основе ИИ • Сводка по {0} отзывам покупателей</value></data>
+  <data name="Review_AISummary" xml:space="preserve"><value>ИИ-сводка</value></data>
+
+  <!-- ===== Страница товара ===== -->
+  <data name="Detail_BackToProducts" xml:space="preserve"><value>Назад к товарам</value></data>
+  <data name="Detail_NoReviewsYet" xml:space="preserve"><value>Отзывов пока нет</value></data>
+  <data name="Detail_InCart" xml:space="preserve"><value>У вас {0} в корзине.</value></data>
+  <data name="Detail_NotAvailable" xml:space="preserve"><value>Эта комбинация недоступна.</value></data>
+  <data name="Detail_YouMightLike" xml:space="preserve"><value>Вам также может понравиться</value></data>
+  <data name="Detail_AIRecommendations" xml:space="preserve"><value>На основе ИИ • Умные рекомендации по схожести товаров</value></data>
+  <data name="Detail_MoreFrom" xml:space="preserve"><value>Ещё от {0}</value></data>
+  <data name="Detail_SimilarProducts" xml:space="preserve"><value>Похожие товары: {0}</value></data>
+
+  <!-- ===== Контакты ===== -->
+  <data name="Contact_Title" xml:space="preserve"><value>Связаться с нами</value></data>
+  <data name="Contact_Heading" xml:space="preserve"><value>Свяжитесь с нами</value></data>
+  <data name="Contact_Subtitle" xml:space="preserve"><value>Мы будем рады вашему обращению. Вот как с нами связаться.</value></data>
+  <data name="Contact_ByPhone" xml:space="preserve"><value>По телефону</value></data>
+  <data name="Contact_ByEmail" xml:space="preserve"><value>По электронной почте</value></data>
+  <data name="Contact_OurOffice" xml:space="preserve"><value>Наш офис</value></data>
+  <data name="Contact_Name" xml:space="preserve"><value>Ваше имя</value></data>
+  <data name="Contact_Email" xml:space="preserve"><value>Ваш email</value></data>
+  <data name="Contact_Subject" xml:space="preserve"><value>Тема</value></data>
+  <data name="Contact_Message" xml:space="preserve"><value>Сообщение</value></data>
+  <data name="Contact_Send" xml:space="preserve"><value>Отправить сообщение</value></data>
+
+  <!-- ===== AI Чат-виджет ===== -->
+  <data name="Chat_AssistantTitle" xml:space="preserve"><value>AI-помощник по покупкам</value></data>
+  <data name="Chat_Subtitle" xml:space="preserve"><value>На базе AI • Всегда готов помочь</value></data>
+  <data name="Chat_NewChat" xml:space="preserve"><value>Новый чат</value></data>
+  <data name="Chat_Welcome" xml:space="preserve"><value>Привет! Я ваш AI-помощник по покупкам. Я могу помочь вам:</value></data>
+  <data name="Chat_FindProducts" xml:space="preserve"><value>Найти нужные товары</value></data>
+  <data name="Chat_AnswerQuestions" xml:space="preserve"><value>Ответить на вопросы о товарах</value></data>
+  <data name="Chat_CompareProducts" xml:space="preserve"><value>Сравнить товары</value></data>
+  <data name="Chat_Recommendations" xml:space="preserve"><value>Дать персональные рекомендации</value></data>
+  <data name="Chat_HowCanIHelp" xml:space="preserve"><value>Чем могу помочь сегодня?</value></data>
+  <data name="Chat_BestSellers" xml:space="preserve"><value>Хиты продаж</value></data>
+  <data name="Chat_MyCart" xml:space="preserve"><value>Моя корзина</value></data>
+  <data name="Chat_MyOrders" xml:space="preserve"><value>Мои заказы</value></data>
+  <data name="Chat_GiftIdeas" xml:space="preserve"><value>Идеи подарков</value></data>
+  <data name="Chat_Placeholder" xml:space="preserve"><value>Спросите что угодно...</value></data>
+
+  <!-- ===== Админ Создание/Редактирование товаров ===== -->
+  <data name="Admin_ProductType" xml:space="preserve"><value>Тип товара</value></data>
+  <data name="Admin_SimpleProduct" xml:space="preserve"><value>Простой товар (фиксированная цена, единый остаток)</value></data>
+  <data name="Admin_VariableProduct" xml:space="preserve"><value>Вариативный товар (опции: размер, цвет и т.д. с разными ценами/остатками)</value></data>
+  <data name="Admin_SimpleProductShort" xml:space="preserve"><value>Простой товар</value></data>
+  <data name="Admin_VariableProductShort" xml:space="preserve"><value>Вариативный товар</value></data>
+  <data name="Admin_Brand" xml:space="preserve"><value>Бренд</value></data>
+  <data name="Admin_Type" xml:space="preserve"><value>Тип</value></data>
+  <data name="Admin_Category" xml:space="preserve"><value>Категория</value></data>
+  <data name="Admin_SelectBrand" xml:space="preserve"><value>-- Выберите бренд --</value></data>
+  <data name="Admin_SelectType" xml:space="preserve"><value>-- Выберите тип --</value></data>
+  <data name="Admin_SelectCategory" xml:space="preserve"><value>-- Выберите категорию --</value></data>
+  <data name="Admin_QuantityInStock" xml:space="preserve"><value>Количество на складе</value></data>
+  <data name="Admin_VariableProductInfo" xml:space="preserve"><value>Для вариативных товаров цена и остатки управляются для каждого варианта ниже. Основные изображения товара используются для всех вариантов.</value></data>
+  <data name="Admin_VariantOptions" xml:space="preserve"><value>Опции вариантов</value></data>
+  <data name="Admin_SelectProductOptions" xml:space="preserve"><value>Выберите опции для этого товара:</value></data>
+  <data name="Admin_GenerateVariants" xml:space="preserve"><value>Сгенерировать варианты</value></data>
+  <data name="Admin_UploadImages" xml:space="preserve"><value>Загрузить изображения</value></data>
+  <data name="Admin_ProductImages" xml:space="preserve"><value>Изображения товара</value></data>
+  <data name="Admin_CreateProduct" xml:space="preserve"><value>Создать товар</value></data>
+  <data name="Admin_EditProduct" xml:space="preserve"><value>Редактировать товар</value></data>
+  <data name="Admin_KindCannotChange" xml:space="preserve"><value>Тип товара нельзя изменить после создания.</value></data>
+  <data name="Admin_AIGenerate" xml:space="preserve"><value>AI-генерация</value></data>
+  <data name="Admin_Professional" xml:space="preserve"><value>Профессиональный</value></data>
+  <data name="Admin_Casual" xml:space="preserve"><value>Повседневный</value></data>
+  <data name="Admin_Luxury" xml:space="preserve"><value>Люкс</value></data>
+  <data name="Admin_Playful" xml:space="preserve"><value>Игривый</value></data>
+  <data name="Admin_AIGeneratedDesc" xml:space="preserve"><value>AI-сгенерированное описание</value></data>
+  <data name="Admin_ShortDescription" xml:space="preserve"><value>Краткое описание:</value></data>
+  <data name="Admin_LongDescription" xml:space="preserve"><value>Полное описание:</value></data>
+  <data name="Admin_MetaDescription" xml:space="preserve"><value>Мета-описание (SEO):</value></data>
+  <data name="Admin_SuggestedKeywords" xml:space="preserve"><value>Предложенные ключевые слова:</value></data>
+  <data name="Admin_UseThis" xml:space="preserve"><value>Использовать</value></data>
+  <data name="Admin_RegenerateVariants" xml:space="preserve"><value>Перегенерировать варианты</value></data>
+  <data name="Admin_RegenerateWarning" xml:space="preserve"><value>Внимание: перегенерация сбросит текущие цены и остатки вариантов.</value></data>
+  <data name="Admin_SaveChanges" xml:space="preserve"><value>Сохранить изменения</value></data>
+  <data name="Admin_ManageImages" xml:space="preserve"><value>Управление изображениями</value></data>
+  <data name="Admin_MainImage" xml:space="preserve"><value>Главное</value></data>
+  <data name="Admin_SetAsMain" xml:space="preserve"><value>Сделать главным</value></data>
+  <data name="Admin_DeleteImage" xml:space="preserve"><value>Удалить изображение</value></data>
+  <data name="Admin_UploadNewImages" xml:space="preserve"><value>Загрузить новые изображения</value></data>
+  <data name="Admin_Upload" xml:space="preserve"><value>Загрузить</value></data>
+  <data name="Admin_ConfigureVariants" xml:space="preserve"><value>Настройка вариантов</value></data>
+  <data name="Admin_ProductOptionsLabel" xml:space="preserve"><value>Опции товара:</value></data>
+
+  <!-- ===== Админ Детали заказа ===== -->
+  <data name="Admin_BackToOrders" xml:space="preserve"><value>Назад к заказам</value></data>
+  <data name="Admin_RefundOrder" xml:space="preserve"><value>Возврат заказа</value></data>
+  <data name="Admin_ConfirmRefund" xml:space="preserve"><value>Вы уверены, что хотите оформить возврат этого заказа?</value></data>
+  <data name="Admin_OrderDetails" xml:space="preserve"><value>Детали заказа</value></data>
+  <data name="Admin_PlacedOn" xml:space="preserve"><value>Оформлен</value></data>
+  <data name="Admin_UpdateDeliveryStatus" xml:space="preserve"><value>Обновить статус доставки</value></data>
+  <data name="Admin_NewStatus" xml:space="preserve"><value>Новый статус</value></data>
+  <data name="Admin_NotesOptional" xml:space="preserve"><value>Заметки (необязательно)</value></data>
+  <data name="Admin_AddUpdate" xml:space="preserve"><value>Добавить обновление</value></data>
+  <data name="Admin_ItemsOrdered" xml:space="preserve"><value>Заказанные товары</value></data>
+  <data name="Admin_DeliveryHistory" xml:space="preserve"><value>История доставки</value></data>
+  <data name="Admin_ShippingTo" xml:space="preserve"><value>Доставка по адресу</value></data>
+  <data name="Admin_ContactPhone" xml:space="preserve"><value>Контактный телефон</value></data>
+  <data name="Admin_DeliveryNotes" xml:space="preserve"><value>Заметки к доставке</value></data>
+  <data name="Admin_OrderSummaryLabel" xml:space="preserve"><value>Итого по заказу</value></data>
+  <data name="Admin_Subtotal" xml:space="preserve"><value>Подитог</value></data>
+  <data name="Admin_DeliveryFee" xml:space="preserve"><value>Доставка</value></data>
+  <data name="Admin_DiscountLabel" xml:space="preserve"><value>Скидка</value></data>
+  <data name="Admin_Total" xml:space="preserve"><value>Итого</value></data>
+
+  <!-- ===== Админ Топ-продаж ===== -->
+  <data name="Admin_TopSellingProducts" xml:space="preserve"><value>Самые продаваемые товары</value></data>
+  <data name="Admin_BackToDashboard" xml:space="preserve"><value>Назад к панели управления</value></data>
+  <data name="Admin_ProductVariant" xml:space="preserve"><value>Товар / Вариант</value></data>
+  <data name="Admin_TotalSold" xml:space="preserve"><value>Всего продано</value></data>
+  <data name="Admin_TotalRevenue" xml:space="preserve"><value>Общая выручка</value></data>
+  <data name="Admin_NoProductsSold" xml:space="preserve"><value>Товары ещё не продавались</value></data>
+  <data name="Admin_NoProductsSoldDesc" xml:space="preserve"><value>Как только вы совершите первую продажу, ваши топ-товары появятся здесь.</value></data>
+
+  <!-- ===== Валидация ===== -->
+  <data name="Validation_Required" xml:space="preserve"><value>Это поле обязательно для заполнения.</value></data>
+  <data name="Validation_Email" xml:space="preserve"><value>Пожалуйста, введите корректный адрес электронной почты.</value></data>
+  <data name="Validation_PasswordLength" xml:space="preserve"><value>Пароль должен содержать не менее 6 символов.</value></data>
+  <data name="Validation_PasswordMatch" xml:space="preserve"><value>Пароли не совпадают.</value></data>
+  <data name="Validation_InvalidLogin" xml:space="preserve"><value>Неверный email или пароль.</value></data>
+</root>

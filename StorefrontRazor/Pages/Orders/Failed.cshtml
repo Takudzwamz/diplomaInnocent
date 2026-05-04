@@ -1,0 +1,27 @@
+@page
+@model StorefrontRazor.Pages.Orders.FailedModel
+@{
+    ViewData["Title"] = "Оплата отменена или не прошла";
+}
+
+<div class="container mt-5">
+    <div class="text-center card p-5 border rounded shadow-lg">
+        <h1 class="text-danger"><i class="bi bi-x-circle-fill"></i></h1>
+        <h2>Оплата отменена или не прошла</h2>
+        
+        @if (Model.Order != null)
+        {
+            <p class="text-muted">Оплата по данному заказу ожидается или не прошла.</p>
+            <p>Заказ сохранён со статусом «Ожидает». Вы можете повторить оплату в любой момент из истории заказов.</p>
+            <div class="mt-4">
+                <a asp-page="./Details" asp-route-id="@Model.Order.Id" class="btn btn-warning">Просмотр заказа и повтор оплаты</a>
+                <a asp-page="/Products/Index" class="btn btn-outline-secondary ms-2">Продолжить покупки</a>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">Оплата не была завершена. Вы можете повторить оформление из корзины.</p>
+            <a asp-page="/Cart/Index" class="btn btn-primary">Назад в корзину</a>
+        }
+    </div>
+</div>

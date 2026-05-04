@@ -1,0 +1,86 @@
+@using Core.Interfaces
+@model Dictionary<string, string>
+@inject ISiteSettingsService SettingsService
+@{
+    var settings = await SettingsService.GetSettingsAsync();
+    var storeName = settings.GetValueOrDefault("StoreName");
+    var logoUrl = settings.GetValueOrDefault("StoreLogoUrl");
+}
+@{
+    var aboutUsText = Model.GetValueOrDefault("footer-about-us");
+    var facebookUrl = Model.GetValueOrDefault("social-facebook-url", "#");
+    var twitterUrl = Model.GetValueOrDefault("social-twitter-url", "#");
+    var instagramUrl = Model.GetValueOrDefault("social-instagram-url", "#");
+    var linkedinUrl = Model.GetValueOrDefault("social-linkedin-url", "#");
+    var whatsappUrl = Model.GetValueOrDefault("social-whatsapp-url", "#");
+}
+
+<footer class="bg-body-tertiary text-body-secondary border-top pt-5 pb-4 mt-5">
+    <div class="container text-center text-md-start">
+        <div class="row text-center text-md-start">
+
+            <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold text-primary">
+                    <a class="navbar-brand d-flex align-items-center" asp-page="/Index">
+                        @if (!string.IsNullOrEmpty(logoUrl))
+                        {
+                            <img src="@logoUrl" alt="@storeName Logo" style="height: 30px; margin-right: 10px;" />
+                        }
+                        else
+                        {
+                            <span class="bi bi-shop-window me-2"></span>
+                        }
+                        @storeName
+                    </a>
+                </h5>
+                <p>@aboutUsText</p>
+            </div>
+
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold">Магазин</h5>
+                <p><a asp-page="/Products/Index" class="text-body-secondary text-decoration-none">Товары</a></p>
+                <p><a asp-page="/Orders/Index" class="text-body-secondary text-decoration-none">Мои заказы</a></p>
+                <p><a asp-page="/Cart/Index" class="text-body-secondary text-decoration-none">Корзина</a></p>
+            </div>
+
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold">Полезные ссылки</h5>
+                <p><a asp-page="/Contact" class="text-body-secondary text-decoration-none">Связаться с нами</a></p>
+                <p><a asp-page="/Policy" class="text-body-secondary text-decoration-none">Политика возврата</a></p>
+                <p><a asp-page="/Faq" class="text-body-secondary text-decoration-none">Помощь/FAQ</a></p>
+            </div>
+
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold">Мы в соцсетях</h5>
+                <a href="@facebookUrl" target="_blank" class="btn btn-outline-primary btn-floating m-1" role="button">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="@twitterUrl" target="_blank" class="btn btn-outline-primary btn-floating m-1" role="button">
+                    <i class="bi bi-twitter-x"></i>
+                </a>
+                <a href="@instagramUrl" target="_blank" class="btn btn-outline-primary btn-floating m-1" role="button">
+                    <i class="bi bi-instagram"></i>
+                </a>
+                <a href="@linkedinUrl" target="_blank" class="btn btn-outline-primary btn-floating m-1" role="button">
+                    <i class="bi bi-linkedin"></i>
+                </a>
+                <a href="@whatsappUrl" target="_blank" class="btn btn-outline-primary btn-floating m-1" role="button">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+
+        <hr class="mb-4 mt-5">
+
+        <div class="row align-items-center">
+            <div class="col-md-12 text-center">
+                <p class="mb-2">
+                    Copyright &copy; @DateTime.Now.Year <strong>@storeName</strong> Все права защищены.
+                </p>
+                <p class="mb-0 small">
+                    Разработано <a href="https://sputnikdevs.com" target="_blank" class="text-primary text-decoration-none">Sputnik Devs (Pty) Ltd</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

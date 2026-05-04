@@ -1,0 +1,182 @@
+@page
+@model StorefrontRazor.Pages.Admin.Products.IndexModel
+@{
+    ViewData["Title"] = "Управление товарами";
+}
+
+@if (!Model.CanCreateProducts)
+{
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">Необходима начальная настройка</h4>
+        <p>Вы не можете добавить товар, пока не создадите хотя бы по одному из следующего:</p>
+        <hr>
+        <ul>
+            @foreach (var prereq in Model.MissingPrerequisites)
+            {
+                @* This creates a dynamic link to the correct management page *@
+                <li><a asp-page="/Admin/@(prereq)/Index" class="alert-link">Управление @prereq</a></li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@ViewData["Title"]</h1>
+    @if (Model.CanCreateProducts)
+    {
+        <a asp-page="./Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle-fill me-2"></i>Создать новый товар
+        </a>
+    }
+    else
+    {
+        <a class="btn btn-primary disabled" title="Вы не можете добавить товар, пока не создадите хотя бы по одному из следующего:">
+            <i class="bi bi-plus-circle-fill me-2"></i>Создать новый товар
+        </a>
+    }
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th style="width: 80px;">Изображение</th>
+                        <th>Название</th>
+                        <th>Бренд</th>
+                        <th>Тип</th>
+                        <th>Цена</th>
+                        <th>Наличие</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model.ProductPagination.Data)
+                    {
+                        <tr class="@(product.QuantityInStock == 0 ? "table-danger" : "")">
+                            <td>@product.Id</td>
+                            <td><img src="@product.PictureUrl" alt="@product.Name" class="img-thumbnail"
+                                    style="width: 60px; height: 60px; object-fit: cover;" /></td>
+                            <td>@product.Name</td>
+                            <td>@product.ProductBrand</td>
+                            <td>@product.ProductType</td>
+                            <td>@product.Price.ToString("C")</td>
+                            <td>
+                                @if (product.QuantityInStock > 0)
+                                {
+                                    <span>@product.QuantityInStock</span>
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-danger">Нет в наличии</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex flex-wrap justify-content-end gap-2">
+                                    <a asp-page="./Edit" asp-route-id="@product.Id" asp-route-pageIndex="@Model.PageIndex"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <form method="post" asp-page-handler="Delete" asp-route-id="@product.Id"
+                                        asp-route-pageIndex="@Model.PageIndex" class="d-inline"
+                                        onsubmit="return confirm('Вы уверены, что хотите удалить этот элемент?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@* --- Pagination Controls --- *@
+<div class="d-flex justify-content-center mt-4">
+
+    @if (Model.ProductPagination.TotalPages > 1)
+    {
+        <div class="d-flex justify-content-center mt-4">
+            <nav>
+                <ul class="pagination">
+                    @{
+                        var currentPage = Model.PageIndex;
+                        var totalPages = Model.ProductPagination.TotalPages;
+
+                        // --- Settings ---
+                        var maxPagesToShow = 5;
+                        var startPage = 1;
+                        var endPage = totalPages;
+
+                        if (totalPages > maxPagesToShow)
+                        {
+                            var pagesToShowHalf = maxPagesToShow / 2;
+                            startPage = Math.Max(1, currentPage - pagesToShowHalf);
+                            endPage = startPage + maxPagesToShow - 1;
+
+                            if (endPage > totalPages)
+                            {
+                                endPage = totalPages;
+                                startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+                            }
+                        }
+
+                        // --- Previous Button ---
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a asp-page="/Admin/Products/Index" asp-route-PageIndex="@(currentPage - 1)" class="page-link"
+                                aria-label="Previous" tabindex="@(currentPage == 1 ? "-1" : null)">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        // --- First Page ---
+                        @if (startPage > 1)
+                        {
+                            <li class="page-item">
+                                <a asp-page="/Admin/Products/Index" asp-route-PageIndex="1" class="page-link">1</a>
+                            </li>
+                            @if (startPage > 2)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                        }
+
+                        // --- Page Numbers ---
+                        @for (var i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a asp-page="/Admin/Products/Index" asp-route-PageIndex="@i" class="page-link">@i</a>
+                            </li>
+                        }
+
+                        // --- Last Page ---
+                        @if (endPage < totalPages)
+                        {
+                            @if (endPage < totalPages - 1)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                            <li class="page-item">
+                                <a asp-page="/Admin/Products/Index" asp-route-PageIndex="@totalPages"
+                                    class="page-link">@totalPages</a>
+                            </li>
+                        }
+
+                        // --- Next Button ---
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a asp-page="/Admin/Products/Index" asp-route-PageIndex="@(currentPage + 1)" class="page-link"
+                                aria-label="Next" tabindex="@(currentPage == totalPages ? "-1" : null)">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>

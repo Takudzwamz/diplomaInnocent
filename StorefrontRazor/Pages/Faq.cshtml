@@ -1,0 +1,71 @@
+@page
+@model StorefrontRazor.Pages.FaqModel
+@{
+    ViewData["Title"] = "Часто задаваемые вопросы";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1>@ViewData["Title"]</h1>
+        <p class="lead text-muted">Найдите ответы на частые вопросы о наших товарах, доставке и возвратах.</p>
+    </div>
+
+    @if (Model.Faqs.Any())
+    {
+        <div class="accordion" id="faqAccordion">
+            @for (var i = 0; i < Model.Faqs.Count; i++)
+            {
+                var item = Model.Faqs[i];
+                var showClass = i == 0 ? "show" : ""; // Make the first item open by default
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading-@item.Id">
+                        <button class="accordion-button @(i == 0 ? "" : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@item.Id" aria-expanded="@(i == 0)" aria-controls="collapse-@item.Id">
+                            @item.Question
+                        </button>
+                    </h2>
+                    <div id="collapse-@item.Id" class="accordion-collapse collapse @showClass" aria-labelledby="heading-@item.Id" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            @* Use Html.Raw to correctly render any HTML formatting from the admin panel *@
+                            @Html.Raw(item.Answer)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center p-5 border rounded">
+            <h4>Вопросы не найдены</h4>
+            <p class="text-muted">Мы работаем над наполнением этого раздела. Загляните позже!</p>
+        </div>
+    }
+</div>
+
+@if (Model.Faqs.Any())
+{
+    @section StructuredData {
+        <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "FAQPage",
+            "mainEntity": [
+                @for (var i = 0; i < Model.Faqs.Count; i++)
+                {
+                    var faq = Model.Faqs[i];
+                    if (i > 0) { <text>,</text> }
+                    <text>{
+                    "@@type": "Question",
+                    "name": "@Html.Raw(faq.Question.Replace("\"", "\\\""))",
+                    "acceptedAnswer": {
+                        "@@type": "Answer",
+                        "text": "@Html.Raw(System.Text.RegularExpressions.Regex.Replace(faq.Answer, "<[^>]+>", "").Replace("\"", "\\\"").Replace("\n", " ").Replace("\r", ""))"
+                    }
+                }</text>
+                }
+            ]
+        }
+        </script>
+    }
+}

@@ -1,0 +1,355 @@
+@page
+@model StorefrontRazor.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Панель управления";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Панель управления</h1>
+</div>
+@* --- Stat Cards --- *@
+<div class="row g-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card-primary h-100 shadow-lg">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-1 fw-bold">@Model.TotalSales.ToString("C0")</div>
+                    <div class="">Общие продажи</div>
+                </div>
+                <i class="bi bi-cash-coin fs-1 "></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-5">
+        <div class="card stat-card-success h-100 shadow-lg">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-1 fw-bold">@Model.TotalOrders</div>
+                    <div class="">Всего заказов</div>
+                </div>
+                <i class="bi bi-receipt-cutoff fs-1 "></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-5">
+        <div class="card stat-card-warning h-100 shadow-lg">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-1 fw-bold">@Model.TotalProducts</div>
+                    <div class="">Товары</div>
+                </div>
+                <i class="bi bi-box-seam-fill fs-1 "></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-3">
+        <a asp-page="/Admin/Products/Index" class="text-decoration-none">
+            <div class="card stat-card-danger h-100 shadow-lg card-hover-lift">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fs-1 fw-bold">@Model.OutOfStockProducts</div>
+                        <div class="">Нет в наличии</div>
+                    </div>
+                    <i class="bi bi-exclamation-triangle-fill fs-1"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xl-2 col-md-3">
+        <div class="card stat-card-info h-100 shadow-lg">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-1 fw-bold">@Model.TotalCustomers</div>
+                    <div class="">Покупатели</div>
+                </div>
+                <i class="bi bi-people-fill fs-1 "></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    @* --- Sales Chart --- *@
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-lg">
+            @* --- START OF REPLACEMENT --- *@
+            <div class="card-body p-3">
+                <div class="bg-gradient border-radius-lg py-3 pe-1 mb-3">
+                    <div class="chart">
+                        <canvas id="sales-chart-canvas" class="chart-canvas" height="400"></canvas>
+                    </div>
+                </div>
+                <h6 class="ms-2 mt-4 mb-0" id="sales-chart-title">@Model.ChartTitle</h6>
+                <div class="d-flex justify-content-end">
+                    <div class="btn-group btn-group-sm" role="group" id="sales-period-group">
+                        <a href="#" data-period="7d"
+                            class="btn btn-outline-secondary sales-period-link @(Model.Period == "7d" ? "active" : "")">7D</a>
+                        <a href="#" data-period="30d"
+                            class="btn btn-outline-secondary sales-period-link @(Model.Period == "30d" ? "active" : "")">30D</a>
+                        <a href="#" data-period="3m"
+                            class="btn btn-outline-secondary sales-period-link @(Model.Period == "3m" ? "active" : "")">3M</a>
+                        <a href="#" data-period="1y"
+                            class="btn btn-outline-secondary sales-period-link @(Model.Period == "1y" ? "active" : "")">1Y</a>
+                        <a href="#" data-period="all"
+                            class="btn btn-outline-secondary sales-period-link @(Model.Period == "all" ? "active" : "")">All</a>
+                    </div>
+                </div>
+            </div>
+            @* --- END OF REPLACEMENT --- *@
+        </div>
+    </div>
+
+    @* --- Quick Links --- *@
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-lg">
+            <div class="card-header"><i class="bi bi-lightning-charge-fill me-2"></i>Быстрые действия</div>
+            <div class="card-body d-flex flex-column justify-content-center gap-3">
+                <a asp-page="/Admin/Products/Index" class="btn btn-lg btn-outline-primary">
+                    <i class="bi bi-box-seam-fill me-2"></i>Управление товарами
+                </a>
+                <a asp-page="/Admin/Coupons/Index" class="btn btn-lg btn-outline-secondary">
+                    <i class="bi bi-ticket-fill me-2"></i>Управление купонами
+                </a>
+                <a asp-page="/Admin/Orders/Index" class="btn btn-lg btn-outline-secondary">
+                    <i class="bi bi-receipt-cutoff me-2"></i>Просмотр заказов
+                </a>
+
+                <a asp-page="/Admin/Categories/Index" class="btn btn-lg btn-outline-info">
+                    <i class="bi bi-tags-fill me-2"></i>Управление категориями
+                </a>
+                <a asp-page="/Admin/Brands/Index" class="btn btn-lg btn-outline-success">
+                    <i class="bi bi-tags-fill me-2"></i>Управление брендами
+                </a>
+                <a asp-page="/Admin/Types/Index" class="btn btn-lg btn-outline-warning">
+                    <i class="bi bi-bookmark-fill me-2"></i>Управление типами
+                </a>
+                <a asp-page="/Admin/DeliveryMethods/Index" class="btn btn-lg btn-outline-info">
+                    <i class="bi bi-truck me-2"></i>Управление доставкой
+                </a>
+                <a asp-page="/Admin/Content/Index" class="btn btn-lg btn-outline-primary">
+                    <i class="bi bi-file-text-fill me-2"></i>Управление контентом
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-lg-6">
+            <div class="card h-100 shadow-lg">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div><i class="bi bi-graph-up-arrow me-2"></i>Топ-10 продаж</div>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var product in Model.TopSellingProducts)
+                        {
+                            <li class="list-group-item d-flex align-items-center">
+                                <img src="@product.PictureUrl" alt="@product.ProductName" class="rounded me-3"
+                                    style="width: 40px; height: 40px; object-fit: cover;" />
+                                <div class="flex-grow-1">
+                                    @* --- 1. UPDATED LINK & NAME --- *@
+                                    <a asp-page="/Admin/Products/Edit" asp-route-id="@product.ProductId"
+                                        class="text-decoration-none fw-bold">
+                                        @product.ProductName
+                                    </a>
+                                    @* 2. ADDED VARIANT OPTIONS *@
+                                    @if (!string.IsNullOrEmpty(product.SelectedOptions))
+                                    {
+                                        <small class="d-block text-muted">@product.SelectedOptions</small>
+                                    }
+                                </div>
+                                @* 3. ADDED REVENUE *@
+                                <div class="text-end">
+                                    <span class="badge text-bg-primary rounded-pill">Продано: @product.TotalQuantitySold</span>
+                                    <div class="fs-6 fw-bold">@product.TotalRevenue.ToString("C")</div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                @* 4. ADDED FOOTER WITH "VIEW ALL" BUTTON *@
+                <div class="card-footer text-center">
+                    <a asp-page="/Admin/Products/TopSelling">Все популярные товары <i
+                            class="bi bi-arrow-right-short"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card h-100 shadow-lg">
+                <div class="card-header">
+                    <i class="bi bi-people-fill me-2"></i>Недавние покупатели
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        @foreach (var customer in Model.RecentCustomers)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-bold">@customer.Name</div>
+                                    <div class="small text-muted">@customer.Email</div>
+                                </div>
+                                @* --- ADD THIS LINK --- *@
+                                @if (customer.OrderCount > 0)
+                                {
+                                    <a asp-page="/Admin/Orders/Index" asp-route-customerEmail="@customer.Email"
+                                        class="btn btn-sm btn-outline-primary rounded-pill">
+                                        @customer.OrderCount заказ(ов)
+                                    </a>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-page="/Admin/Customers/Index">Все покупатели <i class="bi bi-arrow-right-short"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const periodButtonGroup = document.getElementById('sales-period-group');
+            const chartTitleElement = document.getElementById('sales-chart-title');
+            const ctx = document.getElementById('sales-chart-canvas').getContext('2d');
+            let salesChart; // Variable to hold our chart instance
+
+            // --- 1. INITIAL CHART RENDER ON PAGE LOAD ---
+            // Use the data rendered from the C# model
+            const initialLabels = @Json.Serialize(Model.ChartJsLabels);
+            const initialData = @Json.Serialize(Model.ChartJsData);
+            renderChart(initialLabels, initialData);
+
+            // --- 2. EVENT LISTENER FOR DYNAMIC UPDATES ---
+            periodButtonGroup.addEventListener('click', function (e) {
+                e.preventDefault();
+                const link = e.target.closest('a.sales-period-link');
+                if (!link || link.classList.contains('active')) return;
+
+                const period = link.dataset.period;
+                updateActiveButton(link);
+                fetchChartData(period);
+            });
+
+            function updateActiveButton(activeLink) {
+                periodButtonGroup.querySelectorAll('a.sales-period-link').forEach(a => a.classList.remove('active'));
+                activeLink.classList.add('active');
+            }
+
+            async function fetchChartData(period) {
+                try {
+                    const response = await fetch(`/Admin?handler=ChartDataJson&period=${period}`);
+                    if (!response.ok) throw new Error('Network response was not ok.');
+
+                    const data = await response.json();
+                    chartTitleElement.textContent = data.chartTitle;
+                    // Re-render the chart with the new fetched data
+                    renderChart(data.chartJsLabels, data.chartJsData);
+                } catch (error) {
+                    console.error('Error fetching chart data:', error);
+                }
+            }
+
+            // --- 3. CENTRALIZED RENDER FUNCTION ---
+            function renderChart(labels, data) {
+                // If a chart instance already exists, destroy it before creating a new one
+                if (salesChart) {
+                    salesChart.destroy();
+                }
+
+                // Create a number formatter for South African Rand (ZAR)
+                const currencyFormatter = new Intl.NumberFormat('en-ZA', {
+                    style: 'currency',
+                    currency: 'ZAR',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+
+                salesChart = new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Sales",
+                            tension: 0.4,
+                            borderWidth: 0,
+                            borderRadius: 4,
+                            borderSkipped: false,
+                            backgroundColor: "#1b6ec2",
+                            data: data,
+                            maxBarThickness: 10, // Control the thickness of the bars
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            // This formats the popup box when you hover over a bar
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += currencyFormatter.format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: "index",
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: true,
+                                    drawOnChartArea: true,
+                                    drawTicks: false,
+                                    color: '#1b6ec233' // Lighten the grid lines
+                                },
+                                ticks: {
+                                    suggestedMin: 0,
+                                    beginAtZero: true,
+                                    padding: 15,
+                                    font: { size: 14, family: "Open Sans", style: "normal", lineHeight: 2 },
+                                    color: "#1b6ec2",
+                                    // This formats the labels on the Y-axis
+                                    callback: function (value, index, ticks) {
+                                        return currencyFormatter.format(value);
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: false,
+                                    drawOnChartArea: false,
+                                    drawTicks: false
+                                },
+                                ticks: {
+                                    color: "#1b6ec2",
+                                    autoSkip: true, // Let Chart.js decide which labels to skip
+                                    maxRotation: 0 // Prevent labels from rotating
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}

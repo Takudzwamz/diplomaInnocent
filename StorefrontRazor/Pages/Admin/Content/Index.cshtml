@@ -1,0 +1,65 @@
+@page
+@model StorefrontRazor.Pages.Admin.Content.IndexModel
+@{
+    ViewData["Title"] = "Контент";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p class="text-muted">Управляйте блоками контента (например, рекламные баннеры, политики, контактная информация).</p>
+
+<div class="card shadow-sm mt-4">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Key</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var block in Model.ContentBlocks)
+                {
+                    <tr>
+                        <td><strong>@block.Title</strong></td>
+                        <td><code>@block.Key</code></td>
+                        <td class="text-end">
+                            @* --- START: CONDITIONAL EDIT LINK --- *@
+                            @if (block.Key == "home-page-promo-html")
+                            {
+                                <a asp-page="./EditBanner" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil-fill"></i> Редактировать
+                                </a>
+                            }
+                            else if (block.Key == "return-policy")
+                            {
+                                <a asp-page="./EditPolicy" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil-fill"></i> Редактировать
+                                </a>
+                            }else if (block.Key == "homepage-show-brands" || block.Key == "homepage-show-categories")
+                            {
+                                // Render a toggle switch instead of an "Edit" button
+                                <form method="post" asp-page-handler="ToggleVisibility" class="d-inline-flex align-items-center">
+                                    <input type="hidden" name="key" value="@block.Key" />
+                                    <div class="form-check form-switch form-switch-lg">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               name="isEnabled" value="true" 
+                                               checked="@(bool.Parse(block.Content))" 
+                                               onchange="this.form.submit()">
+                                    </div>
+                                </form>
+                            }
+                            else
+                            {
+                                <a asp-page="./Edit" asp-route-id="@block.Id" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil-fill"></i> Редактировать
+                                </a>
+                            }
+                            @* --- END: CONDITIONAL EDIT LINK --- *@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

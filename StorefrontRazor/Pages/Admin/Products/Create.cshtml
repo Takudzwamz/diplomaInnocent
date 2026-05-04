@@ -1,0 +1,231 @@
+@page
+@model StorefrontRazor.Pages.Admin.Products.CreateModel
+@{
+    ViewData["Title"] = "Создать новый товар";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+    @* --- PRODUCT KIND SELECTION --- *@
+    <div class="mb-3">
+        <label class="form-label">Тип товара</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="NewProduct.ProductKind" value="Simple" id="kindSimple" checked>
+            <label class="form-check-label" for="kindSimple">Простой товар (фиксированная цена, единый остаток)</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" asp-for="NewProduct.ProductKind" value="Variable" id="kindVariable">
+            <label class="form-check-label" for="kindVariable">Вариативный товар (опции: размер, цвет и т.д. с разными ценами/остатками)</label>
+        </div>
+    </div>
+
+    @* --- SHARED DETAILS --- *@
+    <div class="mb-3">
+        <label asp-for="NewProduct.Name" class="form-label"></label>
+        <input asp-for="NewProduct.Name" class="form-control" />
+        <span asp-validation-for="NewProduct.Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="NewProduct.Description" class="form-label"></label>
+        <textarea asp-for="NewProduct.Description" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="NewProduct.Description" class="text-danger"></span>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="NewProduct.ProductBrandId" class="form-label">Бренд</label>
+            <select asp-for="NewProduct.ProductBrandId" asp-items="Model.Brands" class="form-select"><option value="">-- Выберите бренд --</option></select>
+            <span asp-validation-for="NewProduct.ProductBrandId" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="NewProduct.ProductTypeId" class="form-label">Тип</label>
+            <select asp-for="NewProduct.ProductTypeId" asp-items="Model.Types" class="form-select"><option value="">-- Выберите тип --</option></select>
+            <span asp-validation-for="NewProduct.ProductTypeId" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="NewProduct.CategoryId" class="form-label">Категория</label>
+            <select asp-for="NewProduct.CategoryId" asp-items="Model.Categories" class="form-select"><option value="">-- Выберите категорию --</option></select>
+            <span asp-validation-for="NewProduct.CategoryId" class="text-danger"></span>
+        </div>
+    </div>
+
+    @* --- SIMPLE PRODUCT FIELDS --- *@
+    <div id="simple-product-fields">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="NewProduct.Price" class="form-label"></label>
+                <input asp-for="NewProduct.Price" class="form-control" />
+                <span asp-validation-for="NewProduct.Price" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="NewProduct.QuantityInStock" class="form-label">Количество на складе</label>
+                <input asp-for="NewProduct.QuantityInStock" class="form-control" />
+                <span asp-validation-for="NewProduct.QuantityInStock" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    @* --- VARIABLE PRODUCT FIELDS --- *@
+    <div id="variable-product-fields" style="display: none;">
+        <div class="alert alert-info">Для вариативных товаров цена и остатки управляются для каждого варианта ниже. Основные изображения товара используются для всех вариантов.</div>
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">Опции вариантов</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="productOptions" class="form-label">Выберите опции для этого товара:</label>
+                    <select id="productOptions" class="form-select" multiple size="5">
+                        @foreach (var option in Model.AvailableOptions)
+                        {
+                            <option value="@option.Id" data-values='@Json.Serialize(option.Values.Select(v => new { v.Id, v.Name }))'>@option.Name</option>
+                        }
+                    </select>
+                </div>
+                <button type="button" id="generate-variants-btn" class="btn btn-secondary">Сгенерировать варианты</button>
+            </div>
+        </div>
+
+        <div id="variants-container">
+            @* Variants table will be injected here by JavaScript *@
+        </div>
+        <span asp-validation-for="NewProduct.VariantsJson" class="text-danger"></span>
+        <input type="hidden" asp-for="NewProduct.VariantsJson" id="variants-json-input" />
+    </div>
+
+    <hr class="my-4" />
+    <h5 class="mb-3">Загрузить изображения</h5>
+    <div class="mb-3">
+        <label asp-for="UploadedImages" class="form-label">Изображения товара</label>
+        <input asp-for="UploadedImages" class="form-control" type="file" multiple />
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+        <a asp-page="./Index" class="btn btn-outline-secondary">Отмена</a>
+        <button type="submit" class="btn btn-primary">Создать товар</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const simpleFields = document.getElementById('simple-product-fields');
+            const variableFields = document.getElementById('variable-product-fields');
+            
+            // --- THIS IS THE FIX: Find inputs by name attribute inside their container ---
+            const simplePriceInput = simpleFields.querySelector('input[name="NewProduct.Price"]');
+            const simpleStockInput = simpleFields.querySelector('input[name="NewProduct.QuantityInStock"]');
+            const variantsJsonInput = document.getElementById('variants-json-input');
+
+            const variantsContainer = document.getElementById('variants-container');
+            const generateBtn = document.getElementById('generate-variants-btn');
+            const optionsSelect = document.getElementById('productOptions');
+
+            let variantData = [];
+
+            // Toggle UI based on product kind selection
+            document.querySelectorAll('input[name="NewProduct.ProductKind"]').forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'Variable') {
+                        simpleFields.style.display = 'none';
+                        variableFields.style.display = 'block';
+                        
+                        // Disable simple fields, enable variant field
+                        if(simplePriceInput) simplePriceInput.disabled = true;
+                        if(simpleStockInput) simpleStockInput.disabled = true;
+                        if(variantsJsonInput) variantsJsonInput.disabled = false;
+                    } else {
+                        simpleFields.style.display = 'block';
+                        variableFields.style.display = 'none';
+                        
+                        // Enable simple fields, disable variant field
+                        if(simplePriceInput) simplePriceInput.disabled = false;
+                        if(simpleStockInput) simpleStockInput.disabled = false;
+                        if(variantsJsonInput) variantsJsonInput.disabled = true;
+                    }
+                });
+            });
+
+            // Trigger the change event on page load to set the initial disabled state
+            document.querySelector('input[name="NewProduct.ProductKind"]:checked').dispatchEvent(new Event('change'));
+
+            // Handle Variant Generation
+            generateBtn.addEventListener('click', function () {
+                const selectedOptions = Array.from(optionsSelect.selectedOptions).map(opt => ({
+                    id: opt.value,
+                    name: opt.textContent,
+                    values: JSON.parse(opt.dataset.values)
+                }));
+
+                if (selectedOptions.length === 0) {
+                    variantsContainer.innerHTML = '<div class="alert alert-warning">Выберите хотя бы одну опцию для генерации вариантов.</div>';
+                    return;
+                }
+
+                // Cartesian product function to get all combinations of multiple arrays
+                const cartesian = (...a) => a.reduce((x, y) => x.flatMap(d => y.map(e => [d, e].flat())));
+                
+                // Create an array of arrays, where each inner array contains the values for one option
+                const optionValuesArrays = selectedOptions.map(opt => opt.values);
+                
+                // Get all possible combinations
+                const combinations = cartesian(...optionValuesArrays);
+
+                variantData = [];
+                
+                let tableHtml = `
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Настройка вариантов</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-bordered mb-0">
+                                    <thead><tr>
+                                        ${selectedOptions.map(opt => `<th>${opt.name}</th>`).join('')}
+                                        <th>Цена</th><th>Склад</th><th>SKU</th>
+                                    </tr></thead>
+                                    <tbody>`;
+                
+                combinations.forEach((combo, index) => {
+                    const comboArray = Array.isArray(combo) ? combo : [combo];
+                    
+                    variantData.push({
+                        valueIds: comboArray.map(v => v.id),
+                        Price: 0,
+                        QuantityInStock: 0,
+                        sku: ''
+                    });
+
+                    tableHtml += `
+                        <tr>
+                            ${comboArray.map(v => `<td>${v.name}</td>`).join('')}
+                            <td><input type="number" step="0.01" class="form-control variant-input" data-index="${index}" data-field="Price" value="0.00" required /></td>
+                            <td><input type="number" class="form-control variant-input" data-index="${index}" data-field="QuantityInStock" value="0" required /></td>
+                            <td><input type="text" class="form-control variant-input" data-index="${index}" data-field="Sku" /></td>
+                        </tr>`;
+                });
+
+                tableHtml += `</tbody></table></div>`;
+                variantsContainer.innerHTML = tableHtml;
+                updateVariantsJson();
+            });
+
+            variantsContainer.addEventListener('input', function(e) {
+                if(e.target.classList.contains('variant-input')) {
+                    const index = e.target.dataset.index;
+                    const field = e.target.dataset.field;
+                    const value = e.target.type === 'number' ? parseFloat(e.target.value) : e.target.value;
+                    
+                   variantData[index][field] = value;
+                   updateVariantsJson();
+                }
+            });
+            
+            function updateVariantsJson() {
+                variantsJsonInput.value = JSON.stringify(variantData);
+            }
+        });
+    </script>
+}

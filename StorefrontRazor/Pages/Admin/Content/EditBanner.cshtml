@@ -1,0 +1,37 @@
+@page
+@model StorefrontRazor.Pages.Admin.Content.EditBannerModel
+@{
+    ViewData["Title"] = "Редактировать";
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+<p class="text-muted">Заполните поля ниже для обновления рекламного баннера на главной странице магазина.</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="BannerInput.CouponCode"></label>
+                <input asp-for="BannerInput.CouponCode" class="form-control" placeholder="e.g., SAVE100" />
+                <span asp-validation-for="BannerInput.CouponCode" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="BannerInput.DiscountValue"></label>
+                <input asp-for="BannerInput.DiscountValue" class="form-control" placeholder="e.g., R100 off or 25%" />
+                <span asp-validation-for="BannerInput.DiscountValue" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="BannerInput.MainText"></label>
+                <input asp-for="BannerInput.MainText" class="form-control" placeholder="e.g., on your first purchase!" />
+                <span asp-validation-for="BannerInput.MainText" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a asp-page="./Index" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>

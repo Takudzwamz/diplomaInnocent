@@ -1,0 +1,27 @@
+@page
+@model StorefrontRazor.Pages.Checkout.PaymentPostModel
+@{
+    ViewData["Title"] = "Перенаправление на оплату...";
+}
+
+<div class="container text-center my-5 py-5">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    <p class="lead">Пожалуйста, подождите, пока мы безопасно перенаправим вас на страницу оплаты.</p>
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+    </div>
+
+    <form id="paymentForm" action="@Model.GatewayUrl" method="post">
+        @foreach (var (key, value) in Model.PostData)
+        {
+            <input type="hidden" name="@key" value="@value" />
+        }
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-submit the form as soon as the page loads
+        document.getElementById('paymentForm').submit();
+    </script>
+}

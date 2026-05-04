@@ -1,0 +1,120 @@
+@model StorefrontRazor.Pages.Products.IndexModel
+
+@if (Model.ProductPagination.Data.Any())
+{
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 g-3 g-md-4">
+        @foreach (var product in Model.ProductPagination.Data)
+        {
+            <div class="col">
+                <partial name="_ProductCardPartial" model="product"
+                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+            </div>
+        }
+    </div>
+
+    @* --- Pagination Controls --- *@
+    @if (Model.ProductPagination.TotalPages > 1)
+    {
+        <nav class="mt-4 d-flex justify-content-center">
+            <ul class="pagination">
+                @{
+                    var pagination = Model.ProductPagination;
+                    var currentPage = Model.PageIndex;
+                    var totalPages = pagination.TotalPages;
+
+                    // --- Settings ---
+                    var maxPagesToShow = 5; // Max number of page links to show
+                    var startPage = 1;
+                    var endPage = totalPages;
+
+                    if (totalPages > maxPagesToShow)
+                    {
+                        var pagesToShowHalf = maxPagesToShow / 2;
+                        startPage = Math.Max(1, currentPage - pagesToShowHalf);
+                        endPage = startPage + maxPagesToShow - 1;
+
+                        if (endPage > totalPages)
+                        {
+                            endPage = totalPages;
+                            startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+                        }
+                    }
+
+                    // --- Previous Button ---
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        @{
+                            var prevRouteData = Model.GetAllRouteData();
+                            prevRouteData["PageIndex"] = (currentPage - 1).ToString();
+                        }
+                        <a asp-page="/Products/Index" asp-all-route-data="prevRouteData" class="page-link product-filter-link"
+                            aria-label="Previous" tabindex="@(currentPage == 1 ? "-1" : null)">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    // --- First Page Link ---
+                    @if (startPage > 1)
+                    {
+                        var firstPageRouteData = Model.GetAllRouteData();
+                        firstPageRouteData["PageIndex"] = "1";
+                        <li class="page-item">
+                            <a asp-page="/Products/Index" asp-all-route-data="firstPageRouteData"
+                                class="page-link product-filter-link">1</a>
+                        </li>
+                        @if (startPage > 2)
+                        {
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        }
+                    }
+
+                    // --- Page Number Links ---
+                    @for (var i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            @{
+                                var routeData = Model.GetAllRouteData();
+                                routeData["PageIndex"] = i.ToString();
+                            }
+                            <a asp-page="/Products/Index" asp-all-route-data="routeData" class="page-link product-filter-link">@i</a>
+                        </li>
+                    }
+
+                    // --- Last Page Link ---
+                    @if (endPage < totalPages)
+                    {
+                        @if (endPage < totalPages - 1)
+                        {
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        }
+                        var lastPageRouteData = Model.GetAllRouteData();
+                        lastPageRouteData["PageIndex"] = totalPages.ToString();
+                        <li class="page-item">
+                            <a asp-page="/Products/Index" asp-all-route-data="lastPageRouteData"
+                                class="page-link product-filter-link">@totalPages</a>
+                        </li>
+                    }
+
+                    // --- Next Button ---
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        @{
+                            var nextRouteData = Model.GetAllRouteData();
+                            nextRouteData["PageIndex"] = (currentPage + 1).ToString();
+                        }
+                        <a asp-page="/Products/Index" asp-all-route-data="nextRouteData" class="page-link product-filter-link"
+                            aria-label="Next" tabindex="@(currentPage == totalPages ? "-1" : null)">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+}
+else
+{
+    <div class="text-center p-5 border rounded ">
+        <h4>Товары не найдены.</h4>
+        <p class="text-muted">Попробуйте изменить фильтры или поисковый запрос.</p>
+        <a asp-page="/Products/Index" class="btn btn-primary mt-3">Сбросить все фильтры</a>
+    </div>
+}

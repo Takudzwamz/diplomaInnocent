@@ -1,0 +1,72 @@
+@page
+@model StorefrontRazor.Pages.Admin.Types.IndexModel
+@{
+    ViewData["Title"] = "Управление типами";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-page="./Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle-fill me-2"></i>Создать
+    </a>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.ErrorMessage
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        @* --- THIS IS THE FIX --- *@
+        @if (Model.Types.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th style="width: 150px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var type in Model.Types)
+                        {
+                            <tr>
+                                <td>@type.Id</td>
+                                <td>@type.Name</td>
+                                <td class="text-end">
+                                    <div class="d-flex flex-wrap justify-content-end gap-2">
+                                        <a asp-page="./Edit" asp-route-id="@type.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@type.Id" class="d-inline" onsubmit="return confirm('Вы уверены, что хотите удалить этот элемент?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            @* --- This card is shown if no types exist --- *@
+            <div class="text-center p-4">
+                <h4 class="text-muted">Типы товаров не найдены</h4>
+                <p>Создайте первый тип товаров (напр., «Одежда», «Снаряжение»).</p>
+                <a asp-page="./Create" class="btn btn-primary mt-2">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Создать тип
+                </a>
+            </div>
+        }
+        @* --- END OF FIX --- *@
+    </div>
+</div>

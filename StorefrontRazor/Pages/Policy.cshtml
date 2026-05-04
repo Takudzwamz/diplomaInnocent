@@ -1,0 +1,24 @@
+@page
+@model StorefrontRazor.Pages.PolicyModel
+@{
+    ViewData["Title"] = "Политика возврата";
+}
+
+<div class="container mt-5">
+    @if (Model.PolicyContent != null)
+    {
+        @if (Model.PolicyContent.IsHtml)
+        {
+            @Html.Raw(Model.PolicyContent.Content)
+        }
+        else
+        {
+            <p>@Model.PolicyContent.Content</p>
+        }
+    }
+    else
+    {
+        <h1>Политика возврата</h1>
+        <p>Контент недоступен. Обратитесь в службу поддержки.</p>
+    }
+</div>

@@ -1,0 +1,483 @@
+@page "/products"
+@model StorefrontRazor.Pages.Products.IndexModel
+
+@if (!string.IsNullOrEmpty(Model.PromoHtmlContent))
+{
+    <div class="container my-4">
+        @Html.Raw(Model.PromoHtmlContent)
+    </div>
+}
+
+<div class="container mt-4">
+    <div class="row">
+        @* --- Filter Sidebar for Large Screens --- *@
+        <div class="col-lg-3 d-none d-lg-block">
+            <div class="card shadow-lg rounded-3 border-0">
+                <div class="card-body ">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="fw-light mb-0">Фильтры</h3>
+                        <a asp-page="/Products/Index"
+                            class="text-muted small text-decoration-none product-filter-link">Сбросить</a>
+                    </div>
+
+                    <div class="accordion accordion-flush" id="filterAccordion">
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button fw-semibold small text-uppercase  rounded-2"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseSort"
+                                    aria-expanded="true">
+                                    <i class="bi bi-sort-down me-2"></i>
+                                    Сортировка
+                                </button>
+                            </h2>
+                            <div id="collapseSort" class="accordion-collapse collapse show">
+                                <div class="accordion-body p-0">
+                                    <form method="get">
+                                        <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+                                        <input type="hidden" name="BrandFilter" value="@Model.BrandFilter" />
+                                        <input type="hidden" name="TypeFilter" value="@Model.TypeFilter" />
+                                        <input type="hidden" name="CategoryFilter" value="@Model.CategoryFilter" />
+                                        <input type="hidden" name="RatingFilter" value="@Model.RatingFilter" />
+                                        <select name="SortOrder" class="form-select border-0">
+                                            <option value="name" selected="@(Model.SortOrder == "name")">По названию (А-Я)
+                                            </option>
+                                            <option value="priceAsc" selected="@(Model.SortOrder == "priceAsc")">По цене (возрастание)</option>
+                                            <option value="priceDesc" selected="@(Model.SortOrder == "priceDesc")">
+                                                По цене (убывание)</option>
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button
+                                    class="accordion-button fw-semibold small text-uppercase  rounded-2 mt-2 @(Model.RatingFilter == null ? "collapsed" : "")"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseRating"
+                                    aria-expanded="@(Model.RatingFilter != null)">
+                                    <i class="bi bi-star me-2"></i>
+                                    Рейтинг
+                                </button>
+                            </h2>
+                            <div id="collapseRating"
+                                class="accordion-collapse collapse @(Model.RatingFilter != null ? "show" : "")">
+                                <ul class="list-group list-group-flush">
+                                    <a asp-page="/Products/Index"
+                                        asp-all-route-data="@(Model.GetAllRouteData(remove: "RatingFilter"))"
+                                        class="list-group-item list-group-item-action product-filter-link @(Model.RatingFilter == null ? "active" : "")">Все
+                                        рейтинги</a>
+                                    @for (int i = 5; i >= 1; i--)
+                                    {
+                                        <a asp-page="/Products/Index"
+                                            asp-all-route-data="@(Model.GetAllRouteData(add: new() { {"RatingFilter", i.ToString()} }))"
+                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center product-filter-link @(Model.RatingFilter == i ? "active" : "")">
+                                            <span class="text-warning">
+                                                @for (int j = 1; j <= 5; j++)
+                                                {
+                                                    <i class="bi @(j <= i ? "bi-star-fill" : "bi-star")"></i>
+                                                }
+                                            </span>
+                                        </a>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button
+                                    class="accordion-button fw-semibold small text-uppercase  rounded-2 mt-2 @(Model.CategoryFilter == null ? "collapsed" : "")"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory"
+                                    aria-expanded="@(Model.CategoryFilter != null)">
+                                    <i class="bi bi-tags-fill me-2"></i>
+                                    Категории
+                                </button>
+                            </h2>
+                            <div id="collapseCategory"
+                                class="accordion-collapse collapse @(Model.CategoryFilter != null ? "show" : "")">
+                                <ul class="list-group list-group-flush">
+                                    <a asp-page="/Products/Index"
+                                        asp-all-route-data="@(Model.GetAllRouteData(remove: "CategoryFilter"))"
+                                        class="list-group-item list-group-item-action product-filter-link @(Model.CategoryFilter == null ? "active" : "")">Все</a>
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <a asp-page="/Products/Index"
+                                            asp-all-route-data="@(Model.GetAllRouteData(add: new() { {"CategoryFilter", category.Id.ToString()} }))"
+                                            class="list-group-item list-group-item-action product-filter-link @(Model.CategoryFilter == category.Id ? "active" : "")">@category.Name</a>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button
+                                    class="accordion-button fw-semibold small text-uppercase rounded-2 mt-2 @(Model.BrandFilter == null ? "collapsed" : "")"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseBrand"
+                                    aria-expanded="@(Model.BrandFilter != null)">
+                                    <i class="bi bi-building me-2"></i>
+                                    Бренды
+                                </button>
+                            </h2>
+                            <div id="collapseBrand"
+                                class="accordion-collapse collapse @(Model.BrandFilter != null ? "show" : "")">
+                                <ul class="list-group list-group-flush">
+                                    <a asp-page="/Products/Index"
+                                        asp-all-route-data="@(Model.GetAllRouteData(remove: "BrandFilter"))"
+                                        class="list-group-item list-group-item-action product-filter-link @(Model.BrandFilter == null ? "active" : "")">Все</a>
+                                    @foreach (var brand in Model.Brands)
+                                    {
+                                        <a asp-page="/Products/Index"
+                                            asp-all-route-data="@(Model.GetAllRouteData(add: new() { {"BrandFilter", brand.Id.ToString()} }))"
+                                            class="list-group-item list-group-item-action product-filter-link @(Model.BrandFilter == brand.Id ? "active" : "")">@brand.Name</a>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button
+                                    class="accordion-button fw-semibold small text-uppercase rounded-2 mt-2 @(Model.TypeFilter == null ? "collapsed" : "")"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseType"
+                                    aria-expanded="@(Model.TypeFilter != null)">
+                                    <i class="bi bi-bookmark me-2"></i>
+                                    Типы
+                                </button>
+                            </h2>
+                            <div id="collapseType"
+                                class="accordion-collapse collapse @(Model.TypeFilter != null ? "show" : "")">
+                                <ul class="list-group list-group-flush">
+                                    <a asp-page="/Products/Index"
+                                        asp-all-route-data="@(Model.GetAllRouteData(remove: "TypeFilter"))"
+                                        class="list-group-item list-group-item-action product-filter-link @(Model.TypeFilter == null ? "active" : "")">Все</a>
+                                    @foreach (var type in Model.Types)
+                                    {
+                                        <a asp-page="/Products/Index"
+                                            asp-all-route-data="@(Model.GetAllRouteData(add: new() { {"TypeFilter", type.Id.ToString()} }))"
+                                            class="list-group-item list-group-item-action product-filter-link @(Model.TypeFilter == type.Id ? "active" : "")">@type.Name</a>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* --- Main Product Content --- *@
+        <div class="col-lg-9">
+            @* --- Search and Header --- *@
+            <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3">
+                <div class="header mb-2 mb-md-0">
+                    @if (Model.ProductPagination != null && Model.ProductPagination.Count > 0)
+                    {
+                        <span>
+                            Показано <strong>@(((Model.PageIndex - 1) * Model.ProductPagination.PageSize) +
+                                                            1)</strong>-<strong>@(((Model.PageIndex - 1) * Model.ProductPagination.PageSize) +
+                                                            Model.ProductPagination.Data.Count)</strong> из
+                            <strong>@Model.ProductPagination.Count</strong> результатов
+                            @if (Model.UsedAISearch)
+                            {
+                                <span class="badge bg-gradient-ai ms-2"><i class="bi bi-stars"></i> ИИ-поиск</span>
+                            }
+                        </span>
+                    }
+                </div>
+                <form class="d-flex flex-wrap flex-md-nowrap gap-2 align-items-center" method="get" id="searchForm">
+                    <input type="hidden" name="BrandFilter" value="@Model.BrandFilter" />
+                    <input type="hidden" name="TypeFilter" value="@Model.TypeFilter" />
+                    <input type="hidden" name="CategoryFilter" value="@Model.CategoryFilter" />
+                    <input type="hidden" name="RatingFilter" value="@Model.RatingFilter" />
+                    <input type="hidden" name="SortOrder" value="@Model.SortOrder" />
+                    <div class="input-group flex-grow-1" style="min-width: 200px;">
+                        <input type="search" name="SearchTerm" id="product-search-input" class="form-control"
+                            placeholder="@(Model.IsAISearchEnabled ? "Попробуйте: 'красные кроссовки для бега'" : "Поиск...")" value="@Model.SearchTerm" />
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                    @if (Model.IsAISearchEnabled)
+                    {
+                        <div class="form-check form-switch mb-0 text-nowrap">
+                            <input class="form-check-input" type="checkbox" name="AISearch" value="true" id="aiSearchToggle" 
+                                   @(Model.AISearch ? "checked" : "") style="width: 2.5em; height: 1.25em;">
+                            <label class="form-check-label small" for="aiSearchToggle">
+                                <i class="bi bi-stars text-primary"></i> AI
+                            </label>
+                        </div>
+                    }
+                    <a asp-page="/Products/Index" class="btn btn-outline-secondary btn-sm text-nowrap">Сбросить</a>
+                </form>
+            </div>
+
+            @* AI Search Info Banner *@
+            @if (Model.UsedAISearch)
+            {
+                <div class="alert alert-info d-flex align-items-center mb-3" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <div>
+                        <strong>ИИ-поиск:</strong> Результаты ранжируются по семантическому сходству с «<em>@Model.SearchTerm</em>».
+                        <a href="/Products?SearchTerm=@Model.SearchTerm" class="alert-link ms-2">Переключиться на обычный поиск</a>
+                    </div>
+                </div>
+            }
+
+            @* --- Off-Canvas Trigger for Mobile --- *@
+            <div class="d-grid d-lg-none mb-3">
+                <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasFilters" aria-controls="offcanvasFilters">
+                    <span class="bi bi-funnel-fill"></span> Показать фильтры
+                </button>
+            </div>
+
+            @* --- Product Grid --- *@
+            <div id="product-list-container">
+                <partial name="_ProductListPartial" model="Model" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<template id="add-to-cart-template">
+    <form method="post" class="add-to-cart-form" asp-page-handler="AddToCartJson">
+        <input type="hidden" name="productId" value="PRODUCT_ID" />
+        <input type="hidden" name="productVariantId" value="VARIANT_ID" />
+        <button type="submit" class="btn btn-primary rounded-pill btn-sm w-100">
+            <i class="bi bi-cart-plus-fill"></i> В корзину
+        </button>
+    </form>
+</template>
+
+<template id="quantity-controls-template">
+    <div class="d-flex align-items-center gap-2 quantity-controls">
+        <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+            <input type="hidden" name="productId" value="PRODUCT_ID" />
+            <input type="hidden" name="productVariantId" value="VARIANT_ID" />
+            <input type="hidden" name="quantity" value="0" />
+            <button type="submit" class="btn btn-outline-secondary rounded-circle btn-sm px-2">-</button>
+        </form>
+        <span class="px-3 quantity-display fw-semibold">1</span>
+        <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+            <input type="hidden" name="productId" value="PRODUCT_ID" />
+            <input type="hidden" name="productVariantId" value="VARIANT_ID" />
+            <input type="hidden" name="quantity" value="2" />
+            <button type="submit" class="btn btn-outline-secondary rounded-circle btn-sm px-2">+</button>
+        </form>
+    </div>
+</template>
+
+
+
+@* --- Off-Canvas Menu for Mobile --- *@
+<div class="offcanvas offcanvas-bottom d-lg-none" style="height: 80vh; border-radius: 10px 10px 0px 0px;" tabindex="-1"
+    id="offcanvasFilters" aria-labelledby="offcanvasFiltersLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasFiltersLabel">Фильтры</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        @* We re-use the same filter logic here *@
+        <h5 class="mb-3 fw-bold">Сортировка</h5>
+        <form method="get">
+            <input type="hidden" name="SearchTerm" value="@Model.SearchTerm" />
+            <input type="hidden" name="BrandFilter" value="@Model.BrandFilter" />
+            <input type="hidden" name="TypeFilter" value="@Model.TypeFilter" />
+            <input type="hidden" name="CategoryFilter" value="@Model.CategoryFilter" />
+            <input type="hidden" name="RatingFilter" value="@Model.RatingFilter" />
+            <select name="SortOrder" class="form-select mb-4" onchange="this.form.submit()">
+                <option value="name" selected="@(Model.SortOrder == "name")">По названию (А-Я)</option>
+                <option value="priceAsc" selected="@(Model.SortOrder == "priceAsc")">По цене (возрастание)</option>
+                <option value="priceDesc" selected="@(Model.SortOrder == "priceDesc")">По цене (убывание)</option>
+            </select>
+        </form>
+
+        <h5 class="fw-bold">Рейтинг</h5>
+        <ul class="list-group list-group-flush mb-4">
+            <a asp-page="/Products/Index" asp-all-route-data="@(Model.GetAllRouteData(remove: "RatingFilter"))"
+                class="list-group-item list-group-item-action @(Model.RatingFilter == null ? "active" : "")">Все
+                рейтинги</a>
+            @for (int i = 5; i >= 1; i--)
+            {
+                <a asp-page="/Products/Index"
+                    asp-all-route-data="@(Model.GetAllRouteData(add: new() { {"RatingFilter", i.ToString()} }))"
+                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @(Model.RatingFilter == i ? "active" : "")">
+                    <span class="text-warning">
+                        @for (int j = 1; j <= 5; j++)
+                        {
+                            <i class="bi @(j <= i ? "bi-star-fill" : "bi-star")"></i>
+                        }
+                    </span>
+                </a>
+            }
+        </ul>
+
+        <h5 class="fw-bold">Категории</h5>
+        <ul class="list-group list-group-flush mb-4">
+            <a asp-page="/Products/Index"
+                asp-all-route-data="@(new Dictionary<string, string> { { "SearchTerm", Model.SearchTerm }, { "BrandFilter", Model.BrandFilter?.ToString() }, { "TypeFilter", Model.TypeFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                class="list-group-item list-group-item-action @(Model.CategoryFilter == null ? "active" : "")">Все</a>
+            @foreach (var category in Model.Categories)
+            {
+                <a asp-page="/Products/Index"
+                    asp-all-route-data="@(new Dictionary<string, string> { { "CategoryFilter", category.Id.ToString() }, { "SearchTerm", Model.SearchTerm }, { "BrandFilter", Model.BrandFilter?.ToString() }, { "TypeFilter", Model.TypeFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                    class="list-group-item list-group-item-action @(Model.CategoryFilter == category.Id ? "active" : "")">@category.Name</a>
+            }
+        </ul>
+
+        <h5 class="fw-bold">Бренды</h5>
+        <ul class="list-group list-group-flush mb-4">
+            <a asp-page="/Products/Index"
+                asp-all-route-data="@(new Dictionary<string, string> { { "SearchTerm", Model.SearchTerm }, { "TypeFilter", Model.TypeFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                class="list-group-item list-group-item-action @(Model.BrandFilter == null ? "active" : "")">Все</a>
+            @foreach (var brand in Model.Brands)
+            {
+                <a asp-page="/Products/Index"
+                    asp-all-route-data="@(new Dictionary<string, string> { { "BrandFilter", brand.Id.ToString() }, { "SearchTerm", Model.SearchTerm }, { "TypeFilter", Model.TypeFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                    class="list-group-item list-group-item-action @(Model.BrandFilter == brand.Id ? "active" : "")">@brand.Name</a>
+            }
+        </ul>
+
+        <h5 class="fw-bold">Типы</h5>
+        <ul class="list-group list-group-flush">
+            <a asp-page="/Products/Index"
+                asp-all-route-data="@(new Dictionary<string, string> { { "SearchTerm", Model.SearchTerm }, { "BrandFilter", Model.BrandFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                class="list-group-item list-group-item-action @(Model.TypeFilter == null ? "active" : "")">Все</a>
+            @foreach (var type in Model.Types)
+            {
+                <a asp-page="/Products/Index"
+                    asp-all-route-data="@(new Dictionary<string, string> { { "TypeFilter", type.Id.ToString() }, { "SearchTerm", Model.SearchTerm }, { "BrandFilter", Model.BrandFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                    class="list-group-item list-group-item-action @(Model.TypeFilter == type.Id ? "active" : "")">@type.Name</a>
+            }
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('product-search-input');
+            const sortSelect = document.querySelector('select[name="SortOrder"]');
+            const listContainer = document.getElementById('product-list-container');
+
+            // --- 1. REUSABLE UPDATE FUNCTION ---
+            // This function contains our core AJAX logic.
+            async function updateProductList(queryString) {
+                try {
+                    listContainer.style.opacity = '0.5';
+                    // Fetch the updated partial view using the new query string
+                    const response = await fetch(`/Products?handler=ProductListPartial&${queryString}`);
+                    const html = await response.text();
+
+                    // Replace the content and update the browser's URL bar without reloading
+                    listContainer.innerHTML = html;
+                    window.history.pushState({}, '', `?${queryString}`);
+                    listContainer.scrollIntoView({ behavior: 'smooth' });
+
+                    updateActiveFilters(queryString);
+                } catch (error) {
+                    console.error('Error fetching product list:', error);
+                } finally {
+                    listContainer.style.opacity = '1';
+                }
+            }
+
+            // --- 2. DEBOUNCE FUNCTION (for search input) ---
+            const debounce = (func, delay) => {
+                let timeout;
+                return function (...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), delay);
+                };
+            };
+
+            // --- 3. EVENT HANDLERS ---
+
+            // Handler for the search input
+            const searchHandler = (event) => {
+                const currentParams = new URLSearchParams(window.location.search);
+                currentParams.set('SearchTerm', event.target.value);
+                currentParams.set('PageIndex', '1'); // Reset to page 1 for new searches
+                updateProductList(currentParams.toString());
+            };
+
+            // Handler for the sort dropdown
+            const sortHandler = (event) => {
+                const currentParams = new URLSearchParams(window.location.search);
+                currentParams.set('SortOrder', event.target.value);
+                currentParams.set('PageIndex', '1');
+                updateProductList(currentParams.toString());
+            };
+
+            // --- 4. ATTACH EVENT LISTENERS ---
+
+            // For the search box (debounced)
+            searchInput.addEventListener('input', debounce(searchHandler, 300));
+
+            // For the sort dropdown
+            if (sortSelect) {
+                sortSelect.addEventListener('change', sortHandler);
+            }
+
+            // For pagination and filter links (event delegation)
+            document.addEventListener('click', function (event) {
+                const link = event.target.closest('a.product-filter-link');
+                if (link) {
+                    event.preventDefault();
+                    const url = new URL(link.href);
+                    const queryString = url.searchParams.toString();
+
+                    // --- ADD THIS DEBUG LOG ---
+                    console.log("Link clicked! Fetching new content with query string:", queryString);
+
+                    updateProductList(queryString);
+                }
+            });
+        });
+
+        // --- THIS IS THE NEW FUNCTION TO ADD ---
+    function updateActiveFilters(queryString) {
+        const params = new URLSearchParams(queryString);
+
+        // Helper function to update one filter group at a time
+        const setActive = (groupSelector, filterKey) => {
+            const listGroup = document.querySelector(groupSelector);
+            if (!listGroup) return;
+
+            const filterValue = params.get(filterKey);
+
+            // 1. Remove .active from all links in this group
+            listGroup.querySelectorAll('.list-group-item').forEach(a => a.classList.remove('active'));
+
+            let activeLink;
+            if (filterValue) {
+                // 2a. Find the specific link that matches the filter value
+                // (e.g., a link with "CategoryFilter=5" in its href)
+                activeLink = listGroup.querySelector(`a[href*="${filterKey}=${filterValue}"]`);
+            }
+
+            if (activeLink) {
+                // 3a. Set the specific link to active
+                activeLink.classList.add('active');
+            } else {
+                // 3b. If no filter value, set the first link ("All") to active
+                const allLink = listGroup.querySelector('.list-group-item');
+                if (allLink) {
+                    allLink.classList.add('active');
+                }
+            }
+        };
+
+        // 4. Run the helper for each filter group
+        // (These IDs come from your <div id="collapseCategory"> elements)
+        setActive('#collapseCategory .list-group', 'CategoryFilter');
+        setActive('#collapseBrand .list-group', 'BrandFilter');
+        setActive('#collapseType .list-group', 'TypeFilter');
+        setActive('#collapseRating .list-group', 'RatingFilter');
+    }
+    // --- END OF NEW FUNCTION ---
+    </script>
+}

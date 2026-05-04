@@ -1,0 +1,165 @@
+﻿@page
+@model IndexModel
+
+@if (!string.IsNullOrEmpty(Model.PromoHtmlContent))
+{
+    <div class="container my-4">
+        @Html.Raw(Model.PromoHtmlContent)
+    </div>
+}
+
+
+
+@* --- HERO SECTION (NOW A CAROUSEL) --- *@
+@if (Model.HeroSlides.Any())
+{
+    <div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @for (var i = 0; i < Model.HeroSlides.Count; i++)
+            {
+                var slide = Model.HeroSlides[i];
+                var activeClass = i == 0 ? "active" : "";
+                <div class="carousel-item @activeClass">
+                    <div class="hero-section text-center text-white d-flex align-items-center justify-content-center"
+                        style="background-image: url('@slide.ImageUrl');">
+                        <div class="hero-overlay"></div>
+                        <div class="hero-content">
+                            @if (i == 0)
+                            {
+                                <h1 class="display-3 fw-bold">@slide.Title</h1>
+                            }
+                            else
+                            {
+                                <p class="display-3 fw-bold" role="heading" aria-level="2">@slide.Title</p>
+                            }
+                            <p class="lead my-4 ms-3 me-3">@slide.Subtext</p>
+                            <a href="@slide.ButtonLink" class="btn btn-primary btn-lg">Смотреть коллекцию</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (Model.HeroSlides.Count > 1)
+        {
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Назад</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Вперёд</span>
+            </button>
+        }
+    </div>
+}
+
+<div class="container my-5">
+    @* --- SHOP BY BRAND SECTION --- *@
+    @if (Model.ShowShopByBrand)
+    {
+        <div class="text-center mb-5 mt-5 pt-4">
+            <h2 class="display-5">Категории товаров</h2>
+            <div class="row g-3 mt-4 justify-content-center">
+                @foreach (var brand in Model.Brands)
+                {
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <a asp-page="/Products/Index" asp-route-BrandFilter="@brand.Id" class="text-decoration-none text-dark">
+                            <div class="card h-100 card-hover-lift">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title m-0 p-2">@brand.Name</h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    @* --- SHOP BY CATEGORY SECTION --- *@
+    @if (Model.ShowShopByCategory)
+    {
+        <div class="text-center mb-5">
+            <h2 class="display-5">Категории товаров</h2>
+            <div class="row g-3 mt-4 justify-content-center">
+                @foreach (var category in Model.Categories)
+                {
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <a asp-page="/Products/Index" asp-route-CategoryFilter="@category.Id"
+                           class="text-decoration-none text-dark">
+                            <div class="card h-100 card-hover-lift">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-tags-fill fs-1 text-primary"></i>
+                                    <h5 class="card-title mt-3">@category.Name</h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @* --- PERSONALIZED RECOMMENDATIONS SECTION (AI-Powered) --- *@
+    @if (Model.PersonalizedRecommendations.Any())
+    {
+        <div class="text-center mb-5 mt-5 pt-4">
+            <h2 class="display-5">
+                Рекомендовано для вас 
+                <span class="badge ms-2 ai-badge-animated" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 0.5em; vertical-align: middle;">
+                    <i class="bi bi-stars"></i> AI
+                </span>
+            </h2>
+            <p class="lead text-muted">Вам может понравиться</p>
+        </div>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4 mb-5" data-rec-section="personalized">
+            @{ var position = 1; }
+            @foreach (var product in Model.PersonalizedRecommendations)
+            {
+                <div class="col" data-rec-product-id="@product.Id" data-rec-strategy="Adaptive" data-rec-position="@position">
+                    <partial name="_ProductCardPartial" model="product"
+                        view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                </div>
+                position++;
+            }
+        </div>
+    }
+
+    @* --- NEW ARRIVALS SECTION --- *@
+    <div class="text-center mb-5 mt-5 pt-4">
+        <h2 class="display-5">Новинки</h2>
+    </div>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4">
+        @foreach (var product in Model.NewArrivals)
+        {
+            <div class="col">
+                <partial name="_ProductCardPartial" model="product"
+                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+            </div>
+        }
+    </div>
+
+    @* --- BEST SELLERS SECTION --- *@
+    @if (Model.BestSellers.Any())
+    {
+        <div class="text-center mb-5 mt-5 pt-4">
+            <h2 class="display-5">Бестселлеры</h2>
+        </div>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4">
+            @foreach (var product in Model.BestSellers)
+            {
+                <div class="col">
+                    <partial name="_ProductCardPartial" model="product"
+                        view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                </div>
+            }
+        </div>
+    }
+
+
+</div>
+
+<partial name="Shared/_CartControlTemplates" />
+
+
+@section Scripts {
+}

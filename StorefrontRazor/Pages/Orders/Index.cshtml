@@ -1,0 +1,156 @@
+@page
+@model StorefrontRazor.Pages.Orders.IndexModel
+@{
+    ViewData["Title"] = @"Мои заказы";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">@ViewData["Title"]</h1>
+
+    @if (Model.Orders == null || !Model.Orders.Data.Any())
+    {
+        <div class="text-center card p-5 border rounded ">
+            <h4>У вас пока нет заказов.</h4>
+            <p class="text-muted">Продолжить покупки</p>
+            <a asp-page="/Products/Index" class="btn btn-primary mt-3">Купить сейчас</a>
+        </div>
+    }
+    else
+    {
+        @foreach (var order in Model.Orders.Data)
+        {
+            <div class="card order-card shadow-sm mb-4">
+                <div
+                    class="card-header d-flex flex-column flex-sm-row flex-wrap justify-content-sm-between align-items-sm-center gap-2">
+                    <div>
+                        <span class="fw-bold d-block d-sm-inline"><i class="bi bi-hash"></i> ORDER @order.Id</span>
+                        <span class="text-muted ms-sm-3 d-block d-sm-inline"><i class="bi bi-calendar-event"></i>
+                            @order.OrderDate.ToShortDateString()</span>
+                    </div>
+                    <div class="d-flex flex-column flex-sm-row gap-2">
+                        <span class="badge @Model.GetStatusBadgeClass(order.Status) fs-6 d-flex align-items-center">
+                            <i class="bi bi-credit-card-fill me-2"></i> @order.Status
+                        </span>
+                        <span
+                            class="badge @Model.GetDeliveryStatusBadgeClass(order.DeliveryStatus) fs-6 d-flex align-items-center">
+                            <i class="bi bi-truck me-2"></i> @order.DeliveryStatus
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            @* --- This now correctly displays the order items --- *@
+                            @if (order.OrderItems != null)
+                            {
+                                @foreach (var item in order.OrderItems.Take(3))
+                                {
+                                    <div class="d-flex align-items-center mb-2">
+                                        <img src="@item.PictureUrl" alt="@item.ProductName" class="rounded"
+                                            style="width: 50px; height: 50px; object-fit: cover;" />
+                                        <span class="ms-3">@item.ProductName x @item.Quantity</span>
+                                    </div>
+                                }
+                                @if (order.OrderItems.Count > 3)
+                                {
+                                    <p class="text-muted small">+ @(order.OrderItems.Count - 3) more item(s)</p>
+                                }
+                            }
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <p class="text-muted mb-1">Total</p>
+                            <h4 class="fw-bold text-primary">@order.Total.ToString("C")</h4>
+                            <a asp-page="./Details" asp-route-id="@order.Id" class="btn btn-outline-primary btn-sm mt-2">
+                                View Details <i class="bi bi-arrow-right-short"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        @if (Model.Orders.TotalPages > 1)
+        {
+            <nav class="mt-4 d-flex justify-content-center">
+                <ul class="pagination">
+                    @{
+                        var currentPage = Model.PageIndex;
+                        var totalPages = Model.Orders.TotalPages;
+
+                        // --- Settings ---
+                        var maxPagesToShow = 5;
+                        var startPage = 1;
+                        var endPage = totalPages;
+
+                        if (totalPages > maxPagesToShow)
+                        {
+                            var pagesToShowHalf = maxPagesToShow / 2;
+                            startPage = Math.Max(1, currentPage - pagesToShowHalf);
+                            endPage = startPage + maxPagesToShow - 1;
+
+                            if (endPage > totalPages)
+                            {
+                                endPage = totalPages;
+                                startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+                            }
+                        }
+
+                        // --- Previous Button (FIXED) ---
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a asp-page="/Orders/Index" asp-route-PageIndex="@(currentPage - 1)"
+                                asp-route-SortOrder="@Model.SortOrder" class="page-link" aria-label="Previous"
+                                tabindex="@(currentPage == 1 ? "-1" : null)">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        // --- First Page ---
+                        @if (startPage > 1)
+                        {
+                            <li class="page-item">
+                                <a asp-page="/Orders/Index" asp-route-PageIndex="1" asp-route-SortOrder="@Model.SortOrder"
+                                    class="page-link">1</a>
+                            </li>
+                            @if (startPage > 2)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                        }
+
+                        // --- Page Numbers ---
+                        @for (var i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a asp-page="/Orders/Index" asp-route-PageIndex="@i" asp-route-SortOrder="@Model.SortOrder"
+                                    class="page-link">@i</a>
+                            </li>
+                        }
+
+                        // --- Last Page ---
+                        @if (endPage < totalPages)
+                        {
+                            @if (endPage < totalPages - 1)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                            <li class="page-item">
+                                <a asp-page="/Orders/Index" asp-route-PageIndex="@totalPages" asp-route-SortOrder="@Model.SortOrder"
+                                    class="page-link">@totalPages</a>
+                            </li>
+                        }
+
+                        // --- Next Button (FIXED) ---
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a asp-page="/Orders/Index" asp-route-PageIndex="@(currentPage + 1)"
+                                asp-route-SortOrder="@Model.SortOrder" class="page-link" aria-label="Next"
+                                tabindex="@(currentPage == totalPages ? "-1" : null)">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+</div>

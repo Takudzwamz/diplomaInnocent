@@ -1,0 +1,21 @@
+@page "{id:int}"
+@model StorefrontRazor.Pages.Admin.Faqs.EditModel
+@{
+    ViewData["Title"] = "Редактировать";
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+
+<form method="post">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <partial name="_FaqFormPartial" model="Model.Faq" />
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-page="./Index" class="btn btn-secondary">Отмена</a>
+        </div>
+    </div>
+</form>

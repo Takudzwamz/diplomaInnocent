@@ -1,0 +1,29 @@
+# Devs Store
+
+> An online storefront for quality products, accessories, and developer items.
+
+## About
+
+Devs Store is an e-commerce platform offering a curated selection of products across multiple categories and brands. We provide a seamless shopping experience with features including product search, filtering by brand/category/type, customer reviews, wishlists, and secure checkout.
+
+## Key Pages
+
+- [Home](https://sputnikdevsdemo.store/): Browse featured products, new arrivals, and best sellers
+- [Products](https://sputnikdevsdemo.store/products): Full product catalog with search, filters, and sorting
+- [Contact](https://sputnikdevsdemo.store/contact): Get in touch with our team
+- [FAQ](https://sputnikdevsdemo.store/faq): Frequently asked questions about orders, shipping, and returns
+- [Return Policy](https://sputnikdevsdemo.store/policy): Our return and refund policy
+
+## Features
+
+- Product browsing with advanced filtering (brand, category, type, rating)
+- Product reviews and ratings
+- Wishlist functionality
+- Secure checkout with multiple payment gateways
+- Order tracking
+- AI-powered product recommendations
+- AI-powered review summaries
+
+## Contact
+
+Visit our [Contact page](https://sputnikdevsdemo.store/contact) for phone, email, and office address details.

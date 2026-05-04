@@ -1,0 +1,74 @@
+@model StorefrontRazor.Pages.Checkout.IndexModel
+
+<h3 class="mb-4">Проверьте ваш заказ</h3>
+
+@* --- FIX #1: Added the Order Items card --- *@
+<div class="card  mb-4">
+    <div class="card-header">
+        <strong>Итог заказа</strong>
+    </div>
+    <ul class="list-group list-group-flush">
+        @foreach (var item in Model.Cart.Items)
+        {
+            <li class="list-group-item d-flex align-items-center">
+                <img src="@item.PictureUrl" alt="@item.ProductName" class="me-3"
+                    style="width: 60px; height: 60px; object-fit: cover; border-radius: .25rem;" />
+                <div class="flex-grow-1">
+                    <h6 class="my-0">@item.ProductName</h6>
+                    @if (!string.IsNullOrEmpty(item.SelectedOptions))
+                    {
+                        <small class="text-muted d-block">@item.SelectedOptions</small>
+                    }
+                    <small class="text-muted">Кол-во: @item.Quantity</small>
+                </div>
+                <span class="text-muted">@((item.Price * item.Quantity).ToString("C"))</span>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header"><strong><i class="bi bi-truck me-2"></i>Адрес доставки</strong></div>
+    <div class="card-body">
+        
+        <div class="d-flex mb-2">
+            <i class="bi bi-person-circle fs-5 me-3" style="width: 1.25em;"></i>
+            <div>
+                @Model.Checkout.ShippingAddress.Name @Model.Checkout.ShippingAddress.LastName<br>
+                @Model.Checkout.ShippingAddress.Line1<br>
+                @if(!string.IsNullOrEmpty(Model.Checkout.ShippingAddress.Line2)) {
+                    @Model.Checkout.ShippingAddress.Line2 <br>
+                }
+                @Model.Checkout.ShippingAddress.City, @Model.Checkout.ShippingAddress.State @Model.Checkout.ShippingAddress.PostalCode
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Checkout.ShippingAddress.PhoneNumber))
+        {
+            <div class="d-flex mb-2">
+                <i class="bi bi-telephone-fill fs-5 me-3" style="width: 1.25em;"></i>
+                <div>
+                    @Model.Checkout.ShippingAddress.PhoneNumber
+                </div>
+            </div>
+        }
+        
+        @if (!string.IsNullOrEmpty(Model.Checkout.ShippingAddress.DeliveryNotes))
+        {   
+            <hr />
+            <h6 class="card-subtitle mb-2 text-muted">
+                <i class="bi bi-chat-left-text me-2"></i>Примечания к доставке (необязательно)
+            </h6>
+            <p class="card-text fst-italic">"@Model.Checkout.ShippingAddress.DeliveryNotes"</p>
+        }
+    </div>
+</div>
+
+<form method="post" asp-page-handler="PlaceOrder" id="placeOrderForm"></form>
+
+<div class="d-flex justify-content-between mt-4">
+    <a asp-page="/Checkout/Index" asp-route-step="2" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Назад к доставке
+    </a>
+    @* The "Place Order" button is now correctly rendered by the _OrderSummary partial *@
+</div>

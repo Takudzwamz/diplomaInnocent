@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /Admin/
+Disallow: /Account/
+Disallow: /Checkout/
+Disallow: /Orders/
+Disallow: /Cart/
+Disallow: /Webhooks/
+
+Sitemap: https://sputnikdevsdemo.store/sitemap.xml
