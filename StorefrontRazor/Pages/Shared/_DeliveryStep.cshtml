@@ -1,0 +1,61 @@
+@model StorefrontRazor.Pages.Checkout.IndexModel
+
+<h3 class="mb-3">Способ доставки</h3>
+<form method="post" asp-page-handler="Delivery">
+    @if (Model.DeliveryMethods == null || !Model.DeliveryMethods.Any())
+    {
+        <div class="text-center p-3"><span class="spinner-border spinner-border-sm"></span> Загрузка...</div>
+    }
+    else
+    {
+        @foreach (var method in Model.DeliveryMethods)
+        {
+            <div class="form-check mb-3">
+                @* --- FIX #1: Added the onchange event to the radio button --- *@
+                <input class="form-check-input" type="radio" name="SelectedDeliveryMethodId" 
+                       id="delivery-@method.Id" value="@method.Id" required
+                       onchange="updateOrderSummary(@method.Id)" />
+                <label class="form-check-label" for="delivery-@method.Id">
+                    <strong>@method.ShortName - @method.Price.ToString("C")</strong>
+                    <p class="text-muted small mb-0">@method.Description</p>
+                </label>
+            </div>
+        }
+    }
+    <div class="d-flex justify-content-between mt-4">
+        <a asp-page="/Checkout/Index" asp-route-step="1" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Назад к адресу
+        </a>
+        <button type="submit" class="btn btn-primary">
+            Далее: Проверка заказа <i class="bi bi-arrow-right"></i>
+        </button>
+    </div>
+</form>
+
+@* --- FIX #2: Added the JavaScript to handle the AJAX call --- *@
+<script>
+    function updateOrderSummary(deliveryMethodId) {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        
+        // The URL for our new JSON handler
+        const url = '?handler=UpdateSummaryJson';
+
+        const formData = new FormData();
+        formData.append('deliveryMethodId', deliveryMethodId);
+
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'RequestVerificationToken': token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update the text of the elements in the Order Summary
+            document.getElementById('summary-delivery').textContent = data.deliveryPrice;
+            document.getElementById('summary-total').textContent = data.total;
+        })
+        .catch(error => console.error('Error updating summary:', error));
+    }
+</script>

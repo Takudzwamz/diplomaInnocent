@@ -1,0 +1,92 @@
+@page
+@model StorefrontRazor.Pages.Checkout.IndexModel
+@{
+    ViewData["Title"] = "Оформление заказа";
+}
+
+<div class="container mt-5">
+    <div class="row ">
+        <div class="col-lg-8">
+            <h1 class="mb-4">Оформление заказа</h1>
+
+            @* --- FIX: Stepper UI with Icons and better active state --- *@
+            <nav class="mb-4">
+                <div class="nav nav-pills nav-fill">
+                    <a class="nav-link me-2 @(Model.Step >= 1 ? "active" : "disabled")"><i class="bi bi-geo-alt-fill me-2"></i></a>
+                    <a class="nav-link me-2 @(Model.Step >= 2 ? "active" : "disabled")"><i class="bi bi-truck me-2"></i></a>
+                    <a class="nav-link @(Model.Step >= 3 ? "active" : "disabled")"><i class="bi bi-credit-card-fill me-2"></i></a>
+                </div>
+            </nav>
+
+            
+            <div class="p-4 border rounded shadow-lg">
+
+                @if (Model.Step == 1)
+                {
+                    <partial name="_AddressStep" model="Model" />
+                }
+                else if (Model.Step == 2)
+                {
+                    <partial name="_DeliveryStep" model="Model" />
+                }
+                else if (Model.Step == 3)
+                {
+                    @* --- AND MOVE IT TO HERE --- *@
+                    @if(!string.IsNullOrEmpty(Model.Error))
+                    {
+                        <div class="alert alert-danger">@Model.Error</div>
+                    }
+                    
+                    <form method="post" asp-page-handler="PlaceOrder" id="placeOrderForm">
+                        <partial name="_ReviewStep" model="Model" />
+                    </form>
+                }
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h4 class="mb-4 mt-2">Итог заказа</h4>
+            <partial name="_OrderSummary" model="Model" />
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Find all radio buttons for delivery methods
+            const deliveryRadios = document.querySelectorAll('input[name="SelectedDeliveryMethodId"]');
+            
+            deliveryRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    const deliveryMethodId = this.value;
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                    // Fetch the updated summary from our backend handler
+                    fetch('/Checkout?handler=UpdateSummaryJson', {
+                        method: 'POST',
+                        headers: {
+                            'RequestVerificationToken': token,
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `deliveryMethodId=${deliveryMethodId}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+
+                        console.log("Data received from server:", data);
+                        // Update the UI with the new values from the server
+                        document.getElementById('summary-delivery').textContent = data.deliveryPrice;
+                        document.getElementById('summary-discount').textContent = `-${data.discount}`;
+                        document.getElementById('summary-total').textContent = data.total;
+
+                        // Show or hide the discount row based on the value
+                        const discountRow = document.getElementById('summary-discount-row');
+                        const discountValue = parseFloat(data.discount.replace(/[^0-9.-]+/g,""));
+                        discountRow.style.display = discountValue > 0 ? 'flex' : 'none';
+                    });
+                });
+            });
+        });
+    </script>
+}

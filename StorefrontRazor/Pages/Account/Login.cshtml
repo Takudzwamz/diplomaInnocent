@@ -1,0 +1,62 @@
+@page
+@model StorefrontRazor.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = @"Войти";
+    Layout = "_AuthLayout"; // Use our new auth layout
+}
+
+<div class="text-center">
+    <h1 class="h3 mb-3 fw-normal">Вход в аккаунт</h1>
+</div>
+
+<form id="account" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="form-floating mb-3">
+        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="email@пример.ru" />
+        <label asp-for="Input.Email" class="form-label"></label>
+        <span asp-validation-for="Input.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-floating mb-3">
+        <div class="input-group">
+            <input asp-for="Input.Password" type="password" class="form-control border-end-0" autocomplete="current-password" aria-required="true" placeholder="Пароль" />
+            <span class="input-group-text bg-transparent" style="cursor: pointer;" onclick="togglePasswordVisibility(this)">
+                <i class="bi bi-eye-slash"></i>
+            </span>
+        </div>
+        <span asp-validation-for="Input.Password" class="text-danger"></span>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div></div>
+        <a asp-page="./ForgotPassword">Забыли пароль?</a>
+    </div>
+
+    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Войти</button>
+    
+    <hr class="my-4">
+
+    <div class="text-center">
+        <p>Нет аккаунта? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Регистрация</a></p>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function togglePasswordVisibility(icon) {
+            const input = icon.previousElementSibling;
+            const i = icon.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                i.classList.remove('bi-eye-slash');
+                i.classList.add('bi-eye');
+            } else {
+                input.type = 'password';
+                i.classList.remove('bi-eye');
+                i.classList.add('bi-eye-slash');
+            }
+        }
+    </script>
+}

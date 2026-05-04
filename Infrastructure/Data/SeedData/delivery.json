@@ -1,0 +1,26 @@
+[
+  {
+    "ShortName": "СДЭК-Экспресс",
+    "Description": "Самая быстрая доставка",
+    "DeliveryTime": "1-2 дня",
+    "Price": 900
+  },
+  {
+    "ShortName": "СДЭК-Стандарт",
+    "Description": "Доставка за 5 дней",
+    "DeliveryTime": "2-5 дней",
+    "Price": 450
+  },
+  {
+    "ShortName": "Почта России",
+    "Description": "Дешевле, но дольше",
+    "DeliveryTime": "5-10 дней",
+    "Price": 200
+  },
+  {
+    "ShortName": "Бесплатная",
+    "Description": "Бесплатная доставка при заказе от 5000₽",
+    "DeliveryTime": "1-2 недели",
+    "Price": 0
+  }
+]

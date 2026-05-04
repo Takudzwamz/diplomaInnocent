@@ -1,0 +1,78 @@
+@page
+@model StorefrontRazor.Pages.Admin.DeliveryMethods.IndexModel
+@{
+    ViewData["Title"] = "Управление доставкой";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-page="./Create" class="btn btn-primary ">
+        <i class="bi bi-plus-circle-fill me-2"></i>Создать
+    </a>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.ErrorMessage
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        @* --- THIS IS THE FIX --- *@
+        @if (Model.DeliveryMethods.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Краткое название</th>
+                            <th>Срок доставки</th>
+                            <th>Описание</th>
+                            <th>Цена</th>
+                            <th style="width: 150px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var method in Model.DeliveryMethods)
+                        {
+                            <tr>
+                                <td>@method.Id</td>
+                                <td>@method.ShortName</td>
+                                <td>@method.DeliveryTime</td>
+                                <td>@method.Description</td>
+                                <td>@method.Price.ToString("C")</td>
+                                <td class="text-end">
+                                    <div class="d-flex flex-wrap justify-content-end gap-2">
+                                        <a asp-page="./Edit" asp-route-id="@method.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@method.Id" class="d-inline" onsubmit="return confirm('Вы уверены, что хотите удалить этот способ доставки?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            @* --- This card is shown if no methods exist --- *@
+            <div class="text-center p-4">
+                <h4 class="text-muted">Способы доставки не найдены</h4>
+                <p>Создайте первый способ доставки.</p>
+                <a asp-page="./Create" class="btn btn-primary mt-2">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Создать способ доставки
+                </a>
+            </div>
+        }
+        @* --- END OF FIX --- *@
+    </div>
+</div>

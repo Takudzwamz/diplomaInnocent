@@ -1,0 +1,117 @@
+
+
+@* This partial view is now flexible and can be used on any page model
+   that provides a 'Cart' property and an optional 'Checkout' property. *@
+@model dynamic
+
+@{
+    // Safely get the required data from the model passed into the partial view.
+    var cart = Model.Cart as Core.Entities.ShoppingCart;
+    var checkoutService = Model.Checkout as StorefrontRazor.Services.CheckoutService;
+    
+    // --- THIS IS THE FIX ---
+    // This logic is now more specific and correctly identifies which page is being rendered.
+    var isCartPage = ((object)Model).GetType().FullName.Contains("StorefrontRazor.Pages.Cart");
+    var isCheckoutPage = ((object)Model).GetType().FullName.Contains("StorefrontRazor.Pages.Checkout");
+    var currentStep = isCheckoutPage ? (int)Model.Step : 0;
+
+    // Perform calculations
+     var subtotal = cart?.Items.Sum(i => i.Price * i.Quantity) ?? 0m;
+    var discount = 0m;
+
+    if (cart?.Coupon != null)
+    {
+        // Determine which items in the cart are eligible for the discount
+        var eligibleItems = cart.Coupon.ApplicableProductIds.Any()
+            ? cart.Items.Where(item => cart.Coupon.ApplicableProductIds.Contains(item.ProductId)).ToList()
+            : cart.Items.ToList();
+
+        // Calculate the subtotal of ONLY the eligible items
+        var eligibleSubtotal = eligibleItems.Sum(i => i.Price * i.Quantity);
+
+        if (cart.Coupon.AmountOff.HasValue)
+        {
+            discount = Math.Min(cart.Coupon.AmountOff.Value, eligibleSubtotal);
+        }
+        else if (cart.Coupon.PercentOff.HasValue)
+        {
+            discount = eligibleSubtotal * (cart.Coupon.PercentOff.Value / 100);
+        }
+    }
+
+    var delivery = checkoutService?.ShippingPrice ?? 0m;
+    var total = subtotal - discount + delivery;
+}
+
+<div class="card shadow-lg">
+    <div class="card-body">
+        <h5 class="card-title mb-3">Итог заказа</h5>
+        <hr>
+        
+        <div class="d-flex justify-content-between">
+            <span>Подытог</span>
+            <strong id="summary-subtotal">@subtotal.ToString("C")</strong>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <span>Доставка</span>
+            <strong id="summary-delivery">@delivery.ToString("C")</strong>
+        </div>
+        
+        <div id="summary-discount-row" class="d-flex justify-content-between text-success" style="@(cart?.Coupon == null ? "display: none;" : "")">
+            <span>Скидка (<span id="summary-discount-code">@cart?.Coupon?.PromotionCode</span>)</span>
+            <strong id="summary-discount">-@discount.ToString("C")</strong>
+        </div>
+        
+        <hr>
+        <div class="d-flex justify-content-between fw-bold fs-5">
+            <span>Итого</span>
+            <strong id="summary-total">@total.ToString("C")</strong>
+        </div>
+        <hr>
+
+        @if (isCartPage)
+        {
+            @if (cart.Coupon == null)
+            {
+               <p class="mb-2">Применить купон</p>
+               <form method="post" asp-page="/Cart/Index" asp-page-handler="ApplyCoupon" class="input-group">
+                   <input type="text" name="VoucherCode" class="form-control" placeholder="Введите код купона" />
+                   <button class="btn btn-primary" type="submit">Применить купон</button>
+               </form>
+                @if (!string.IsNullOrEmpty(Model.CouponErrorMessage))
+                {
+                    <div class="text-danger small mt-1">@Model.CouponErrorMessage</div>
+                }
+            }
+            else
+            {
+               <div class="d-flex justify-content-between align-items-center">
+                   <span class="text-success">Купон применён!</span>
+                   <form method="post" asp-page="/Cart/Index" asp-page-handler="RemoveCoupon">
+                       <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                   </form>
+               </div>
+            }
+        }
+        
+        <div class="d-grid mt-4">
+            @if (isCheckoutPage && currentStep == 3)
+            {
+                // On the final checkout step, this button submits the 'placeOrderForm' from _ReviewStep.cshtml
+                <button type="submit" form="placeOrderForm" class="btn btn-primary btn-lg">Оформить заказ</button>
+            }
+            else if (isCheckoutPage)
+            {
+                // On earlier checkout steps, the button is disabled.
+                 <button class="btn btn-primary btn-lg" disabled>Оформить заказ</button>
+            }
+            else
+            {
+                // On the cart page, this button links to the checkout.
+                <a asp-page="/Checkout/Index" class="btn btn-primary btn-lg">Перейти к оформлению</a>
+            }
+        </div>
+    </div>
+</div>
+

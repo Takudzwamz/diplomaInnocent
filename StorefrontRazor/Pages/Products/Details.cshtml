@@ -1,0 +1,905 @@
+@page "/products/{id:int}"
+@using Core.Entities
+@using Microsoft.AspNetCore.Identity
+@model StorefrontRazor.Pages.Products.DetailsModel
+@inject SignInManager<Core.Entities.AppUser> SignInManager
+@{
+    ViewData["Title"] = Model.Product.Name;
+}
+
+@if (!string.IsNullOrEmpty(Model.PromoHtmlContent))
+{
+    <div class="container my-4">
+        @Html.Raw(Model.PromoHtmlContent)
+    </div>
+}
+
+@section Head {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/drift-zoom@1.5.1/dist/drift-basic.min.css">
+    <style>
+        .variant-pills .btn-check:checked+.btn {
+            background-color: var(--bs-primary);
+            color: var(--bs-white);
+            border-color: var(--bs-primary);
+        }
+        .thumbnail-img {
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .thumbnail-img.active,
+        .thumbnail-img:hover {
+            border-color: #0d6efd;
+        }
+        
+        /* Thumbnail gallery scrollbar styling */
+        .thumbnail-gallery::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .thumbnail-gallery::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .thumbnail-gallery::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        .thumbnail-gallery::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        .star-rating i {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        
+        /* Color Circle Option Styles */
+        .color-circle-label {
+            cursor: pointer;
+            display: inline-block;
+            padding: 2px;
+        }
+        
+        .color-circle {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #dee2e6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .color-circle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        /* Selected state for color circle */
+        .btn-check:checked + .color-circle-label .color-circle,
+        .color-circle.selected {
+            border-color: var(--bs-primary);
+            border-width: 3px;
+            box-shadow: 0 0 0 2px var(--bs-primary), 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Checkmark for selected color */
+        .btn-check:checked + .color-circle-label .color-circle::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: bold;
+            /* Dynamic text color based on background brightness - handled by CSS filter */
+            color: #fff;
+            text-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
+        
+        /* For very light colors, show dark checkmark */
+        .color-circle[data-light="true"]::after {
+            color: #333;
+            text-shadow: none;
+        }
+        
+        /* White color circle - add subtle border */
+        .color-circle[style*="#FFFFFF"],
+        .color-circle[style*="#ffffff"],
+        .color-circle[style*="#FFF"],
+        .color-circle[style*="#fff"] {
+            border-color: #ccc;
+        }
+    </style>
+    <style>
+        /* This targets the semi-transparent square from the Drift.js library */
+        .drift-bounding-box {
+            background: transparent !important; /* Makes the overlay invisible */
+            border: none !important;           /* Removes its border */
+        }
+        
+        /* AI Badge Styling */
+        .bg-gradient-ai {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @@keyframes pulse {
+            0% {
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 25px rgba(102, 126, 234, 0.6);
+            }
+            100% {
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            }
+        }
+    </style>
+}
+
+<div class="container mt-5" itemscope itemtype="https://schema.org/Product">
+    <meta itemprop="productID" content="@Model.Product.Id" />
+    <meta itemprop="sku" content="SKU-@Model.Product.Id" />
+    <link itemprop="url" href="@ViewContext.HttpContext.Request.Scheme://@ViewContext.HttpContext.Request.Host@ViewContext.HttpContext.Request.Path" />
+    <link itemprop="itemCondition" href="https://schema.org/NewCondition" />
+    <div class="row">
+        <div class="col-md-6">
+            @* --- Image Gallery --- *@
+             <div class="mb-3 zoom-pane-container" style="position: relative; border-radius: 10px; overflow: hidden;">
+                <img id="mainProductImage" itemprop="image"
+                    src="@Model.Product.Images.FirstOrDefault(i => i.IsMain)?.Url"
+                    data-zoom="@Model.Product.Images.FirstOrDefault(i => i.IsMain)?.Url" @* <-- Add data-zoom attribute *@
+                    alt="@Model.Product.Name" class="img-fluid rounded shadow-sm w-100"
+                    style="max-height: 500px; width: 100%; object-fit: cover;" />
+            </div>
+            @if (Model.Product.Images.Count > 1)
+            {
+                <div class="d-flex gap-2 flex-wrap thumbnail-gallery" style="max-height: 180px; overflow-y: auto;">
+                    @foreach (var image in Model.Product.Images)
+                    {
+                        var isActive = image.IsMain ? "active" : "";
+                        <img src="@image.Url" onclick="selectImage('@image.Url')" class="rounded thumbnail-img @isActive" itemprop="image"
+                            alt="@Model.Product.Name - thumbnail" style="width: 70px; height: 70px; object-fit: cover; flex-shrink: 0;" />
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="col-md-6">
+            <a href="@Model.ReturnUrl" class="btn btn-outline-secondary mb-3 mt-2">
+                <span class="bi bi-arrow-left"></span> Назад к товарам
+            </a>
+            <h1 class="display-5" itemprop="name">@Model.Product.Name</h1>
+            @if (Model.Product.AverageRating > 0)
+            {
+                <div class="d-flex align-items-center mb-2">
+                    <partial name="_StarRatingPartial" model="Model.Product.AverageRating" />
+                    <span class="text-muted ms-2">@string.Format("На основе {0} отзыв(ов)", Model.Product.ReviewCount)</span>
+                </div>
+            }
+            else
+            {
+                <div class="mb-2">
+                    <span class="text-muted">Отзывов пока нет</span>
+                </div>
+            }
+            <div class="">
+                <partial name="_WishlistButtonPartial" model="@Model.Product.Id" />
+            </div>
+                <div class="mb-3">
+                    <span class="badge bg-primary me-2" itemprop="category">
+                        <i class="bi bi-collection me-1"></i> Категория: @Model.Product.ProductCategory
+                    </span>
+                    <span class="badge bg-secondary me-2" itemprop="brand" itemscope itemtype="https://schema.org/Brand">
+                        <i class="bi bi-building me-1"></i> Бренд: <span itemprop="name">@Model.Product.ProductBrand</span>
+                    </span>
+                    <span class="badge bg-info text-dark">
+                        <i class="bi bi-box-seam me-1"></i> Тип: @Model.Product.ProductType
+                    </span>
+                </div>
+
+            <p itemprop="description">@Model.Product.Description</p>
+
+            @* --- ADDED: VARIANT SELECTION UI --- *@
+            @if (Model.Product.ProductKind == ProductKind.Variable)
+            {
+                <div id="variant-selectors" class="my-3">
+                    @foreach (var option in Model.Product.Options)
+                    {
+                        @* Check if this option has any color values *@
+                        var hasColors = option.Values.Any(v => !string.IsNullOrEmpty(v.ColorHex));
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">@option.Name</label>
+                            <div class="variant-pills d-flex flex-wrap gap-2 @(hasColors ? "color-option-pills" : "")" data-option-id="@option.Id">
+                                @foreach (var val in option.Values)
+                                {
+                                    var isChecked = Model.DefaultSelectedValueIds.Contains(val.Id);
+                                    
+                                    @if (!string.IsNullOrEmpty(val.ColorHex))
+                                    {
+                                        @* Color circle selector *@
+                                        <input type="radio" class="btn-check variant-radio" name="option-@option.Id" id="value-@val.Id" value="@val.Id" autocomplete="off"
+                                               @(isChecked ? "checked" : "")>
+                                        <label class="color-circle-label" for="value-@val.Id" title="@val.Name">
+                                            <span class="color-circle @(isChecked ? "selected" : "")" style="background-color: @val.ColorHex;"></span>
+                                        </label>
+                                    }
+                                    else
+                                    {
+                                        @* Standard text button *@
+                                        <input type="radio" class="btn-check variant-radio" name="option-@option.Id" id="value-@val.Id" value="@val.Id" autocomplete="off"
+                                               @(isChecked ? "checked" : "")>
+                                        <label class="btn btn-sm btn-outline-secondary" for="value-@val.Id">@val.Name</label>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div id="variant-error" class="alert alert-warning" style="display: none;">Эта комбинация недоступна.</div>
+            }
+
+            <div class="mb-2">
+                <span id="stock-info" class="text-muted"></span>
+                @{ var simpleItemInCart = Model.Cart?.Items.FirstOrDefault(i => i.ProductId == Model.Product.Id && i.ProductVariantId == null); }
+                <span class="text-success fw-bold details-page-cart-info" style="@(simpleItemInCart == null ? "display: none;" : "")">
+                     - @string.Format("У вас {0} в корзине.", "<span class='quantity-display'>" + simpleItemInCart?.Quantity + "</span>")
+                </span>
+            </div>
+
+
+            @if (!string.IsNullOrEmpty(Model.Product.AvailableCoupon))
+            {
+                <div class="alert alert-success d-flex align-items-center">
+                    <i class="bi bi-tag-fill me-2 fs-4"></i>
+                    <span>@Model.Product.AvailableCoupon</span>
+                </div>
+            }
+            <hr />
+
+            <div id="price-display-container" class="mb-4" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                <link itemprop="url" href="@ViewContext.HttpContext.Request.Scheme://@ViewContext.HttpContext.Request.Host@ViewContext.HttpContext.Request.Path" />
+                <meta itemprop="priceCurrency" content="ZAR" />
+                <link itemprop="availability" href="@(Model.Product.QuantityInStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock")" />
+                <link itemprop="itemCondition" href="https://schema.org/NewCondition" />
+                <meta itemprop="priceValidUntil" content="@DateTime.UtcNow.AddMonths(6).ToString("yyyy-MM-dd")" />
+                @if (Model.Product.DiscountedPrice.HasValue)
+                {
+                    <meta itemprop="price" content="@Model.Product.DiscountedPrice.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+                    <h2 id="price-display" class="text-danger fw-bold mb-4">
+                        <span id="main-price">@Model.Product.DiscountedPrice.Value.ToString("C")</span>
+                        <small id="original-price" class="text-muted fs-5"><del>@Model.Product.Price.ToString("C")</del></small>
+                    </h2>
+                }
+                else
+                {
+                    <meta itemprop="price" content="@Model.Product.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+                    <h2 id="price-display" class="text-primary fw-bold mb-4">
+                        <span id="main-price">@Model.Product.Price.ToString("C")</span>
+                        <small id="original-price" class="text-muted fs-5" style="display: none;"><del></del></small>
+                    </h2>
+                }
+            </div>
+
+            @if (!User.IsInRole("Admin"))
+            {
+                <div class="cart-controls" data-product-id="@Model.Product.Id">
+                    @* --- MODIFIED: This section is now simpler. JS will populate it. --- *@
+                    @if (Model.Product.ProductKind == ProductKind.Simple)
+                    {
+                        @if (Model.Product.QuantityInStock > 0)
+                        {
+                            @if (simpleItemInCart == null)
+                            {
+                                <form method="post" class="add-to-cart-form" asp-page-handler="AddToCartJson">
+                                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                    <button type="submit" class="btn btn-success btn-lg ms-3">
+                                        <span class="bi bi-cart-plus-fill"></span> В корзину
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center quantity-controls">
+                                    <form method="post" class="update-cart-form">
+                                        <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                        <input type="hidden" name="quantity" value="@(simpleItemInCart.Quantity - 1)" />
+                                        <button type="submit" class="btn btn-outline-secondary btn-lg">-</button>
+                                    </form>
+                                    <span class="px-4 fs-4 quantity-display">@simpleItemInCart.Quantity</span>
+                                    <form method="post" class="update-cart-form">
+                                        <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                        <input type="hidden" name="quantity" value="@(simpleItemInCart.Quantity + 1)" />
+                                        <button type="submit" class="btn btn-outline-secondary btn-lg" disabled="@(simpleItemInCart.Quantity >= Model.Product.QuantityInStock)">+</button>
+                                    </form>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-danger btn-lg disabled ms-3">
+                                <i class="bi bi-x-circle"></i> Нет в наличии
+                            </button>
+                        }
+                    }
+                    @* --- THIS IS THE NEW BLOCK --- *@
+                    else if (Model.Product.ProductKind == ProductKind.Variable && Model.DefaultVariant != null)
+                    {
+                        @* We are pre-rendering the state for the DEFAULT (cheapest) variant *@
+                        @if (Model.DefaultVariant.QuantityInStock > 0)
+                        {
+                            @if (Model.DefaultVariantCartItem == null)
+                            {
+                                @* Show the "Add to Cart" button by default *@
+                                <form method="post" class="add-to-cart-form" asp-page-handler="AddToCartJson">
+                                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                    <input type="hidden" name="productVariantId" value="@Model.DefaultVariant.Id" />
+                                    <button type="submit" class="btn btn-success btn-lg ms-3">
+                                        <span class="bi bi-cart-plus-fill"></span> В корзину
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                @* Show the "Quantity" controls by default *@
+                                <div class="d-flex align-items-center quantity-controls">
+                                    <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+                                        <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                        <input type="hidden" name="productVariantId" value="@Model.DefaultVariant.Id" />
+                                        <input type="hidden" name="quantity" value="@(Model.DefaultVariantCartItem.Quantity - 1)" />
+                                        <button type="submit" class="btn btn-outline-secondary btn-lg">-</button>
+                                    </form>
+                                    <span class="px-4 fs-4 quantity-display">@Model.DefaultVariantCartItem.Quantity</span>
+                                    <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+                                        <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                        <input type="hidden" name="productVariantId" value="@Model.DefaultVariant.Id" />
+                                        <input type="hidden" name="quantity" value="@(Model.DefaultVariantCartItem.Quantity + 1)" />
+                                        <button type="submit" class="btn btn-outline-secondary btn-lg" 
+                                                disabled="@(Model.DefaultVariantCartItem.Quantity >= Model.DefaultVariant.QuantityInStock)">+</button>
+                                    </form>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-danger btn-lg disabled ms-3">
+                                <i class="bi bi-x-circle"></i> Нет в наличии
+                            </button>
+                        }
+                    }
+                    @* --- END OF NEW BLOCK --- *@
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    <hr class="my-5" />
+
+    @* --- Customer Reviews Section --- *@
+    <div class="row">
+        <div class="col-md-7">
+            @if (Model.Product.ReviewCount > 0)
+            {
+                <div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+                    <meta itemprop="ratingValue" content="@Model.Product.AverageRating.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)" />
+                    <meta itemprop="reviewCount" content="@Model.Product.ReviewCount" />
+                    <meta itemprop="bestRating" content="5" />
+                    <meta itemprop="worstRating" content="1" />
+                </div>
+            }
+            <h3 class="mb-4">Отзывы покупателей (@Model.Product.Reviews.Count)</h3>
+            
+            @* --- AI Review Summary --- *@
+            @if (Model.AIReviewSummary != null)
+            {
+                <div class="card mb-4 border-0 shadow-sm ai-review-summary">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-gradient-ai me-2 pulse-animation">
+                                <i class="bi bi-stars me-1"></i> ИИ-сводка
+                            </span>
+                            @{
+                                var sentimentClass = Model.AIReviewSummary.Sentiment switch
+                                {
+                                    "Positive" => "text-success",
+                                    "Negative" => "text-danger",
+                                    _ => "text-warning"
+                                };
+                                var sentimentIcon = Model.AIReviewSummary.Sentiment switch
+                                {
+                                    "Positive" => "bi-emoji-smile",
+                                    "Negative" => "bi-emoji-frown",
+                                    _ => "bi-emoji-neutral"
+                                };
+                            }
+                            <span class="@sentimentClass fw-bold">
+                                <i class="bi @sentimentIcon me-1"></i> @Model.AIReviewSummary.Sentiment
+                            </span>
+                        </div>
+                        
+                        <p class="mb-3">@Model.AIReviewSummary.Summary</p>
+                        
+                        <div class="row">
+                            @if (Model.AIReviewSummary.Pros.Any())
+                            {
+                                <div class="col-md-6">
+                                    <h6 class="text-success"><i class="bi bi-hand-thumbs-up me-1"></i> Что нравится покупателям</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach (var pro in Model.AIReviewSummary.Pros)
+                                        {
+                                            <li class="mb-1"><i class="bi bi-check-circle text-success me-1"></i> @pro</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            @if (Model.AIReviewSummary.Cons.Any())
+                            {
+                                <div class="col-md-6">
+                                    <h6 class="text-danger"><i class="bi bi-hand-thumbs-down me-1"></i> Области для улучшения</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach (var con in Model.AIReviewSummary.Cons)
+                                        {
+                                            <li class="mb-1"><i class="bi bi-x-circle text-danger me-1"></i> @con</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                        
+                        <div class="mt-3 text-muted small">
+                            <i class="bi bi-robot me-1"></i> @string.Format("На основе ИИ • Сводка по {0} отзывам покупателей", Model.Product.Reviews.Count)
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            @if (!Model.Product.Reviews.Any())
+            {
+                <p>Отзывов пока нет. Будьте первым, кто оценит этот товар!</p>
+            }
+            @foreach (var review in Model.Product.Reviews)
+            {
+                <div class="mb-4" itemprop="review" itemscope itemtype="https://schema.org/Review">
+                    <div class="d-flex align-items-center mb-2">
+                        <strong class="me-3" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">@review.ReviewerName</span></strong>
+                        <div class="text-warning" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                            <meta itemprop="ratingValue" content="@review.Rating" />
+                            <meta itemprop="bestRating" content="5" />
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="bi @(i <= review.Rating ? "bi-star-fill" : "bi-star")"></i>
+                            }
+                        </div>
+                    </div>
+                    <p class="mb-1" itemprop="reviewBody">@review.Comment</p>
+                    <small class="text-muted">Отзыв от <time itemprop="datePublished" datetime="@review.ReviewDate.ToString("yyyy-MM-dd")">@review.ReviewDate.ToLongDateString()</time></small>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-5">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                @if (Model.HasPurchasedProduct)
+                {
+                    @if (Model.HasReviewedProduct)
+                    {
+                        @* Case 1: User has purchased AND already reviewed the product *@
+                        <div class="alert alert-success">
+                            <h5 class="alert-heading"><i class="bi bi-check-circle-fill"></i> Спасибо!</h5>
+                            <p>Вы уже оставили отзыв об этом товаре.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        @* Case 2: User has purchased but NOT YET reviewed -> Show the form *@
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Написать отзыв</h4>
+                                <form method="post" asp-page-handler="SubmitReview">
+                                    <div asp-validation-summary="All" class="text-danger"></div>
+                                    <input type="hidden" asp-for="ReturnUrl" />
+                                    <input type="hidden" asp-for="NewReview.ProductId" />
+                                    <div class="mb-3">
+                                        <label asp-for="NewReview.Rating" class="form-label">Ваша оценка</label>
+                                        <input type="hidden" asp-for="NewReview.Rating" id="ratingInput" />
+                                        <div class="star-rating text-warning" id="star-rating-container">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="bi bi-star" data-value="@i" onclick="setRating(@i)"></i>
+                                            }
+                                        </div>
+                                        <span asp-validation-for="NewReview.Rating" class="text-danger"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label asp-for="NewReview.Comment" class="form-label">Ваш комментарий</label>
+                                        <textarea asp-for="NewReview.Comment" class="form-control" rows="4"></textarea>
+                                        <span asp-validation-for="NewReview.Comment" class="text-danger"></span>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    @* Case 3: User is logged in but has NOT purchased the product *@
+                    <div class="alert alert-info">
+                        Оставить отзыв можно только о купленных товарах.
+                    </div>
+                }
+            }
+            else
+            {
+                @* Case 4: User is not logged in *@
+                <div class="alert alert-info">
+                    @Html.Raw(string.Format("Чтобы написать отзыв, необходимо {0}.", "<a href='/account/login?returnUrl=" + Request.Path + "'>" + "войти в систему" + "</a>"))
+                </div>
+            }
+        </div>
+
+
+    </div>
+
+    @if (Model.AIRecommendations.Any() || Model.RelatedByBrand.Any() || Model.RelatedByType.Any())
+    {
+        <div class="container mt-5 mb-5">
+            <hr />
+
+            @* AI-Powered Recommendations Section - Only show if AI is enabled AND has results *@
+            @if (Model.IsAIEnabled && Model.AIRecommendations.Any())
+            {
+                <div class="mt-5">
+                    <div class="d-flex align-items-center justify-content-center mb-4">
+                        <div class="badge bg-gradient-ai me-3 pulse-animation">
+                            <i class="bi bi-stars"></i> AI
+                        </div>
+                        <h2 class="mb-0">Вам также может понравиться</h2>
+                    </div>
+                    <p class="text-center text-muted mb-4">
+                        <small>На основе ИИ • Умные рекомендации по схожести товаров</small>
+                    </p>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" data-rec-section="product-detail">
+                        @{ var recPos = 1; }
+                        @foreach (var aiProduct in Model.AIRecommendations)
+                        {
+                            <div class="col" data-rec-product-id="@aiProduct.Id" data-rec-strategy="ContentBased" data-rec-position="@recPos" data-rec-source-id="@Model.Product.Id">
+                                <partial name="_ProductCardPartial" model="aiProduct"
+                                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                            </div>
+                            recPos++;
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.RelatedByBrand.Any())
+            {
+                <div class="mt-5">
+                    <h2 class="text-center mb-4">@string.Format("Ещё от {0}", Model.Product.ProductBrand)</h2>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4">
+                        @foreach (var relatedProduct in Model.RelatedByBrand)
+                        {
+                            <div class="col">
+                                <partial name="_ProductCardPartial" model="relatedProduct"
+                                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.RelatedByType.Any())
+            {
+                <div class="mt-5">
+                    <h2 class="text-center mb-4">@string.Format("Похожие товары: {0}", Model.Product.ProductType)</h2>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4">
+                        @foreach (var relatedProduct in Model.RelatedByType)
+                        {
+                            <div class="col">
+                                <partial name="_ProductCardPartial" model="relatedProduct"
+                                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<partial name="Shared/_CartControlTemplates" />
+
+@* --- ADD THESE TEMPLATES for the JS to use --- *@
+
+<template id="add-to-cart-details-template">
+    <form method="post" class="add-to-cart-form" asp-page-handler="AddToCartJson">
+        <div class="d-flex align-items-center">
+            <input type="hidden" name="productId" value="PRODUCT_ID" />
+            <input type="hidden" name="productVariantId" value="VARIANT_ID" />
+            <button type="submit" class="btn btn-success btn-lg ms-3">
+                <span class="bi bi-cart-plus-fill"></span> В корзину
+            </button>
+        </div>
+    </form>
+</template>
+
+<template id="quantity-controls-details-template">
+    <div class="d-flex align-items-center quantity-controls">
+        <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+            <input type="hidden" name="productId" value="PRODUCT_ID" />
+            <input type="hidden" name="productVariantId" value="VARIANT_ID" />
+            <input type="hidden" name="quantity" value="0" />
+            <button type="submit" class="btn btn-outline-secondary btn-lg">-</button>
+        </form>
+        <span class="px-4 fs-4 quantity-display">1</span>
+        <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+            <input type="hidden" name="productId" value="PRODUCT_ID" />
+            <input type="hidden" name="productVariantId" value="VARIANT_ID" />
+            <input type="hidden" name="quantity" value="2" />
+            <button type="submit" class="btn btn-outline-secondary btn-lg">+</button>
+        </form>
+    </div>
+</template>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+     <script src="https://cdn.jsdelivr.net/npm/drift-zoom@1.5.1/dist/Drift.min.js"></script>
+    <script>
+        // Pass data from the C# model to our global site.js file
+        const productVariants = @Json.Serialize(Model.Product.Variants);
+        const productImages = @Json.Serialize(Model.Product.Images);
+        const cartData = @Json.Serialize(Model.Cart);
+    </script>
+    <script>
+
+
+        // --- START OF NEW SCRIPT LOGIC ---
+        let drift; // Variable to hold our magnifier instance
+
+        // Function to initialize or re-initialize the magnifier
+        function initializeDrift() {
+            // If a magnifier instance already exists, destroy it first
+            if (drift) {
+                drift.disable();
+            }
+
+            const mainImage = document.getElementById('mainProductImage');
+            const pane = document.querySelector('.zoom-pane-container');
+            
+            // Create a new Drift instance
+            drift = new Drift(mainImage, {
+                paneContainer: pane,
+                inlinePane: 768, // The zoom appears over the image on screens < 768px wide
+                zoomFactor: 3, // How much to magnify
+                hoverBoundingBox: true
+            });
+        }
+
+
+        function selectImage(imageUrl) {
+            const mainImage = document.getElementById('mainProductImage');
+            if(!mainImage) return;
+            mainImage.src = imageUrl;
+            mainImage.dataset.zoom = imageUrl;
+
+            document.querySelectorAll('.thumbnail-img').forEach(img => img.classList.remove('active'));
+            
+            // --- THIS IS THE FIX ---
+            // Find the correct thumbnail by its 'src' attribute instead of relying on an event object.
+            const newActiveThumb = document.querySelector(`.thumbnail-img[src="${imageUrl}"]`);
+            if (newActiveThumb) {
+                newActiveThumb.classList.add('active');
+            }
+            
+            initializeDrift();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeDrift(); // Initialize Drift when the page first loads
+        });
+        // --- END OF NEW SCRIPT LOGIC ---
+
+        // --- ADD THIS SCRIPT for the star rating ---
+        const ratingInput = document.getElementById('ratingInput');
+        const stars = document.querySelectorAll('#star-rating-container i');
+
+        function setRating(rating) {
+            ratingInput.value = rating; // Update the hidden input
+            updateStars(rating);
+        }
+
+        function updateStars(rating) {
+            stars.forEach(star => {
+                if (star.dataset.value <= rating) {
+                    star.classList.replace('bi-star', 'bi-star-fill');
+                } else {
+                    star.classList.replace('bi-star-fill', 'bi-star');
+                }
+            });
+        }
+    </script>
+}
+
+@section StructuredData {
+    @{
+        var productUrl = $"{ViewContext.HttpContext.Request.Scheme}://{ViewContext.HttpContext.Request.Host}{ViewContext.HttpContext.Request.Path}";
+        var sellerName = ViewData["StoreName"]?.ToString() ?? "Store";
+        var productImages = Model.Product.Images.Select(i => i.Url).ToList();
+        if (!productImages.Any()) { productImages.Add(Model.Product.PictureUrl); }
+        var isVariable = Model.Product.ProductKind == Core.Entities.ProductKind.Variable && Model.Product.Variants.Any();
+        var escapedName = Model.Product.Name.Replace("\"", "\\\"");
+        var escapedDesc = Model.Product.Description.Replace("\"", "\\\"").Replace("\n", " ").Replace("\r", "");
+    }
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Product",
+        "name": "@Html.Raw(escapedName)",
+        "description": "@Html.Raw(escapedDesc)",
+        "productID": "@Model.Product.Id",
+        "sku": "SKU-@Model.Product.Id",
+        "url": "@productUrl",
+        "mainEntityOfPage": {
+            "@@type": "WebPage",
+            "@@id": "@productUrl"
+        },
+        "image": [@Html.Raw(string.Join(", ", productImages.Select(url => $"\"{url}\"")))],
+        "brand": {
+            "@@type": "Brand",
+            "name": "@Model.Product.ProductBrand"
+        },
+        "category": "@Model.Product.ProductCategory",
+        "itemCondition": "https://schema.org/NewCondition",
+        @if (isVariable)
+        {
+            var variantPrices = Model.Product.Variants.Select(v => v.DiscountedPrice ?? v.Price).ToList();
+            var anyInStock = Model.Product.Variants.Any(v => v.QuantityInStock > 0);
+            <text>"offers": {
+            "@@type": "AggregateOffer",
+            "lowPrice": "@variantPrices.Min().ToString(System.Globalization.CultureInfo.InvariantCulture)",
+            "highPrice": "@variantPrices.Max().ToString(System.Globalization.CultureInfo.InvariantCulture)",
+            "priceCurrency": "ZAR",
+            "offerCount": "@Model.Product.Variants.Count",
+            "availability": "@(anyInStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock")",
+            "url": "@productUrl",
+            "seller": {
+                "@@type": "Organization",
+                "name": "@sellerName"
+            }
+        }</text>
+        }
+        else
+        {
+            <text>"offers": {
+            "@@type": "Offer",
+            "price": "@((Model.Product.DiscountedPrice ?? Model.Product.Price).ToString(System.Globalization.CultureInfo.InvariantCulture))",
+            "priceCurrency": "ZAR",
+            "availability": "@(Model.Product.QuantityInStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock")",
+            "url": "@productUrl",
+            "itemCondition": "https://schema.org/NewCondition",
+            "priceValidUntil": "@DateTime.UtcNow.AddMonths(6).ToString("yyyy-MM-dd")",
+            "seller": {
+                "@@type": "Organization",
+                "name": "@sellerName"
+            }
+        }</text>
+        }
+        @if (Model.Product.ReviewCount > 0)
+        {
+            <text>,
+        "aggregateRating": {
+            "@@type": "AggregateRating",
+            "ratingValue": "@Model.Product.AverageRating.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)",
+            "bestRating": "5",
+            "worstRating": "1",
+            "reviewCount": "@Model.Product.ReviewCount"
+        }</text>
+        }
+        @if (Model.Product.Reviews.Any())
+        {
+            <text>,
+        "review": [
+            @for (var i = 0; i < Math.Min(Model.Product.Reviews.Count, 10); i++)
+            {
+                var review = Model.Product.Reviews[i];
+                if (i > 0) { <text>,</text> }
+                <text>{
+                "@@type": "Review",
+                "author": {
+                    "@@type": "Person",
+                    "name": "@review.ReviewerName"
+                },
+                "reviewRating": {
+                    "@@type": "Rating",
+                    "ratingValue": "@review.Rating",
+                    "bestRating": "5",
+                    "worstRating": "1"
+                },
+                "reviewBody": "@Html.Raw(review.Comment?.Replace("\"", "\\\"").Replace("\n", " ").Replace("\r", "") ?? "")",
+                "datePublished": "@review.ReviewDate.ToString("yyyy-MM-dd")"
+            }</text>
+            }
+        ]</text>
+        }
+        @if (Model.Product.Options.Any())
+        {
+            <text>,
+        "additionalProperty": [
+            @for (var i = 0; i < Model.Product.Options.Count; i++)
+            {
+                var option = Model.Product.Options[i];
+                var optionValues = string.Join(", ", option.Values.Select(v => v.Name));
+                if (i > 0) { <text>,</text> }
+                <text>{
+                "@@type": "PropertyValue",
+                "name": "@option.Name",
+                "value": "@Html.Raw(optionValues.Replace("\"", "\\\""))"
+            }</text>
+            }
+        ]</text>
+        }
+        @if (isVariable)
+        {
+            <text>,
+        "hasVariant": [
+            @for (var vi = 0; vi < Math.Min(Model.Product.Variants.Count, 20); vi++)
+            {
+                var variant = Model.Product.Variants[vi];
+                var variantPrice = (variant.DiscountedPrice ?? variant.Price).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var variantOptionNames = new List<string>();
+                foreach (var optValId in variant.OptionValueIds)
+                {
+                    foreach (var opt in Model.Product.Options)
+                    {
+                        var val = opt.Values.FirstOrDefault(v => v.Id == optValId);
+                        if (val != null) { variantOptionNames.Add($"{opt.Name}: {val.Name}"); }
+                    }
+                }
+                var variantName = variantOptionNames.Any()
+                    ? $"{Model.Product.Name} - {string.Join(", ", variantOptionNames)}"
+                    : $"{Model.Product.Name} - Variant {variant.Id}";
+                if (vi > 0) { <text>,</text> }
+                <text>{
+                "@@type": "Product",
+                "name": "@Html.Raw(variantName.Replace("\"", "\\\""))",
+                "sku": "VAR-@variant.Id",
+                "offers": {
+                    "@@type": "Offer",
+                    "price": "@variantPrice",
+                    "priceCurrency": "ZAR",
+                    "availability": "@(variant.QuantityInStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock")",
+                    "url": "@productUrl",
+                    "itemCondition": "https://schema.org/NewCondition",
+                    "seller": {
+                        "@@type": "Organization",
+                        "name": "@sellerName"
+                    }
+                }
+            }</text>
+            }
+        ]</text>
+        }
+    }
+    </script>
+}

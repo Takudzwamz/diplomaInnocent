@@ -1,0 +1,8 @@
+<div class="fab-stack">
+@if (!User.IsInRole("Admin"))
+    {
+    <div class="fab-button btn-light">
+        @await Component.InvokeAsync("Cart")
+    </div>
+    }
+</div>

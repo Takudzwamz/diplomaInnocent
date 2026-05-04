@@ -1,0 +1,254 @@
+[
+  {
+    "Name": "Angular Speedster Board 2000",
+    "Description": "Высокоскоростная доска для профессионалов. Карбоновая основа обеспечивает лёгкость и маневренность на любых склонах.",
+    "Price": 18000,
+    "Type": "Доски",
+    "Brand": "Angular",
+    "Category": "Снаряжение",
+    "QuantityInStock": 82,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095214/products/sb-ang1_gvla1l.webp",
+        "IsMain": true
+      },
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095215/products/sb-ang2_yy5orr.webp",
+        "IsMain": false
+      }
+    ]
+  },
+  {
+    "Name": "Green Angular Board 3000",
+    "Description": "Универсальная доска для фрирайда. Подходит как для начинающих, так и для опытных райдеров.",
+    "Price": 13500,
+    "Type": "Доски",
+    "Brand": "Angular",
+    "Category": "Снаряжение",
+    "QuantityInStock": 75,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095215/products/sb-ang2_yy5orr.webp",
+        "IsMain": true
+      },
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095214/products/sb-ang1_gvla1l.webp",
+        "IsMain": false
+      }
+    ]
+  },
+  {
+    "Name": "Core Board Speed Rush 3",
+    "Description": "Доска для скоростного спуска. Жёсткая конструкция и уникальный дизайн для максимального контроля.",
+    "Price": 16200,
+    "Type": "Доски",
+    "Brand": "NetCore",
+    "QuantityInStock": 3,
+    "Category": "Одежда",
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/sb-core1_brkgbw.webp",
+        "IsMain": true
+      },
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095218/products/sb-core2_e1sf3d.webp",
+        "IsMain": false
+      }
+    ]
+  },
+  {
+    "Name": "Net Core Super Board",
+    "Description": "Премиальная доска с усиленным кантом. Отличный выбор для фристайла и прыжков.",
+    "Price": 27000,
+    "Type": "Доски",
+    "Brand": "NetCore",
+    "QuantityInStock": 52,
+    "Category": "Одежда",
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095218/products/sb-core2_e1sf3d.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "React Board Super Whizzy Fast",
+    "Description": "Легендарная доска для карвинга. Новейшие технологии для плавных поворотов на высокой скорости.",
+    "Price": 22500,
+    "Type": "Доски",
+    "Brand": "React",
+    "QuantityInStock": 97,
+    "Category": "Аксессуары",
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095218/products/sb-react1_vlnrq7.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Typescript Entry Board",
+    "Description": "Доска для начинающих райдеров. Мягкий прогиб и прощающий флекс помогут освоить первые повороты.",
+    "Price": 10800,
+    "Type": "Доски",
+    "Brand": "Typescript",
+    "Category": "Аксессуары",
+    "QuantityInStock": 37,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095219/products/sb-ts1_tmibeo.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Core Blue Hat",
+    "Description": "Стильная шапка из мериносовой шерсти. Сохраняет тепло даже в сильный мороз.",
+    "Price": 900,
+    "Type": "Шапки",
+    "Brand": "NetCore",
+    "Category": "Электроника",
+    "QuantityInStock": 32,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095220/products/hat-core1_ciorc1.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Blue Code Gloves",
+    "Description": "Тёплые перчатки с сенсорными кончиками. Идеальны для использования смартфона на морозе.",
+    "Price": 1620,
+    "Type": "Перчатки",
+    "Brand": "VS Code",
+    "Category": "Защита",
+    "QuantityInStock": 74,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/glove-code1_eg5d0b.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Green Code Gloves",
+    "Description": "Влагостойкие перчатки для активного отдыха. Мембрана Gore-Tex защищает от ветра и снега.",
+    "Price": 1350,
+    "Type": "Перчатки",
+    "Brand": "VS Code",
+    "Category": "Обслуживание",
+    "QuantityInStock": 19,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095216/products/glove-code2_rkory9.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Purple React Gloves",
+    "Description": "Спортивные перчатки с усиленной ладонью. Отличное сцепление и защита от ударов.",
+    "Price": 1440,
+    "Type": "Перчатки",
+    "Brand": "React",
+    "Category": "Обслуживание",
+    "QuantityInStock": 77,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095216/products/glove-react1_wuofay.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Green React Gloves",
+    "Description": "Утеплённые перчатки из натуральной кожи. Элегантный дизайн и высокое качество материалов.",
+    "Price": 1260,
+    "Type": "Перчатки",
+    "Brand": "React",
+    "Category": "Одежда",
+    "QuantityInStock": 45,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/glove-react2_ii3tkn.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Redis Red Boots",
+    "Description": "Водонепроницаемые ботинки для сноуборда. BOA-шнуровка и термоизоляция Thinsulate.",
+    "Price": 22500,
+    "Type": "Ботинки",
+    "Brand": "Redis",
+    "Category": "Одежда",
+    "QuantityInStock": 49,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-redis1_qjobqv.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Core Red Boots",
+    "Description": "Ботинки средней жёсткости для универсального катания. Анатомическая стелька и система быстрой шнуровки.",
+    "Price": 17100,
+    "Type": "Ботинки",
+    "Brand": "NetCore",
+    "Category": "Защита",
+    "QuantityInStock": 28,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-core2_oexqcd.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Core Purple Boots",
+    "Description": "Жёсткие ботинки для агрессивного катания. Рассчитаны на высокие скорости и крутые склоны.",
+    "Price": 18000,
+    "Type": "Ботинки",
+    "Brand": "NetCore",
+    "Category": "Электроника",
+    "QuantityInStock": 69,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095214/products/boot-core1_v6axpv.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Angular Purple Boots",
+    "Description": "Лёгкие ботинки для паркового катания. Гибкая подошва и мягкий внутренник.",
+    "Price": 13500,
+    "Type": "Ботинки",
+    "Brand": "Angular",
+    "Category": "Электроника",
+    "QuantityInStock": 35,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095214/products/boot-ang2_ajrflp.webp",
+        "IsMain": true
+      }
+    ]
+  },
+  {
+    "Name": "Angular Blue Boots",
+    "Description": "Комфортные ботинки для длительного катания. Технология Auto-Fit адаптирует внутренник под ногу.",
+    "Price": 16200,
+    "Type": "Ботинки",
+    "Brand": "Angular",
+    "Category": "Защита",
+    "QuantityInStock": 27,
+    "Images": [
+      {
+        "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095215/products/boot-ang1_mmq6ze.webp",
+        "IsMain": true
+      }
+    ]
+  }
+]

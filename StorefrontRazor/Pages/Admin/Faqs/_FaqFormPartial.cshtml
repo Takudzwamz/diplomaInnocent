@@ -1,0 +1,27 @@
+@model Core.Entities.FaqItem
+
+<input type="hidden" asp-for="Id" />
+<div class="form-group mb-3">
+    <label asp-for="Question"></label>
+    <input asp-for="Question" class="form-control" />
+    <span asp-validation-for="Question" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="Answer"></label>
+    <textarea asp-for="Answer" class="form-control" rows="10"></textarea>
+    <span asp-validation-for="Answer" class="text-danger"></span>
+    <small class="form-text text-muted">Можно использовать базовые HTML-теги: &lt;strong&gt; для жирного, &lt;a href="..."&gt; для ссылок и т.д.</small>
+</div>
+<div class="row">
+    <div class="col-md-6 form-group mb-3">
+        <label asp-for="DisplayOrder"></label>
+        <input asp-for="DisplayOrder" class="form-control" />
+        <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+    </div>
+    <div class="col-md-6 form-group d-flex align-items-end mb-3">
+        <div class="form-check form-switch">
+            <input asp-for="IsPublished" class="form-check-input" />
+            <label asp-for="IsPublished" class="form-check-label"></label>
+        </div>
+    </div>
+</div>

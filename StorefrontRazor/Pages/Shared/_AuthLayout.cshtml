@@ -1,0 +1,22 @@
+@{
+    // This tells the auth layout to use the main layout, so we still get the primary navbar and footer.
+    Layout = "_Layout";
+}
+
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-body p-4 p-sm-5">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

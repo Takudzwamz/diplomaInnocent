@@ -1,0 +1,1168 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+} */
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+.filters-accordion .accordion-button {
+  padding: .5rem 1rem;
+  gap: .5rem;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.filters-accordion .accordion-button::after {
+  display: none;
+}
+
+.filters-accordion .toggle-icon {
+  transition: transform .22s ease;
+  transform-origin: center;
+}
+
+
+.filters-accordion .accordion-button:not(.collapsed) .toggle-icon {
+  transform: rotate(180deg);
+}
+
+.filters-accordion .list-group-item {
+  cursor: pointer;
+}
+
+.filters-accordion .accordion-body {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+
+.product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 1rem;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Product image container with 4:3 aspect ratio */
+.product-img-wrapper {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+.product-card:hover .product-img {
+    transform: scale(1.05);
+}
+
+/* Product card body responsive padding */
+.product-card-body {
+    padding: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .product-card-body {
+        padding: 1rem;
+    }
+}
+
+/* Product name - allow 2 lines on mobile, single line on larger screens */
+.product-name {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+    min-height: 2.6em;
+}
+
+@media (min-width: 768px) {
+    .product-name {
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+        white-space: nowrap;
+        display: block;
+        min-height: auto;
+    }
+}
+
+/* Responsive font sizes for mobile */
+@media (max-width: 575.98px) {
+    .product-card .card-title {
+        font-size: 0.85rem;
+    }
+    .product-card .fs-5 {
+        font-size: 1rem !important;
+    }
+    .product-card .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.6rem;
+    }
+    .product-card .small {
+        font-size: 0.7rem;
+    }
+}
+
+.quantity-controls button {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Smaller quantity buttons on mobile */
+@media (max-width: 575.98px) {
+    .quantity-controls button {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+    .quantity-controls .quantity-display {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        font-size: 0.85rem;
+    }
+}
+
+
+/* --- Floating Action Button Styles (Separate) --- */
+.fab-stack {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+
+}
+
+/* Individual frosted glass FAB */
+.fab-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* glass appearance */
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+
+  transition: transform 0.18s ease-in-out, box-shadow 0.18s ease-in-out, background 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover / active polish */
+.fab-button:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06));
+}
+
+/* keyboard focus */
+.fab-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37,140,251,0.12), 0 8px 20px rgba(0,0,0,0.18);
+}
+
+/* Override for the cart component to fit in the FAB style */
+.fab-button .nav-link {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bs-primary-text-emphasis); /* Use Bootstrap's theme colors */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.fab-button .nav-link i {
+  font-size: 1.5rem;
+}
+
+.fab-button .badge {
+  top: 5px !important;
+  left: 40px !important;
+  font-size: .65em;
+}
+
+/* Style for the theme switcher dropdown */
+.fab-button.dropdown .nav-link {
+  color: var(--bs-primary-text-emphasis);
+}
+
+/* Fallbacks / prefers-reduced-transparency */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .fab-stack { background: rgba(255,255,255,0.06); border: 1px solid rgba(0,0,0,0.06); }
+  .fab-button { background: rgba(255,255,255,0.06); border: 1px solid rgba(0,0,0,0.06); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .fab-stack, .fab-button {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255,255,255,0.06);
+  }
+}
+
+/* 1. Define Color Palettes as CSS Variables */
+
+
+
+
+/*
+=========================================
+  Dark Mode Styles for Choices.js
+=========================================
+*/
+
+/* --- Main input container --- */
+[data-bs-theme="dark"] .choices__inner {
+  background-color: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+
+
+/* --- Choices input test --- */
+[data-bs-theme="dark"] .choices__input {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  caret-color: var(--bs-body-color);
+}
+
+/* --- Dropdown list background --- */
+[data-bs-theme="dark"] .choices__list--dropdown {
+  background-color: var(--bs-tertiary-bg);
+  border: 1px solid var(--bs-border-color);
+}
+
+/* --- Items in the dropdown --- */
+[data-bs-theme="dark"] .choices__item--choice {
+  color: var(--bs-body-color);
+}
+
+/* --- Hovered/highlighted item in the dropdown --- */
+[data-bs-theme="dark"] .choices__list--dropdown .choices__item--selectable.is-highlighted {
+  background-color: var(--bs-primary);
+  color: var(--bs-body-bg);
+}
+
+/* --- Selected items (pills/tokens) in the input area --- */
+[data-bs-theme="dark"] .choices__item.choices__item--selectable {
+    background-color: var(--bs-primary);
+    border: 1px solid var(--bs-primary-border-subtle);
+    color: #fff;
+}
+
+/* --- The 'X' remove button on selected items --- */
+[data-bs-theme="dark"] .choices__button {
+    filter: invert(1) grayscale(100) brightness(200%); /* Makes the dark icon white */
+    opacity: 0.75;
+}
+
+[data-bs-theme="dark"] .choices__button:hover {
+    opacity: 1;
+}
+
+
+
+
+/*
+=========================================
+  1. NEW COLOR PALETTE
+  Inspired by your example (vibrant purple)
+=========================================
+*/
+:root {
+  --bs-primary: #8b5cf6; /* Vibrant purple from example */
+  --bs-primary-rgb: 139, 92, 246;
+  --bs-primary-text-emphasis: #5b21b6; /* Darker purple */
+  --bs-primary-bg-subtle: #ede9fe; /* Light purple */
+  --bs-primary-border-subtle: #c4b5fd; /* Mid purple */
+
+  --bs-body-color: #111827; 
+  --bs-body-color-rgb: 17, 24, 39;
+  
+  /* --- Glassmorphism Light Theme --- */
+  /* Brighter, more opaque glass */
+  --glass-bg: rgba(255, 255, 255, 0.35); 
+  --glass-border: rgba(var(--bs-body-color-rgb), 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  --glass-blur: 12px;
+}
+
+[data-bs-theme="dark"] {
+  --bs-primary: #a78bfa; 
+  --bs-primary-rgb: 167, 139, 250;
+  --bs-primary-text-emphasis: #ede9fe; /* Light purple */
+  --bs-primary-bg-subtle: #2d1d57; /* Dark purple */
+  --bs-primary-border-subtle: #5b21b6; /* Darker purple */
+  
+  --bs-body-color: #e5e7eb; 
+  --bs-body-color-rgb: 229, 231, 235;
+
+  /* --- Glassmorphism Dark Theme --- */
+  /* Darker, more transparent glass (like your example) */
+  --glass-bg: rgba(255, 255, 255, 0.08); 
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --glass-blur: 10px;
+}
+
+/*
+=========================================
+  2. ANIMATED ORB BACKGROUND
+  This is the new "lava lamp" effect.
+=========================================
+*/
+
+/* This container holds the orbs */
+.bg-animation {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: -1; /* Sits behind all content */
+  overflow: hidden; /* Prevents scrollbars */
+  /* Base background color for themes */
+  background-color: #f7f7fa; 
+  transition: background-color 0.3s ease;
+}
+
+[data-bs-theme="dark"] .bg-animation {
+  background-color: #0a0a0f; /* Dark bg from your example */
+}
+
+/* Base style for all orbs */
+.floating-orb {
+  position: absolute;
+  border-radius: 50%;
+  /* This blur is what gives the "aurora" look */
+  filter: blur(80px); 
+  opacity: 0.7;
+  animation: float 20s infinite ease-in-out;
+  transition: background 0.3s ease-in-out;
+}
+
+/* --- LIGHT MODE ORB COLORS --- */
+/* We use softer, pastel colors for the light theme */
+:root .orb1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #fbc2eb, transparent 60%);
+  top: -150px;
+  left: -150px;
+  animation-duration: 25s;
+}
+:root .orb2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #a6c1ee, transparent 60%);
+  bottom: -150px;
+  right: -150px;
+  animation-duration: 30s;
+  animation-delay: 5s;
+}
+:root .orb3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #f3e8ff, transparent 60%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-duration: 35s;
+  animation-delay: 10s;
+}
+
+/* --- DARK MODE ORB COLORS --- */
+/* We use the vibrant, techy colors from your example */
+[data-bs-theme="dark"] .orb1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--bs-primary), transparent 60%);
+  opacity: 0.5;
+  top: -200px;
+  left: -200px;
+}
+[data-bs-theme="dark"] .orb2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #ec4899, transparent 60%);
+  opacity: 0.5;
+  bottom: -200px;
+  right: -200px;
+}
+[data-bs-theme="dark"] .orb3 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #06b6d4, transparent 60%);
+  opacity: 0.4;
+  top: 50%;
+  left: 50%;
+}
+
+/* The animation that moves the orbs */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(100px, -100px) scale(1.1); }
+  50% { transform: translate(-100px, 100px) scale(0.9); }
+  75% { transform: translate(50px, 50px) scale(1.05); }
+}
+
+/* This is still needed! 
+  It makes the <body> transparent so the 
+  .bg-animation behind it is visible. 
+*/
+body {
+  background-color: transparent;
+}
+
+
+/*
+=========================================
+  3. GLASSMORPHISM EFFECT
+  Applies the "frosted glass" look to key components.
+=========================================
+*/
+
+/* --- Glassmorphism Core Style --- */
+/* This now uses our new --glass-bg variables */
+/* NOTE: .card is excluded here — product cards use plain backgrounds.
+   Non-product cards that need glass get it via .glass-card class or specific selectors below. */
+.navbar,
+.accordion-item,
+.modal-content,
+.offcanvas,
+.dropdown-menu,
+.pagination .page-item .page-link {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow);
+}
+
+/* Apply glass to non-product cards (admin panels, checkout, account, etc.) */
+.card:not(.product-card) {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow);
+}
+
+/* --- Component-Specific Fixes --- */
+
+/* Make sure Bootstrap's default backgrounds don't cover our glass */
+.bg-body-tertiary,
+.bg-transparent,
+.list-group {
+  background: transparent !important;
+}
+
+/* Fix for Accordions */
+.accordion-item {
+  margin-bottom: 1rem;
+  border-radius: .375rem !important;
+}
+.accordion-button {
+  background-color: transparent !important;
+}
+.accordion-button:not(.collapsed) {
+  box-shadow: none;
+}
+
+/* Fix for Product Cards — plain OPAQUE background, NO frosted glass */
+.card.product-card,
+.product-card {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  opacity: 1 !important;
+}
+.card.product-card:hover,
+.product-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+}
+[data-bs-theme="dark"] .card.product-card,
+[data-bs-theme="dark"] .product-card {
+  background: #2b2b2b !important;
+  background-color: #2b2b2b !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+[data-bs-theme="dark"] .card.product-card:hover,
+[data-bs-theme="dark"] .product-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Fix for the Footer */
+footer.footer,
+footer.bg-body-tertiary {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  border-top: 1px solid var(--glass-border) !important;
+}
+
+/* Fix for auth/checkout input groups */
+.input-group-text {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+
+/*
+=========================================
+  4. ACTIVE STATE STYLING
+  Fixes for pagination, filters, and accordions
+=========================================
+*/
+
+/* --- Filter/List Group Active State Fix --- */
+.list-group-item.active {
+  /* Use the primary color as the background */
+  background-color: var(--bs-primary) !important;
+  /* Use a light text color (from our palette) */
+  color: var(--bs-primary-bg-subtle) !important;
+  /* Use the primary color for the border */
+  border-color: var(--bs-primary) !important;
+  /* Use the standard glass shadow */
+  box-shadow: var(--glass-shadow);
+  transform: scale(1.02); /* Add a slight "pop" */
+}
+
+/* --- Pagination Active State Fix --- */
+.pagination .page-item.active .page-link {
+  /* Use the primary color as the background */
+  background-color: var(--bs-primary) !important;
+  /* Use a light text color */
+  color: var(--bs-primary-bg-subtle) !important;
+  border-color: var(--bs-primary) !important;
+  box-shadow: var(--glass-shadow);
+  transform: scale(1.05); /* Add a slight "pop" */
+}
+
+/* --- Accordion Button Active (Open) State --- */
+.accordion-button:not(.collapsed) {
+  /* Tints the background with the primary color */
+  background: rgba(var(--bs-primary-rgb), 0.1) !important;
+  /* Makes the text the primary color */
+  color: var(--bs-primary) !important;
+  box-shadow: none !important;
+}
+
+/* --- (Optional but Recommended) Hover Effects --- */
+
+/* Hover state for non-active filter links */
+.list-group-item:not(.active):hover {
+  background: rgba(var(--bs-primary-rgb), 0.05) !important;
+  border-color: rgba(var(--bs-primary-rgb), 0.2) !important;
+  /* transform: scale(1.02); */
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+/* Hover state for non-active pagination links */
+.pagination .page-item:not(.active) .page-link:hover {
+  background: rgba(var(--bs-primary-rgb), 0.05) !important;
+  border-color: rgba(var(--bs-primary-rgb), 0.2) !important;
+  /* transform: translateY(-2px); */
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+/*
+=========================================
+  5. NAVBAR STICKY & STACKING FIX
+  Makes navbar stick to top and ensures dropdowns appear over page content
+=========================================
+*/
+
+/*
+  We give the navbar 'position: sticky' with top: 0 so it sticks to the top,
+  and a high z-index (1030) to ensure it and its children
+  (like the dropdown menu) render on top of all other content.
+*/
+.navbar {
+  position: sticky !important; 
+  top: 0;
+  z-index: 1030;      
+}
+
+/*
+=========================================
+  6. DROPDOWN MENU FROST FIX
+  Increases blur and opacity for dropdowns
+=========================================
+*/
+
+/* --- Light Mode Dropdown --- */
+/* We make the dropdown more opaque and blurrier than other glass */
+:root .dropdown-menu {
+  background: rgba(255, 255, 255, 0.6) !important; /* Was 0.35 */
+  backdrop-filter: blur(12px) !important;       /* Was 6px */
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* --- Dark Mode Dropdown --- */
+/* We increase the white tint from 8% to 20% for a frostier look */
+[data-bs-theme="dark"] .dropdown-menu {
+  background: rgba(144, 130, 146, 0.5) !important; /* Was 0.08 */
+  backdrop-filter: blur(14px) !important;       /* Was 10px */
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+
+/*
+=========================================
+  8. THEME COLOR & STAT CARD EXPANSION
+=========================================
+*/
+
+/* --- 1. DEFINE LIGHT MODE COLORS --- */
+:root {
+  /* --bs-primary and its variants are already defined */
+  
+  --bs-success: #198754;
+  --bs-success-rgb: 25, 135, 84;
+  --bs-success-text-emphasis: #0a3622; /* Dark green */
+  
+  --bs-warning: #ffc107;
+  --bs-warning-rgb: 255, 193, 7;
+  --bs-warning-text-emphasis: #664d03; /* Dark yellow */
+
+  --bs-danger: #dc3545;
+  --bs-danger-rgb: 220, 53, 69;
+  --bs-danger-text-emphasis: #58151c; /* Dark red */
+  
+  --bs-info: #0dcaf0;
+  --bs-info-rgb: 13, 202, 240;
+  --bs-info-text-emphasis: #055160; /* Dark cyan */
+}
+
+/* --- 2. DEFINE DARK MODE COLORS --- */
+[data-bs-theme="dark"] {
+  /* --bs-primary and its variants are already defined */
+
+  /* Use Bootstrap's light color variants for dark mode */
+  --bs-success: #75b798;
+  --bs-success-rgb: 117, 183, 152;
+  --bs-success-text-emphasis: #75b798; /* Light green */
+  
+  --bs-warning: #ffda6a;
+  --bs-warning-rgb: 255, 218, 106;
+  --bs-warning-text-emphasis: #ffda6a; /* Light yellow */
+  
+  --bs-danger: #dc3545;
+  --bs-danger-rgb: 220, 53, 69;
+  --bs-danger-text-emphasis: #dc3545; /* Light red */
+
+  --bs-info: #6edff6;
+  --bs-info-rgb: 110, 223, 246;
+  --bs-info-text-emphasis: #6edff6; /* Light cyan */
+}
+
+/* --- 3. NEW STAT CARD CLASSES --- */
+/* These override the default .card glass and add a color tint */
+
+.stat-card-primary,
+.stat-card-success,
+.stat-card-warning,
+.stat-card-danger,
+.stat-card-info {
+  /* This uses the RGB variable of the *current* theme 
+     to create a 20% opacity background. */
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.stat-card-primary {
+  background: rgba(var(--bs-primary-rgb), 0.2) !important;
+  border-color: rgba(var(--bs-primary-rgb), 0.3) !important;
+  /* Use the high-contrast text color for the theme */
+  color: var(--bs-primary-text-emphasis) !important;
+}
+
+.stat-card-success {
+  background: rgba(var(--bs-success-rgb), 0.2) !important;
+  border-color: rgba(var(--bs-success-rgb), 0.3) !important;
+  color: var(--bs-success-text-emphasis) !important;
+}
+
+.stat-card-warning {
+  background: rgba(var(--bs-warning-rgb), 0.2) !important;
+  border-color: rgba(var(--bs-warning-rgb), 0.3) !important;
+  color: var(--bs-warning-text-emphasis) !important;
+}
+
+.stat-card-danger {
+  background: rgba(var(--bs-danger-rgb), 0.2) !important;
+  border-color: rgba(var(--bs-danger-rgb), 0.3) !important;
+  color: var(--bs-danger-text-emphasis) !important;
+}
+
+.stat-card-info {
+  background: rgba(var(--bs-info-rgb), 0.2) !important;
+  border-color: rgba(var(--bs-info-rgb), 0.3) !important;
+  color: var(--bs-info-text-emphasis) !important;
+}
+
+/* Ensure links inside the cards also get the right color */
+.stat-card-danger a,
+.stat-card-danger a:hover {
+    color: var(--bs-danger-text-emphasis) !important;
+}
+
+
+/*
+=========================================
+  9. GLASS TABLE STYLING
+  Makes tables transparent with glass effects
+=========================================
+*/
+
+/* 1. Make the main table transparent */
+.table {
+  /* Remove Bootstrap's default table background */
+  --bs-table-bg: transparent !important;
+  /* Use our body color for the table text */
+  color: var(--bs-body-color);
+  /* Change table borders to our glass border color */
+  border-color: var(--glass-border) !important;
+}
+
+/* 2. Style the table header row */
+.table > thead {
+  /* Use a very subtle glass tint for the header */
+  background-color: rgba(var(--bs-primary-rgb), 0.05);
+  border-color: var(--glass-border);
+}
+
+.table > thead th {
+   color: var(--bs-body-color); /* Ensure header text is visible */
+   border-bottom-width: 1px;
+}
+
+/* 3. Style the table hover state */
+.table-hover > tbody > tr:hover {
+  /* On hover, apply a subtle primary-color tint */
+  background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+  color: var(--bs-body-color) !important;
+}
+
+/* 4. Add rounded corners to the table's container */
+/* This makes the table fit inside the rounded glass card */
+.card-body .table-responsive {
+    border-radius: 0.375rem; /* Bootstrap's default card radius */
+    overflow: hidden; /* This clips the table's corners */
+}
+
+/* 5. Ensure the table fills the rounded container */
+.card-body .table-responsive .table {
+    margin-bottom: 0 !important; /* Remove default table margin */
+}
+
+/* 6. Fix for special table rows (like 'Out of Stock') */
+tr.table-danger,
+[data-bs-theme="dark"] tr.table-danger {
+    background-color: rgba(var(--bs-danger-rgb), 0.2) !important;
+    color: var(--bs-danger-text-emphasis) !important;
+    border-color: rgba(var(--bs-danger-rgb), 0.3) !important;
+}
+
+
+
+/*
+=========================================
+  7. ADMIN SIDEBAR FROST FIX (Final)
+  Adds frost AND a visible primary border
+=========================================
+*/
+
+/* --- 1. Set the main glass properties (for all sizes) --- */
+
+/* Light Mode */
+:root #adminSidebar {
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--glass-border);
+  border-radius: 0px 8px 8px 0px; /* Rounded top-right and bottom-right corners */
+}
+
+/* Dark Mode */
+[data-bs-theme="dark"] #adminSidebar {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+/* --- 2. Fix the DESKTOP border (lg screens and up) --- */
+/* This selector targets the sidebar ONLY on large screens */
+@media (min-width: 992px) {
+  #adminSidebar.offcanvas-lg.offcanvas-start {
+    /* FORCE the border-right to be the primary color */
+    border-right-color: var(--bs-primary) !important;
+    border-right-width: 1px !important; /* Ensure it has a width */
+  }
+}
+
+/* --- 3. Fix the MOBILE/TABLET border (md screens and down) --- */
+/* This selector targets the sidebar ONLY when it's a slide-out menu */
+@media (max-width: 991.98px) {
+  /* Light Mode */
+  :root #adminSidebar.offcanvas.offcanvas-start {
+    border-color: rgba(var(--bs-body-color-rgb), 0.2) !important;
+  }
+  
+  /* Dark Mode */
+  [data-bs-theme="dark"] #adminSidebar.offcanvas.offcanvas-start {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+}
+
+
+/*
+=========================================
+  10. BLUE COLOR OVERRIDE FIX
+  Forces all components to use the new primary (purple) palette
+=========================================
+*/
+
+/* --- 1. Default Link Colors (Fixes Footer, Pagination) --- */
+:root {
+  /* Set the default link color to our primary palette */
+  --bs-link-color: var(--bs-primary);
+  --bs-link-color-rgb: var(--bs-primary-rgb);
+  --bs-link-hover-color: var(--bs-primary-text-emphasis);
+}
+
+/* Ensure all links (<a> tags) use this */
+a {
+  color: var(--bs-link-color);
+  text-decoration: none; /* Optional: I prefer cleaner links */
+}
+a:hover {
+  color: var(--bs-link-hover-color);
+}
+
+/* --- 2. Primary Button (Fixes Search Button) --- */
+.btn-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+  color: #FFFFFF !important; /* White text on purple */
+}
+.btn-primary:hover {
+  /* Get a bit darker on hover */
+  background-color: var(--bs-primary-text-emphasis) !important;
+  border-color: var(--bs-primary-text-emphasis) !important;
+  color: #FFFFFF !important;
+}
+
+[data-bs-theme="dark"] .btn-primary {
+   /* Use the light purple for dark mode */
+   background-color: var(--bs-primary) !important; 
+   border-color: var(--bs-primary) !important;
+   /* Use a dark text for contrast on the light purple */
+   color: #2d1d57 !important; 
+}
+[data-bs-theme="dark"] .btn-primary:hover {
+   background-color: #c4b5fd !important; /* Even lighter purple */
+   border-color: #c4b5fd !important;
+   color: #2d1d57 !important; 
+}
+
+
+/* --- 3. Outline Button (Fixes Footer Social Icons) --- */
+.btn-outline-primary {
+  color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+.btn-outline-primary:hover {
+  color: #FFFFFF !important; /* White text on purple bg */
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary {
+  color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+[data-bs-theme="dark"] .btn-outline-primary:hover {
+  color: #2d1d57 !important; /* Dark purple text */
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+/* --- 4. Admin Sidebar Links (Fixes blue link text) --- */
+#adminSidebar .nav-link {
+  /* Use the default body text color */
+  color: var(--bs-body-color);
+}
+#adminSidebar .nav-link:hover {
+  /* Hover to purple */
+  color: var(--bs-primary);
+}
+
+/* --- 5. Admin Sidebar *Active* Link (Fixes solid blue bg) --- */
+#adminSidebar .nav-link.active {
+  background-color: var(--bs-primary) !important;
+  color: #FFFFFF !important; /* White text on solid bg */
+}
+
+[data-bs-theme="dark"] #adminSidebar .nav-link.active {
+  /* Dark text on light purple bg */
+  color: #2d1d57 !important; 
+}
+
+/* --- 6. Text Primary (Just in case) --- */
+.text-primary {
+  color: var(--bs-primary) !important;
+}
+
+/*
+=========================================
+  11. CHECKOUT & SECONDARY BUTTON FIX
+=========================================
+*/
+
+/* --- 1. Secondary Button (Fixes "Back to Cart") --- */
+.btn-outline-secondary {
+  /* Use the body text color for the non-hovered state */
+  color: var(--bs-body-color) !important;
+  border-color: var(--glass-border) !important;
+  /* Give it a subtle glass background */
+  background-color: var(--glass-bg) !important;
+}
+.btn-outline-secondary:hover {
+  /* On hover, use the primary color */
+  color: #FFFFFF !important;
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-secondary:hover {
+  color: #2d1d57 !important; /* Dark text for light purple bg */
+}
+
+/* --- 2. Checkout Stepper (Fixes blue pills) --- */
+.nav-pills .nav-link {
+  /* Make non-active steps glassy */
+  background-color: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--bs-body-color) !important;
+  opacity: 0.7; /* Make them look 'dimmed' */
+}
+.nav-pills .nav-link.active {
+  /* Make the active step our solid primary color */
+  background-color: var(--bs-primary) !important;
+  color: #FFFFFF !important;
+  opacity: 1.0;
+  box-shadow: var(--glass-shadow);
+}
+.nav-pills .nav-link.disabled {
+  /* Make disabled steps even more glassy and faded */
+  background-color: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  opacity: 0.4 !important;
+}
+
+[data-bs-theme="dark"] .nav-pills .nav-link.active {
+  color: #2d1d57 !important; /* Dark text for light purple bg */
+}
+
+/*
+=========================================
+  12. FORM CHECKBOX & RADIO FIX
+=========================================
+*/
+
+/* --- 1. Style the checked state --- */
+.form-check-input:checked {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+/* --- 2. Style the focus outline --- */
+.form-check-input:focus {
+  /* This uses our primary color for the glow */
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+
+/*
+=========================================
+  13. LIST GROUP FROST FIX
+  Increases blur and opacity for list items
+=========================================
+*/
+
+/* --- Light Mode List Items --- */
+:root .list-group-item {
+  background-color: transparent;
+  border-radius: 5px;
+  border-color: var(--glass-border);
+}
+
+/* --- Dark Mode List Items --- */
+[data-bs-theme="dark"] .list-group-item {
+  background-color: transparent;
+  border-color: var(--glass-border);
+  border-radius: 5px;
+}
+
+/* This fixes the borders for lists inside cards 
+  (like your "Order Items" list) 
+*/
+.card > .list-group-flush .list-group-item {
+    border-width: 0 0 1px !important; /* Only show the bottom border */
+}
+/* Fix for the last item in a flush list */
+.card > .list-group-flush .list-group-item:last-child {
+    border-bottom-width: 0 !important;
+    
+}
+
+/* This putd a 2px border radius on the selected list item */
+.list-group-item.active {
+    border-radius: 5px;
+}
+
+[data-bs-theme="dark"] .list-group-item.active {
+    border-color: var(--bs-primary) !important;
+    border-radius: 5px;
+}
+
+/*
+=========================================
+  14. ACCORDION FOCUS RING FIX
+  Changes the blue glow to our theme purple
+=========================================
+*/
+
+.accordion-button:focus {
+  /* This uses our primary color for the glow */
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25) !important;
+  /* We also need to set the border color */
+  border-color: rgba(var(--bs-primary-rgb), 0.8) !important;
+}
+
+/*
+=========================================
+  15. HERO CAROUSEL & HOME PAGE STYLES
+=========================================
+*/
+
+.hero-section {
+  position: relative;
+  height: 60vh;
+  min-height: 400px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+}
+
+#heroCarousel .carousel-control-prev,
+#heroCarousel .carousel-control-next {
+  width: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  opacity: 0;
+}
+
+#heroCarousel .carousel-control-prev:hover,
+#heroCarousel .carousel-control-next:hover {
+  opacity: 0.5;
+}
+
+@media (max-width: 576px) {
+  #heroCarousel .carousel-control-prev {
+    left: -10px;
+  }
+
+  #heroCarousel .carousel-control-next {
+    right: -10px;
+  }
+}
+
+.card-hover-lift {
+  transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+@keyframes ai-badge-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.ai-badge-animated i {
+  animation: ai-badge-pulse 2s ease-in-out infinite;
+}

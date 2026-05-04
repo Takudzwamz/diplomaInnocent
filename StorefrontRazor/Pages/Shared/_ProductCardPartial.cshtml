@@ -1,0 +1,145 @@
+@model Core.DTOs.ProductDto
+@inject Core.Interfaces.ICartService CartService
+
+@{
+
+    var cart = ViewData["Cart"] as Core.Entities.ShoppingCart;
+    var itemInCart = cart?.Items.FirstOrDefault(i => i.ProductId == Model.Id);
+}
+
+<div class="card h-100 product-card">
+    <div class="position-relative overflow-hidden rounded-top product-img-wrapper">
+        <a asp-page="/Products/Details" asp-route-id="@Model.Id"
+            asp-route-returnUrl="@(ViewContext.HttpContext.Request.Path + ViewContext.HttpContext.Request.QueryString)">
+            <img src="@Model.PictureUrl" class="card-img-top img-fluid product-img" alt="@Model.Name">
+        </a>
+        <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
+            <partial name="_WishlistButtonPartial" model="@Model.Id" />
+        </div>
+         @if (Model.DiscountedPrice.HasValue)
+        {
+            <div class="position-absolute bottom-0 start-0 p-2" style="z-index: 10;">
+                <span class="badge bg-success shadow-sm rounded-pill">
+                    <i class="bi bi-tag-fill me-1"></i>
+                    -@((int)(100 - (Model.DiscountedPrice.Value / Model.Price * 100)))%
+                </span>
+            </div>
+        }
+    </div>
+
+    <div class="card-body d-flex flex-column product-card-body">
+        <h6 class="card-title mb-1 fw-semibold">
+            <a asp-page="/Products/Details" asp-route-id="@Model.Id"
+                asp-route-returnUrl="@(ViewContext.HttpContext.Request.Path + ViewContext.HttpContext.Request.QueryString)"
+                class="text-decoration-none stretched-link product-name">@Model.Name</a>
+        </h6>
+
+        @if (Model.AverageRating > 0)
+        {
+            <div class="d-flex align-items-center mb-2">
+                <partial name="_StarRatingPartial" model="Model.AverageRating" />
+                <span class="text-muted small ms-2">(@Model.ReviewCount)</span>
+            </div>
+        }
+        else
+        {
+            <div class="mb-2">
+                <span class="text-muted small">Отзывов пока нет</span>
+            </div>
+        }
+
+        @* --- Price Section --- *@
+        <div class="mb-2">
+            @if (Model.ProductKind == Core.Entities.ProductKind.Variable)
+            {
+                <span class="text-muted small d-block">От</span>
+            }
+            
+            @if (Model.DiscountedPrice.HasValue)
+            {
+                <span class="fw-bold fs-5 text-danger">@Model.DiscountedPrice.Value.ToString("C")</span>
+                <del class="text-muted small ms-1">@Model.Price.ToString("C")</del>
+            }
+            else
+            {
+                <span class="fw-bold fs-5 text-primary">@Model.Price.ToString("C")</span>
+            }
+        </div>
+
+        @* --- Cart Controls Section (Now Below Price) --- *@
+        @if (!User.IsInRole("Admin"))
+        {
+            <div class="cart-controls mt-auto" data-product-id="@Model.Id" style="z-index: 2; position: relative;">
+
+                @if (Model.ProductKind == Core.Entities.ProductKind.Variable)
+                {
+                    <a asp-page="/Products/Details" asp-route-id="@Model.Id" class="btn btn-outline-primary rounded-pill btn-sm w-100">
+                        <i class="bi bi-sliders"></i> Выбрать опции
+                    </a>
+                }
+                else
+                {
+                    if (Model.QuantityInStock > 0)
+                    {
+                        if (itemInCart == null)
+                        {
+                            <form method="post" class="add-to-cart-form" asp-page-handler="AddToCartJson">
+                                <input type="hidden" name="productId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-primary rounded-pill btn-sm w-100">
+                                    <i class="bi bi-cart-plus-fill"></i> В корзину
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center gap-2 quantity-controls">
+                                <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+                                    <input type="hidden" name="productId" value="@Model.Id" />
+                                    <input type="hidden" name="quantity" value="@(itemInCart.Quantity - 1)" />
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm rounded-circle px-2">-</button>
+                                </form>
+                                <span class="px-3 quantity-display fw-semibold">@itemInCart.Quantity</span>
+                                <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+                                    <input type="hidden" name="productId" value="@Model.Id" />
+                                    <input type="hidden" name="quantity" value="@(itemInCart.Quantity + 1)" />
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm rounded-circle px-2" disabled="@(itemInCart.Quantity >= Model.QuantityInStock)">+</button>
+                                </form>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-danger btn-sm w-100 disabled">
+                            <i class="bi bi-x-circle"></i> Нет в наличии
+                        </button>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<template id="add-to-cart-template-@Model.Id">
+    <form method="post" class="add-to-cart-form" asp-page-handler="AddToCartJson">
+        <input type="hidden" name="productId" value="@Model.Id" />
+        <button type="submit" class="btn btn-primary btn-sm rounded-pill w-100">
+            <i class="bi bi-cart-plus-fill"></i> В корзину
+        </button>
+    </form>
+</template>
+
+<template id="quantity-controls-template-@Model.Id">
+    <div class="d-flex align-items-center gap-2 quantity-controls">
+        <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="hidden" name="quantity" value="0" />
+            <button type="submit" class="btn btn-outline-secondary btn-sm rounded-circle px-2">-</button>
+        </form>
+        <span class="px-3 quantity-display fw-semibold">1</span>
+        <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="hidden" name="quantity" value="2" />
+            <button type="submit" class="btn btn-outline-secondary btn-sm rounded-circle px-2">+</button>
+        </form>
+    </div>
+</template>

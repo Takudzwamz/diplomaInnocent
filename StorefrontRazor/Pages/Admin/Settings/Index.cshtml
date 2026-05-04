@@ -1,0 +1,154 @@
+@page
+@model StorefrontRazor.Pages.Admin.Settings.IndexModel
+@{
+    ViewData["Title"] = "Настройки";
+}
+<h1>@ViewData["Title"]</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card h-100 shadow-sm border-primary">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-robot text-primary me-2"></i>Настройки ИИ
+                </h5>
+                <p class="card-text">Настройка интеграции Azure OpenAI для ИИ-рекомендаций товаров.</p>
+                <a asp-page="/Admin/Settings/AI" class="btn btn-primary">
+                    <i class="bi bi-gear-fill me-2"></i>Управление ИИ
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card h-100 shadow-sm border-success">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-credit-card text-success me-2"></i>Настройки оплаты
+                </h5>
+                <p class="card-text">Настройка платёжных шлюзов (Paystack, PayFast) и режимов транзакций.</p>
+                <a asp-page="/Admin/Settings/Payment" class="btn btn-success">
+                    <i class="bi bi-gear-fill me-2"></i>Управление оплатой
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="alert alert-warning" role="alert">
+                <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Важные системные настройки</h5>
+                <p>Эти настройки критичны для работы магазина. Неправильные значения URL или API-ключей могут нарушить загрузку файлов, отправку почты и другие функции.</p>
+            </div>
+
+            <h4 class="mt-4">Общие настройки</h4>
+            <hr />
+
+            <div class="form-group mb-3">
+                <label asp-for="Vm.StoreName"></label>
+                <input asp-for="Vm.StoreName" class="form-control" />
+                <span asp-validation-for="Vm.StoreName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Vm.PublicUrl"></label>
+                <input asp-for="Vm.PublicUrl" class="form-control" placeholder="https://www.your-live-domain.com" />
+                <div class="form-text">Основной URL вашего сайта, используемый в письмах (напр., https://www.yourstore.ru).</div>
+                <span asp-validation-for="Vm.PublicUrl" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Vm.AdminNotificationEmail"></label>
+                <input asp-for="Vm.AdminNotificationEmail" class="form-control" placeholder="admin@yourstore.com" />
+                <div class="form-text">Email-адрес для получения уведомлений об оплате и других административных уведомлений.</div>
+                <span asp-validation-for="Vm.AdminNotificationEmail" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group mb-3">
+                        <label asp-for="LogoUpload">Логотип магазина</label>
+                        <input asp-for="LogoUpload" class="form-control" />
+                        <span asp-validation-for="Vm.StoreName" class="text-danger"></span>
+                        <small>Рекомендуемый размер: 200px в ширину</small>
+                    </div>
+
+
+                </div>
+                <div class="col-md-4">
+                    @if (!string.IsNullOrEmpty(Model.Vm.CurrentLogoUrl))
+                    {
+                        <img src="@Model.Vm.CurrentLogoUrl" alt="Current store logo" class="img-thumbnail" style="max-height: 50px;" />
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group mb-3">
+                        <label asp-for="FaviconUpload">Иконка браузера (Favicon)</label>
+                        <input asp-for="FaviconUpload" class="form-control" />
+                        <small>Рекомендуется: квадратный .ico или .png файл (напр., 32x32px)</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    @if (!string.IsNullOrEmpty(Model.Vm.CurrentFaviconUrl))
+                    {
+                        <img src="@Model.Vm.CurrentFaviconUrl" alt="Current favicon" class="img-thumbnail" style="max-height: 32px;" />
+                    }
+                </div>
+            </div>
+
+            <h4 class="mt-5">Настройки API-ключей</h4>
+            <small>Настройте API-ключи для сторонних сервисов, необходимых для работы магазина.</small>
+            <hr />
+            
+            <h5 class="text-primary">SendGrid</h5>
+            <div class="form-text mb-2">
+                Используется для отправки всех писем магазина (подтверждения заказов и т.д.). 
+                <a href="https://sendgrid.com/" style="text-decoration: none;" target="_blank">Зарегистрируйтесь здесь</a> и найдите ключи в разделе "Settings" -> "API Keys".
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Vm.SendGridKey"></label>
+                <input asp-for="Vm.SendGridKey" class="form-control" />
+                <span asp-validation-for="Vm.SendGridKey" class="text-danger"></span>
+            </div>
+            
+            <h5 class="text-primary mt-4">Cloudinary</h5>
+            <div class="form-text mb-2">
+                Используется для хранения изображений товаров и других изображений магазина. 
+                <a href="https://cloudinary.com/users/login" style="text-decoration: none;" target="_blank">Найдите ключи на панели управления.</a>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Vm.CloudinaryCloudName"></label>
+                <input asp-for="Vm.CloudinaryCloudName" class="form-control" />
+                <div class="form-text">Имя облака (Cloud Name) из панели Cloudinary.</div>
+                <span asp-validation-for="Vm.CloudinaryCloudName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Vm.CloudinaryApiKey"></label>
+                <input asp-for="Vm.CloudinaryApiKey" class="form-control" />
+                <span asp-validation-for="Vm.CloudinaryApiKey" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Vm.CloudinaryApiSecret"></label>
+                <input asp-for="Vm.CloudinaryApiSecret" class="form-control" />
+                <span asp-validation-for="Vm.CloudinaryApiSecret" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </div>
+</form>

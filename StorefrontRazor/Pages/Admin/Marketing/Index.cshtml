@@ -1,0 +1,137 @@
+@page
+@model StorefrontRazor.Pages.Admin.Marketing.IndexModel
+@{
+    ViewData["Title"] = "Маркетинг";
+}
+
+<h1 class="mb-4">Создание Email-кампании</h1>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-success">@Model.StatusMessage</div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post">
+            <div class="form-group mb-3">
+                <label for="template-select">1. Выберите шаблон</label>
+                <select id="template-select" asp-items="Model.EmailTemplates" class="form-select">
+                    <option value="">Выберите шаблон...</option>
+                </select>
+            </div>
+
+            <div id="placeholder-inputs" class="p-3  border rounded mb-3" style="display: none;">
+                @* Placeholder input fields will be generated here by JavaScript *@
+            </div>
+
+            <hr />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Campaign.Subject" class="form-label">2. Тема письма</label>
+                <input asp-for="Campaign.Subject" class="form-control" />
+                <span asp-validation-for="Campaign.Subject" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Campaign.Body" class="form-label">3. Тело письма (HTML)</label>
+                <textarea asp-for="Campaign.Body" class="form-control" rows="15"></textarea>
+                <span asp-validation-for="Campaign.Body" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary"
+                    onclick="return confirm('Вы уверены, что хотите отправить это письмо ВСЕМ покупателям?');">
+                    <i class="bi bi-send-fill me-2"></i>Отправить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const templates = @Html.Raw(Model.TemplatesJson);
+            const templateSelect = document.getElementById('template-select');
+            const placeholderContainer = document.getElementById('placeholder-inputs');
+            const subjectInput = document.getElementById('Campaign_Subject');
+            const bodyTextarea = document.getElementById('Campaign_Body');
+
+            let currentTemplateBody = '';
+            let currentTemplateSubject = '';
+
+            templateSelect.addEventListener('change', function () {
+                const templateId = this.value;
+                console.log("Template dropdown changed. Selected ID:", templateId);
+                console.log("All templates data from server:", templates);
+                if (!templateId) {
+                    placeholderContainer.style.display = 'none';
+                    return;
+                }
+                const template = templates[templateId];
+                console.log("Found template object for that ID:", template);
+
+                currentTemplateBody = template.body || template.Body;
+                currentTemplateSubject = template.subject || template.Subject;
+
+                subjectInput.value = currentTemplateSubject;
+                bodyTextarea.value = currentTemplateBody;
+
+                // Find all placeholders like {PlaceholderName}
+                const placeholders = [...new Set(currentTemplateBody.match(/\{(.+?)\}/g) || [])];
+
+                placeholderContainer.innerHTML = ''; // Clear old inputs
+
+                if (placeholders.length > 0) {
+                    placeholderContainer.style.display = 'block';
+                    placeholderContainer.innerHTML = '<h5 class="mb-3">Заполните поля</h5>';
+
+                    placeholders.forEach(placeholder => {
+                        const key = placeholder.replace(/[{}]/g, '');
+
+                        const group = document.createElement('div');
+                        group.className = 'form-group mb-2';
+
+                        const label = document.createElement('label');
+                        label.className = 'form-label';
+                        label.textContent = key.replace(/([A-Z])/g, ' $1').trim(); // "CouponCode" -> "Coupon Code"
+
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.className = 'form-control';
+                        input.dataset.placeholder = placeholder; // Store the original placeholder, e.g., "{CouponCode}"
+
+                        input.addEventListener('input', updateFinalEmail);
+
+                        group.appendChild(label);
+                        group.appendChild(input);
+                        placeholderContainer.appendChild(group);
+                    });
+                } else {
+                    placeholderContainer.style.display = 'none';
+                }
+            });
+
+            function updateFinalEmail() {
+                let tempBody = currentTemplateBody;
+                let tempSubject = currentTemplateSubject;
+
+                placeholderContainer.querySelectorAll('input').forEach(input => {
+                    const placeholder = input.dataset.placeholder;
+                    const value = input.value;
+
+                    // Use a RegExp to replace all instances of the placeholder
+                    const regex = new RegExp(placeholder.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g');
+                    tempBody = tempBody.replace(regex, value);
+                    tempSubject = tempSubject.replace(regex, value);
+                });
+
+                bodyTextarea.value = tempBody;
+                subjectInput.value = tempSubject;
+            }
+        });
+    </script>
+}
