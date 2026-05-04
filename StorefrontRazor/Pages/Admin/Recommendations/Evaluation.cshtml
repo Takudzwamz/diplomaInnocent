@@ -1,0 +1,223 @@
+@page
+@model StorefrontRazor.Pages.Admin.Recommendations.EvaluationModel
+@{
+    Layout = "/Pages/Admin/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Офлайн-оценка — метрики качества моделей</h2>
+        <a asp-page="/Admin/Recommendations/Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Назад
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-gear me-2"></i> Параметры оценки
+        </div>
+        <div class="card-body">
+            <form method="post" asp-page-handler="RunEvaluation">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Период (дней)</label>
+                        <input type="number" class="form-control" name="days" value="@Model.Days" min="7" max="90" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Top-K</label>
+                        <input type="number" class="form-control" name="k" value="@Model.K" min="3" max="50" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Разбиение обуч./тест</label>
+                        <select class="form-select" name="split">
+                            <option value="0.7" selected="@(Model.Split == 0.7)">70% / 30%</option>
+                            <option value="0.8" selected="@(Model.Split == 0.8)">80% / 20%</option>
+                            <option value="0.9" selected="@(Model.Split == 0.9)">90% / 10%</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-play-fill me-1"></i> Запустить оценку
+                        </button>
+                    </div>
+                </div>
+                <p class="text-muted mt-2 mb-0">
+                    <small>Оценивает все стратегии на исторических данных взаимодействий с временным разбиением обуч./тест.</small>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.HasRun && Model.EvaluationResult != null)
+    {
+        var result = Model.EvaluationResult;
+        <div class="alert alert-info">
+            <strong>Оценка завершена.</strong>
+            Обучающий период: @result.TrainFrom.ToString("dd MMM yyyy") — @result.TrainTo.ToString("dd MMM yyyy") |
+            Тестовый период: @result.TestFrom.ToString("dd MMM yyyy") — @result.TestTo.ToString("dd MMM yyyy") |
+            Оценено пользователей: <strong>@result.TotalUsersEvaluated</strong>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-table me-2"></i> Сравнение стратегий — офлайн-метрики (K=@result.K)
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Стратегия</th>
+                                <th class="text-center">Точность (Precision)@@@result.K</th>
+                                <th class="text-center">Полнота (Recall)@@@result.K</th>
+                                <th class="text-center">F1-мера@@@result.K</th>
+                                <th class="text-center">NDCG@@@result.K</th>
+                                <th class="text-center">MRR</th>
+                                <th class="text-center">Hit Rate</th>
+                                <th class="text-center">Покрытие</th>
+                                <th class="text-center">Пользователи</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in result.StrategyResults)
+                            {
+                                var isBest = result.StrategyResults.Max(x => x.NDCGAtK) == s.NDCGAtK;
+                                <tr class="@(isBest ? "table-success" : "")">
+                                    <td>
+                                        <strong>@s.Strategy</strong>
+                                        @if (isBest)
+                                        {
+                                            <span class="badge bg-success ms-2">Лучший</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">@s.PrecisionAtK.ToString("P1")</td>
+                                    <td class="text-center">@s.RecallAtK.ToString("P1")</td>
+                                    <td class="text-center">@s.F1AtK.ToString("P1")</td>
+                                    <td class="text-center"><strong>@s.NDCGAtK.ToString("F4")</strong></td>
+                                    <td class="text-center">@s.MRR.ToString("F4")</td>
+                                    <td class="text-center">@s.HitRateAtK.ToString("P1")</td>
+                                    <td class="text-center">@s.Coverage.ToString("P1")</td>
+                                    <td class="text-center">@s.UsersEvaluated</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metric definitions for thesis reference -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-info-circle me-2"></i> Определения метрик
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-2">Precision@K</dt>
+                    <dd class="col-sm-10">Доля рекомендаций из топ-K, которые оказались релевантными (куплены/добавлены в корзину в тестовом периоде).</dd>
+
+                    <dt class="col-sm-2">Recall@K</dt>
+                    <dd class="col-sm-10">Доля релевантных товаров пользователя (из тестового периода), попавших в топ-K рекомендаций.</dd>
+
+                    <dt class="col-sm-2">F1@K</dt>
+                    <dd class="col-sm-10">Гармоническое среднее Precision@K и Recall@K: 2·P·R / (P+R).</dd>
+
+                    <dt class="col-sm-2">NDCG@K</dt>
+                    <dd class="col-sm-10">Нормализованный дисконтированный накопленный выигрыш — оценивает качество ранжирования, штрафуя за релевантные элементы на низких позициях.</dd>
+
+                    <dt class="col-sm-2">MRR</dt>
+                    <dd class="col-sm-10">Средний обратный ранг — среднее значение 1/ранг первого релевантного элемента по всем пользователям.</dd>
+
+                    <dt class="col-sm-2">Hit Rate@K</dt>
+                    <dd class="col-sm-10">Доля пользователей, для которых хотя бы один релевантный элемент попал в топ-K.</dd>
+
+                    <dt class="col-sm-2">Coverage</dt>
+                    <dd class="col-sm-10">Доля каталога товаров, рекомендованных всем пользователям (больше = разнообразнее).</dd>
+                </dl>
+            </div>
+        </div>
+    }
+
+    @if (Model.OnlineMetrics != null)
+    {
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-broadcast me-2"></i> Онлайн-метрики (@Model.Days) — Сравнение стратегий — офлайн-метрики
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Стратегия</th>
+                                <th class="text-center">Показы</th>
+                                <th class="text-center">Клики</th>
+                                <th class="text-center">Покупки</th>
+                                <th class="text-center">CTR</th>
+                                <th class="text-center">Click→Purchase</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in Model.OnlineMetrics.ByStrategy)
+                            {
+                                <tr>
+                                    <td><strong>@s.Strategy</strong></td>
+                                    <td class="text-center">@s.Impressions.ToString("N0")</td>
+                                    <td class="text-center">@s.Clicks.ToString("N0")</td>
+                                    <td class="text-center">@s.Purchases.ToString("N0")</td>
+                                    <td class="text-center">@s.CTR.ToString("P2")</td>
+                                    <td class="text-center">
+                                        @(s.Clicks > 0 ? ((double)s.Purchases / s.Clicks).ToString("P1") : "—")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="text-muted">Общий CTR</h5>
+                        <h2>@Model.OnlineMetrics.OverallCTR.ToString("P2")</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="text-muted">Конверсия в корзину</h5>
+                        <h2>@Model.OnlineMetrics.AddToCartRate.ToString("P2")</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="text-muted">Конверсия в покупку</h5>
+                        <h2>@Model.OnlineMetrics.PurchaseRate.ToString("P2")</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="text-muted">Всего показов</h5>
+                        <h2>@Model.OnlineMetrics.TotalImpressions.ToString("N0")</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (!Model.HasRun)
+    {
+        <div class="alert alert-secondary">
+            <i class="bi bi-lightbulb me-2"></i>
+            <strong>Офлайн-оценка использует временное разбиение на обуч./тест. Взаимодействия до даты разделения «обучают» модель, а взаимодействия после (покупки/добавления в корзину) служат эталоном.</strong>
+        </div>
+    }
+</div>

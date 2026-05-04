@@ -1,0 +1,16 @@
+@page "/sitemap.xml"
+@model StorefrontRazor.Pages.SitemapModel
+@{
+    Layout = null; // No layout
+    
+}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    @foreach (var node in Model.SitemapNodes)
+    {
+        <url>
+            <loc>@node.Url</loc>
+            <lastmod>@node.LastModified</lastmod>
+            <priority>@node.Priority</priority>
+        </url>
+    }
+</urlset>

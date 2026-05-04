@@ -1,0 +1,81 @@
+
+@model StorefrontRazor.Pages.Admin.Coupons.CouponFormViewModel
+
+<input type="hidden" asp-for="Coupon.Id" />
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group mb-3">
+            <label asp-for="Coupon.Code" class="form-label"></label>
+            <input asp-for="Coupon.Code" class="form-control" />
+            <span asp-validation-for="Coupon.Code" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="Coupon.Description" class="form-label"></label>
+            <input asp-for="Coupon.Description" class="form-control" />
+            <span asp-validation-for="Coupon.Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" asp-for="Coupon.IsActive">
+            <label class="form-check-label" asp-for="Coupon.IsActive">Активен</label>
+        </div>
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" asp-for="Coupon.FirstTimeCustomerOnly">
+            <label class="form-check-label" asp-for="Coupon.FirstTimeCustomerOnly">Только для новых клиентов</label>
+        </div>
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" asp-for="Coupon.LimitOnePerCustomer">
+            <label class="form-check-label" asp-for="Coupon.LimitOnePerCustomer">Ограничить одним использованием на клиента</label>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Coupon.AmountOff" class="form-label">Фиксированная скидка (₽)</label>
+            <input asp-for="Coupon.AmountOff" class="form-control" id="amountOff" />
+            <span asp-validation-for="Coupon.AmountOff" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group mb-3">
+            <label asp-for="Coupon.PercentOff" class="form-label">Процентная скидка (%)</label>
+            <input asp-for="Coupon.PercentOff" class="form-control" id="percentOff" />
+            <span asp-validation-for="Coupon.PercentOff" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group mb-3">
+            <label asp-for="Coupon.ValidFrom" class="form-label"></label>
+            <input asp-for="Coupon.ValidFrom" type="date" class="form-control" />
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group mb-3">
+            <label asp-for="Coupon.ValidUntil" class="form-label"></label>
+            <input asp-for="Coupon.ValidUntil" type="date" class="form-control" />
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group mb-3">
+            <label asp-for="Coupon.UsageLimit" class="form-label"> Лимит использования (необязательно)</label>
+            <input asp-for="Coupon.UsageLimit" class="form-control" />
+        </div>
+    </div>
+</div>
+
+
+<hr class="my-4">
+
+<div class="form-group mb-3">
+    <label class="form-label">Применимые товары</label>
+    @* --- THIS IS THE FIX --- *@
+    @* Now we bind directly to the properties of our ViewModel *@
+    <select id="product-select" asp-for="SelectedProductIds" asp-items="Model.AllProducts" class="form-control" multiple>
+    </select>
+    <small class="form-text text-muted">Выберите товары, к которым применяется купон. Оставьте пустым для всей корзины.</small>
+</div>

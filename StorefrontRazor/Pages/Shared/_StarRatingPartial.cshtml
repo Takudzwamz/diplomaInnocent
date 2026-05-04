@@ -1,0 +1,25 @@
+@model double
+
+@* This partial takes a double (e.g., 4.7) and renders the correct star icons.
+  - A full star is shown if the loop index is less than or equal to the rating.
+  - A half star is shown if the rating falls between the last full star and the current one.
+  - An empty star is shown otherwise.
+*@
+
+<div class="text-warning d-inline-block" title="@Model.ToString("0.0") из 5 звёзд">
+    @for (int i = 1; i <= 5; i++)
+    {
+        @if (i <= Model)
+        {
+            <i class="bi bi-star-fill"></i>
+        }
+        else if (i - 0.5 <= Model)
+        {
+            <i class="bi bi-star-half"></i>
+        }
+        else
+        {
+            <i class="bi bi-star"></i>
+        }
+    }
+</div>

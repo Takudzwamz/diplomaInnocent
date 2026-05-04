@@ -1,0 +1,65 @@
+@page "{id:int}"
+@model StorefrontRazor.Pages.Admin.Coupons.EditModel
+@{
+    ViewData["Title"] = "Редактировать";
+}
+
+@section Head {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+}
+
+
+<h1 class="mb-4">Редактировать: @Model.CouponVM.Coupon.Code</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            @* --- UPDATE THIS LINE --- *@
+            <partial name="_CouponFormPartial" model="Model.CouponVM" />
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a asp-page="./Index" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productSelectElement = document.getElementById('product-select');
+            let choicesInstance = null; // Variable to hold our instance
+
+            // Function to initialize or re-initialize the widget
+            function initializeChoices() {
+                // If an instance already exists, destroy it first
+                if (choicesInstance) {
+                    choicesInstance.destroy();
+                }
+                
+                choicesInstance = new Choices(productSelectElement, {
+                    removeItemButton: true,
+                    placeholder: true,
+                    placeholderValue: 'Search for products...',
+                });
+            }
+
+            // --- WIRING IT ALL UP ---
+
+            // 1. Initial setup when the page loads
+            initializeChoices();
+
+            // 2. Listen for our custom themeChanged event
+            window.addEventListener('themeChanged', () => {
+                // When the theme changes, just re-initialize the widget
+                initializeChoices();
+            });
+        });
+    </script>
+}

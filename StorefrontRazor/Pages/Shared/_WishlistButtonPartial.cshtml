@@ -1,0 +1,32 @@
+@model int
+@inject Core.Interfaces.IWishlistService WishlistService
+@inject Microsoft.AspNetCore.Identity.UserManager<Core.Entities.AppUser> UserManager
+@inject Microsoft.AspNetCore.Identity.SignInManager<Core.Entities.AppUser> SignInManager
+
+@{
+    var productId = Model;
+    var isInWishlist = false;
+    if (SignInManager.IsSignedIn(User))
+    {
+        var userId = UserManager.GetUserId(User);
+        isInWishlist = await WishlistService.IsItemInWishlistAsync(userId, productId);
+    }
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <form method="post" asp-page-handler="ToggleWishlist" class="wishlist-form d-inline">
+        <input type="hidden" name="productId" value="@productId" />
+        <button type="submit" class="btn wishlist-btn" title="@(isInWishlist ? "Удалить из избранного" : "Добавить в избранное")" aria-pressed="@(isInWishlist)">
+            <i class="bi wishlist-icon @(isInWishlist ? "bi-heart-fill text-danger" : "bi-heart  text-primary")" aria-hidden="true"></i>
+            <span class="visually-hidden">@(isInWishlist ? "Удалить из избранного" : "Добавить в избранное")</span>
+        </button>
+    </form>
+}
+else
+{
+    <a asp-page="/Account/Login" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)" class="btn wishlist-link" title="Войдите, чтобы добавить в избранное">
+        <i class="bi wishlist-icon bi-heart text-primary" aria-hidden="true"></i>
+        <span class="visually-hidden">Войдите, чтобы добавить в избранное</span>
+    </a>
+}

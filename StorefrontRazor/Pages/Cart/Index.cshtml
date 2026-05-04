@@ -1,0 +1,112 @@
+@page "/cart"
+@model StorefrontRazor.Pages.Cart.IndexModel
+@{
+    ViewData["Title"] = @"Корзина";
+    ViewData["BodyClass"] = "cart-page";
+}
+
+@if (!string.IsNullOrEmpty(Model.PromoHtmlContent))
+{
+    <div class="container my-4">
+        @Html.Raw(Model.PromoHtmlContent)
+    </div>
+}
+
+
+<div class="container mt-5 ">
+    <h1>@ViewData["Title"]</h1>
+
+    <div id="cart-container">
+        @if (Model.Cart == null || !Model.Cart.Items.Any())
+        {
+            <div class="text-center p-5 border rounded">
+                <h4>Ваша корзина пуста</h4>
+                <p class="text-muted">Похоже, вы ещё не добавили товары в корзину.</p>
+                <a asp-page="/Products/Index" class="btn btn-primary mt-3">Продолжить покупки</a>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-lg-8" id="cart-items-list">
+                    @foreach (var item in Model.Cart.Items)
+                    {
+                        // --- FIX #1: The row is now uniquely identified by both ProductId and ProductVariantId ---
+                        <div class="card mb-3 cart-item-row" data-product-id="@item.ProductId" data-product-variant-id="@item.ProductVariantId">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-12 col-md-5 d-flex align-items-center mb-3 mb-md-0">
+                                        <img src="@item.PictureUrl" class="img-fluid rounded-3" alt="@item.ProductName" style="width: 65px;">
+                                        <div class="ms-3">
+                                            <h5 class="mb-0">
+                                                <a asp-page="/Products/Details" asp-route-id="@item.ProductId" class="text-decoration-none product-link">
+                                                    @item.ProductName
+                                                </a>
+                                            </h5>
+                                            
+                                            @* --- FIX #2: Display the selected options if they exist --- *@
+                                            @if (!string.IsNullOrEmpty(item.SelectedOptions))
+                                            {
+                                                <p class="small mb-0 text-muted">@item.SelectedOptions</p>
+                                            }
+
+                                            <p class="small mb-0 text-muted">
+                                                @item.ProductCategory &middot; @item.ProductBrand / @item.ProductType
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="d-flex align-items-center quantity-controls">
+                                            <form method="post" class="cart-page-update-form" asp-page-handler="UpdateQuantityJson">
+                                                @* --- FIX #3: Add the ProductVariantId to all forms --- *@
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="hidden" name="productVariantId" value="@item.ProductVariantId" />
+                                                <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
+                                                <button type="submit" class="btn btn-outline-secondary">-</button>
+                                            </form>
+                                            <span class="px-3 quantity-display">@item.Quantity</span>
+                                            <form method="post" class="cart-page-update-form" asp-page-handler="UpdateQuantityJson">
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="hidden" name="productVariantId" value="@item.ProductVariantId" />
+                                                <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
+                                                <button type="submit" class="btn btn-outline-secondary">+</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 col-md-2 text-md-end">
+                                        <h5 class="mb-0 item-total">@((item.Price * item.Quantity).ToString("C"))</h5>
+                                    </div>
+                                    <div class="col-2 col-md-2 text-end">
+                                        <form method="post" class="cart-page-remove-form" asp-page-handler="RemoveItemJson">
+                                            <input type="hidden" name="productId" value="@item.ProductId" />
+                                            <input type="hidden" name="productVariantId" value="@item.ProductVariantId" />
+                                            <button type="submit" class="btn btn-outline-danger" title="Удалить товар">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="col-lg-4">
+                    <partial name="_OrderSummary" model="Model" />
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Hidden template for the "Empty Cart" message -->
+    <template id="empty-cart-template">
+        <div class="text-center p-5 border rounded">
+            <h4>Ваша корзина пуста</h4>
+            <p class="text-muted">Похоже, вы ещё не добавили товары в корзину.</p>
+            <a asp-page="/Products/Index" class="btn btn-primary mt-3">Продолжить покупки</a>
+        </div>
+    </template>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

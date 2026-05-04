@@ -1,0 +1,331 @@
+[
+  {
+    "Name": "React Woolen Hat",
+    "Description": "Тёплая шерстяная шапка на каждый день. Доступна в нескольких цветах.",
+    "Price": 1080,
+    "Type": "Шапки",
+    "Brand": "React",
+    "Category": "Одежда",
+    "Options": [
+      "Цвет"
+    ],
+    "Variants": [
+      {
+        "OptionValues": [
+          "Зелёный"
+        ],
+        "Price": 1080,
+        "QuantityInStock": 80,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095219/products/hat-react1_iszpky.webp"
+      },
+      {
+        "OptionValues": [
+          "Фиолетовый"
+        ],
+        "Price": 1350,
+        "QuantityInStock": 45,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095215/products/hat-react2_cat63y.webp"
+      }
+    ]
+  },
+  {
+    "Name": "VS Code Gloves",
+    "Description": "Премиальные перчатки для работы и активного отдыха. Доступны в разных цветах и размерах.",
+    "Price": 1440,
+    "Type": "Перчатки",
+    "Brand": "VS Code",
+    "Category": "Обслуживание",
+    "Options": [
+      "Цвет",
+      "Размер"
+    ],
+    "Variants": [
+      {
+        "OptionValues": [
+          "Синий",
+          "S"
+        ],
+        "Price": 1440,
+        "QuantityInStock": 30,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/glove-code1_eg5d0b.webp"
+      },
+      {
+        "OptionValues": [
+          "Синий",
+          "M"
+        ],
+        "Price": 1620,
+        "QuantityInStock": 44,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/glove-code1_eg5d0b.webp"
+      },
+      {
+        "OptionValues": [
+          "Синий",
+          "L"
+        ],
+        "Price": 1620,
+        "QuantityInStock": 25,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/glove-code1_eg5d0b.webp"
+      },
+      {
+        "OptionValues": [
+          "Зелёный",
+          "S"
+        ],
+        "Price": 1350,
+        "QuantityInStock": 8,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095216/products/glove-code2_rkory9.webp"
+      },
+      {
+        "OptionValues": [
+          "Зелёный",
+          "M"
+        ],
+        "Price": 1350,
+        "QuantityInStock": 11,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095216/products/glove-code2_rkory9.webp"
+      },
+      {
+        "OptionValues": [
+          "Зелёный",
+          "L"
+        ],
+        "Price": 1530,
+        "QuantityInStock": 0,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095216/products/glove-code2_rkory9.webp"
+      }
+    ]
+  },
+  {
+    "Name": "React Performance Gloves",
+    "Description": "Высокопроизводительные перчатки для спорта. Несколько вариантов цвета и размера.",
+    "Price": 1350,
+    "Type": "Перчатки",
+    "Brand": "React",
+    "Category": "Одежда",
+    "Options": [
+      "Цвет",
+      "Размер"
+    ],
+    "Variants": [
+      {
+        "OptionValues": [
+          "Фиолетовый",
+          "S"
+        ],
+        "Price": 1350,
+        "QuantityInStock": 22,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095216/products/glove-react1_wuofay.webp"
+      },
+      {
+        "OptionValues": [
+          "Фиолетовый",
+          "M"
+        ],
+        "Price": 1440,
+        "QuantityInStock": 38,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095216/products/glove-react1_wuofay.webp"
+      },
+      {
+        "OptionValues": [
+          "Фиолетовый",
+          "L"
+        ],
+        "Price": 1440,
+        "QuantityInStock": 15,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095216/products/glove-react1_wuofay.webp"
+      },
+      {
+        "OptionValues": [
+          "Зелёный",
+          "S"
+        ],
+        "Price": 1260,
+        "QuantityInStock": 50,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/glove-react2_ii3tkn.webp"
+      },
+      {
+        "OptionValues": [
+          "Зелёный",
+          "M"
+        ],
+        "Price": 1350,
+        "QuantityInStock": 0,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/glove-react2_ii3tkn.webp"
+      },
+      {
+        "OptionValues": [
+          "Зелёный",
+          "L"
+        ],
+        "Price": 1350,
+        "QuantityInStock": 33,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/glove-react2_ii3tkn.webp"
+      }
+    ]
+  },
+  {
+    "Name": "NetCore Developer Boots",
+    "Description": "Профессиональные ботинки для сноуборда. Доступны в нескольких размерах.",
+    "Price": 17550,
+    "Type": "Ботинки",
+    "Brand": "NetCore",
+    "Category": "Защита",
+    "Options": [
+      "Размер"
+    ],
+    "Variants": [
+      {
+        "OptionValues": [
+          "S"
+        ],
+        "Price": 17550,
+        "QuantityInStock": 12,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-core2_oexqcd.webp"
+      },
+      {
+        "OptionValues": [
+          "M"
+        ],
+        "Price": 17550,
+        "QuantityInStock": 20,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-core2_oexqcd.webp"
+      },
+      {
+        "OptionValues": [
+          "L"
+        ],
+        "Price": 18000,
+        "QuantityInStock": 18,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-core2_oexqcd.webp"
+      },
+      {
+        "OptionValues": [
+          "XL"
+        ],
+        "Price": 18000,
+        "QuantityInStock": 5,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-core2_oexqcd.webp"
+      }
+    ]
+  },
+  {
+    "Name": "Angular Pro Boots",
+    "Description": "Ботинки для продвинутых райдеров. Усиленная конструкция и максимальный отклик.",
+    "Price": 14850,
+    "Type": "Ботинки",
+    "Brand": "Angular",
+    "Category": "Одежда",
+    "Options": [
+      "Размер"
+    ],
+    "Variants": [
+      {
+        "OptionValues": [
+          "S"
+        ],
+        "Price": 14850,
+        "QuantityInStock": 10,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095214/products/boot-ang2_ajrflp.webp"
+      },
+      {
+        "OptionValues": [
+          "M"
+        ],
+        "Price": 14850,
+        "QuantityInStock": 25,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095214/products/boot-ang2_ajrflp.webp"
+      },
+      {
+        "OptionValues": [
+          "L"
+        ],
+        "Price": 15300,
+        "QuantityInStock": 15,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095214/products/boot-ang2_ajrflp.webp"
+      },
+      {
+        "OptionValues": [
+          "XL"
+        ],
+        "Price": 15300,
+        "QuantityInStock": 7,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095214/products/boot-ang2_ajrflp.webp"
+      }
+    ]
+  },
+  {
+    "Name": "Core Performance Hat",
+    "Description": "Спортивная шапка с технологией отвода влаги. Лёгкая и дышащая.",
+    "Price": 900,
+    "Type": "Шапки",
+    "Brand": "NetCore",
+    "Category": "Аксессуары",
+    "Options": [
+      "Цвет"
+    ],
+    "Variants": [
+      {
+        "OptionValues": [
+          "Синий"
+        ],
+        "Price": 900,
+        "QuantityInStock": 60,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095220/products/hat-core1_ciorc1.webp"
+      },
+      {
+        "OptionValues": [
+          "Красный"
+        ],
+        "Price": 990,
+        "QuantityInStock": 40,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095220/products/hat-core1_ciorc1.webp"
+      }
+    ]
+  },
+  {
+    "Name": "Redis Premium Boots",
+    "Description": "Премиальные ботинки с системой подогрева стельки. Максимальный комфорт в любую погоду.",
+    "Price": 22500,
+    "Type": "Ботинки",
+    "Brand": "Redis",
+    "Category": "Одежда",
+    "Options": [
+      "Размер"
+    ],
+    "Variants": [
+      {
+        "OptionValues": [
+          "S"
+        ],
+        "Price": 22500,
+        "QuantityInStock": 8,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-redis1_qjobqv.webp"
+      },
+      {
+        "OptionValues": [
+          "M"
+        ],
+        "Price": 22500,
+        "QuantityInStock": 15,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-redis1_qjobqv.webp"
+      },
+      {
+        "OptionValues": [
+          "L"
+        ],
+        "Price": 23400,
+        "QuantityInStock": 12,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-redis1_qjobqv.webp"
+      },
+      {
+        "OptionValues": [
+          "XL"
+        ],
+        "Price": 23400,
+        "QuantityInStock": 4,
+        "ImageUrl": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/boot-redis1_qjobqv.webp"
+      }
+    ]
+  }
+]

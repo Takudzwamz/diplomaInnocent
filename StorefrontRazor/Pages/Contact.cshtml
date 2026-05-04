@@ -1,0 +1,58 @@
+@page
+@model StorefrontRazor.Pages.ContactModel
+@{
+    ViewData["Title"] = "Связаться с нами";
+}
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h1>Свяжитесь с нами</h1>
+        <p class="lead text-muted">Мы будем рады вашему обращению. Вот как с нами связаться.</p>
+    </div>
+
+    <div class="row g-4 mt-4">
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-telephone-fill fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">По телефону</h5>
+                    <p class="card-text">@Model.PhoneNumber</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-envelope-fill fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">По электронной почте</h5>
+                    <p class="card-text">@Model.EmailAddress</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-geo-alt-fill fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">Наш офис</h5>
+                    <p class="card-text">@Model.PhysicalAddress</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section StructuredData {
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "LocalBusiness",
+        "name": "@ViewData["Title"]",
+        "telephone": "@Model.PhoneNumber",
+        "email": "@Model.EmailAddress",
+        "address": {
+            "@@type": "PostalAddress",
+            "streetAddress": "@Model.PhysicalAddress"
+        }
+    }
+    </script>
+}

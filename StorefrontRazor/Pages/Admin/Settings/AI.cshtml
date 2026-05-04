@@ -1,0 +1,155 @@
+@page
+@model StorefrontRazor.Pages.Admin.Settings.AIModel
+@{
+    ViewData["Title"] = "Настройки";
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+<p class="text-muted">Настройте интеграцию Azure OpenAI для рекомендаций товаров на основе ИИ.</p>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-robot me-2"></i>Настройка ИИ
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" asp-for="Input.IsEnabled" id="aiEnabledSwitch" style="width: 3em; height: 1.5em;">
+                        <label class="form-check-label ms-2" for="aiEnabledSwitch">
+                            <strong>Включить ИИ-рекомендации</strong>
+                        </label>
+                    </div>
+                    <div class="form-text mt-2">
+                        При включении товары будут показывать ИИ-рекомендации на основе семантического сходства с помощью Azure OpenAI.
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Input.Endpoint" class="form-label">
+                        <strong>Эндпоинт Azure OpenAI</strong>
+                    </label>
+                    <input asp-for="Input.Endpoint" class="form-control bg-transparent" placeholder="https://your-resource.openai.azure.com/" />
+                    <div class="form-text">
+                        Найдите в Azure Portal → ваш ресурс OpenAI → Ключи и эндпоинт.
+                    </div>
+                    <span asp-validation-for="Input.Endpoint" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Input.ApiKey" class="form-label">
+                        <strong>API-ключ</strong>
+                        @if (!string.IsNullOrEmpty(Model.Input.ApiKey))
+                        {
+                            <span class="badge bg-success ms-2">
+                                <i class="bi bi-check-circle"></i> Сохранён
+                            </span>
+                        }
+                    </label>
+                    <input asp-for="Input.ApiKey" type="password" class="form-control bg-transparent" id="apiKeyInput" 
+                           placeholder="@(string.IsNullOrEmpty(Model.Input.ApiKey) ? "Enter your Azure OpenAI API key" : "••••••••••••••••••••••••••••")" />
+                    <div class="form-text">
+                        @if (!string.IsNullOrEmpty(Model.Input.ApiKey))
+                        {
+                            <span class="text-success"><i class="bi bi-shield-check"></i> API-ключ надёжно сохранён. Оставьте поле пустым, чтобы сохранить текущий, или введите новый для замены.</span>
+                        }
+                        else
+                        {
+                            <span>Найдите в Azure Portal → ваш ресурс OpenAI → Ключи и эндпоинт (Ключ 1 или Ключ 2).</span>
+                        }
+                    </div>
+                    <span asp-validation-for="Input.ApiKey" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Input.EmbeddingDeployment" class="form-label">
+                        <strong>Имя развёртывания Embedding</strong>
+                    </label>
+                    <input asp-for="Input.EmbeddingDeployment" class="form-control bg-transparent" placeholder="text-embedding-ada-002" />
+                    <div class="form-text">
+                        Имя развёртывания, созданное в Azure OpenAI Studio для моделей встраивания (напр., text-embedding-ada-002 или text-embedding-3-small).
+                    </div>
+                    <span asp-validation-for="Input.EmbeddingDeployment" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Input.ChatDeployment" class="form-label">
+                        <strong>Имя развёртывания Chat</strong>
+                    </label>
+                    <input asp-for="Input.ChatDeployment" class="form-control bg-transparent" placeholder="gpt-4o-mini" />
+                    <div class="form-text">
+                        Имя развёртывания для чат/комплетаций (напр., gpt-4o-mini, gpt-4o, gpt-35-turbo). Используется для ИИ-обзоров и помощника покупок.
+                    </div>
+                    <span asp-validation-for="Input.ChatDeployment" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-3" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Нужна помощь?</strong> Перейдите в <a href="https://portal.azure.com" target="_blank" class="alert-link">Azure Portal</a> 
+                для создания ресурса Azure OpenAI и развёртывания модели text-embedding-ada-002.
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary btn-lg">
+            <i class="bi bi-check-circle me-2"></i>Сохранить
+        </button>
+        <a asp-page="/Admin/Settings/Index" class="btn btn-secondary btn-lg ms-2">
+            <i class="bi bi-arrow-left me-2"></i>Назад
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Disable/enable fields based on AI enabled switch
+            const enableSwitch = document.getElementById('aiEnabledSwitch');
+            const endpointInput = document.querySelector('input[name="Input.Endpoint"]');
+            const apiKeyInput = document.getElementById('apiKeyInput');
+            const deploymentInput = document.querySelector('input[name="Input.EmbeddingDeployment"]');
+
+            function toggleFields() {
+                if (!enableSwitch || !endpointInput || !apiKeyInput || !deploymentInput) return;
+                
+                const isEnabled = enableSwitch.checked;
+                endpointInput.disabled = !isEnabled;
+                apiKeyInput.disabled = !isEnabled;
+                deploymentInput.disabled = !isEnabled;
+                
+                if (!isEnabled) {
+                    endpointInput.classList.add('bg-light');
+                    apiKeyInput.classList.add('bg-light');
+                    deploymentInput.classList.add('bg-light');
+                } else {
+                    endpointInput.classList.remove('bg-light');
+                    apiKeyInput.classList.remove('bg-light');
+                    deploymentInput.classList.remove('bg-light');
+                }
+            }
+
+            if (enableSwitch) {
+                enableSwitch.addEventListener('change', toggleFields);
+                toggleFields(); // Initial state
+            }
+        });
+    </script>
+}
+

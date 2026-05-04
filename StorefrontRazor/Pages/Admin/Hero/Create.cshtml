@@ -1,0 +1,36 @@
+@page
+@model StorefrontRazor.Pages.Admin.Hero.CreateModel
+@{
+    ViewData["Title"] = "Создать";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group mb-3">
+        <label asp-for="ImageUpload" class="form-label">Фоновое изображение</label>
+        <input asp-for="ImageUpload" class="form-control" required />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Slide.Title" class="form-label"></label>
+        <input asp-for="Slide.Title" class="form-control" />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Slide.Subtext" class="form-label"></label>
+        <input asp-for="Slide.Subtext" class="form-control" />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Slide.ButtonLink" class="form-label"></label>
+        <input asp-for="Slide.ButtonLink" class="form-control" />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Slide.DisplayOrder" class="form-label"></label>
+        <input asp-for="Slide.DisplayOrder" class="form-control" />
+    </div>
+    <div class="form-check form-switch mb-3">
+        <input asp-for="Slide.IsActive" class="form-check-input" />
+        <label asp-for="Slide.IsActive" class="form-check-label"></label>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>

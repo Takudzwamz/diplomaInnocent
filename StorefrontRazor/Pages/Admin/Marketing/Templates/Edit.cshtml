@@ -1,0 +1,28 @@
+@page "{id:int}"
+@model StorefrontRazor.Pages.Admin.Marketing.Templates.EditModel
+@{
+    ViewData["Title"] = "Редактировать";
+}
+
+<h1>@ViewData["Title"]: @Model.Template.Name</h1>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    
+    <input type="hidden" asp-for="Template.Id" />
+
+    <div class="form-group mb-3">
+        <label asp-for="Template.Name"></label>
+        <input asp-for="Template.Name" class="form-control" />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Template.Subject"></label>
+        <input asp-for="Template.Subject" class="form-control" />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Template.Body">Тело письма (HTML)</label>
+        <textarea asp-for="Template.Body" class="form-control" rows="20"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a asp-page="./Index" class="btn btn-secondary">Отмена</a>
+</form>

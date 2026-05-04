@@ -1,0 +1,49 @@
+@page "{id:int}"
+@model StorefrontRazor.Pages.Admin.Hero.EditModel
+@{
+    ViewData["Title"] = "Редактировать";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Slide.Id" />
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group mb-3">
+                <label asp-for="ImageUpload" class="form-label">Новое фоновое изображение (необязательно)</label>
+                <input asp-for="ImageUpload" class="form-control" />
+                <small class="form-text text-muted">Загрузите новое изображение только если хотите заменить текущее.</small>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Slide.Title" class="form-label"></label>
+                <input asp-for="Slide.Title" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Slide.Subtext" class="form-label"></label>
+                <input asp-for="Slide.Subtext" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Slide.ButtonLink" class="form-label"></label>
+                <input asp-for="Slide.ButtonLink" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Slide.DisplayOrder" class="form-label"></label>
+                <input asp-for="Slide.DisplayOrder" class="form-control" />
+            </div>
+            <div class="form-check form-switch mb-3">
+                <input asp-for="Slide.IsActive" class="form-check-input" />
+                <label asp-for="Slide.IsActive" class="form-check-label"></label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Текущее изображение</label>
+            <img src="@Model.Slide.ImageUrl" alt="@Model.Slide.Title hero slide" class="img-fluid rounded shadow-sm" />
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a asp-page="./Index" class="btn btn-secondary">Отмена</a>
+</form>

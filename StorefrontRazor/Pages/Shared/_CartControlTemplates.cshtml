@@ -1,0 +1,27 @@
+<template id="add-to-cart-template">
+    <form method="post" class="add-to-cart-form" asp-page-handler="AddToCartJson">
+        <input type="hidden" name="productId" value="PRODUCT_ID" />
+        <input type="hidden" name="productVariantId" value="VARIANT_ID" />
+        <button type="submit" class="btn btn-primary rounded-pill btn-sm w-100">
+            <i class="bi bi-cart-plus-fill"></i> В корзину
+        </button>
+    </form>
+</template>
+
+<template id="quantity-controls-template">
+    <div class="d-flex align-items-center gap-2 quantity-controls">
+        <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+            <input type="hidden" name="productId" value="PRODUCT_ID" />
+            <input type="hidden" name="productVariantId" value="VARIANT_ID" />
+            <input type="hidden" name="quantity" value="0" />
+            <button type="submit" class="btn btn-outline-secondary rounded-circle btn-sm px-2">-</button>
+        </form>
+        <span class="px-3 quantity-display fw-semibold">1</span>
+        <form method="post" class="update-cart-form" asp-page-handler="UpdateCartJson">
+            <input type="hidden" name="productId" value="PRODUCT_ID" />
+            <input type="hidden" name="productVariantId" value="VARIANT_ID" />
+            <input type="hidden" name="quantity" value="2" />
+            <button type="submit" class="btn btn-outline-secondary rounded-circle btn-sm px-2">+</button>
+        </form>
+    </div>
+</template>

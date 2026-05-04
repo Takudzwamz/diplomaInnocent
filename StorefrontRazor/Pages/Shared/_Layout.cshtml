@@ -1,0 +1,152 @@
+﻿@using Core.Interfaces
+@inject ISiteSettingsService SettingsService
+@{
+    var settings = await SettingsService.GetSettingsAsync();
+    var storeName = settings.GetValueOrDefault("StoreName");
+    var faviconUrl = settings.GetValueOrDefault("StoreFaviconUrl");
+    var publicUrl = settings.GetValueOrDefault("PublicUrl")?.TrimEnd('/') ?? $"{Context.Request.Scheme}://{Context.Request.Host}";
+    var canonicalUrl = $"{publicUrl}{Context.Request.Path}";
+    var pageTitle = ViewData["Title"]?.ToString() ?? storeName;
+    var pageDescription = ViewData["Description"]?.ToString() ?? $"Качественные товары в {storeName}. Смотрите нашу коллекцию!";
+    var pageImage = ViewData["ImageUrl"]?.ToString() ?? "";
+    var twitterHandle = settings.GetValueOrDefault("SocialTwitterHandle", "");
+}
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@pageTitle</title>
+    <meta name="description" content="@pageDescription" />
+    <link rel="canonical" href="@canonicalUrl" />
+    
+    @* Open Graph Meta Tags *@
+    <meta property="og:type" content="@(ViewData["OgType"]?.ToString() ?? "website")" />
+    <meta property="og:title" content="@pageTitle" />
+    <meta property="og:description" content="@pageDescription" />
+    <meta property="og:image" content="@pageImage" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:site_name" content="@storeName" />
+    
+    @* Twitter / X Card Meta Tags *@
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@pageTitle" />
+    <meta name="twitter:description" content="@pageDescription" />
+    <meta name="twitter:image" content="@pageImage" />
+    @if (!string.IsNullOrEmpty(twitterHandle))
+    {
+        <meta name="twitter:site" content="@twitterHandle" />
+    }
+    
+    @* Schema.org Organization & WebSite Structured Data *@
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "Organization",
+        "name": "@storeName",
+        "url": "@publicUrl",
+        @if (!string.IsNullOrEmpty(pageImage))
+        {
+            @:"logo": "@pageImage",
+        }
+        "sameAs": [
+            @{
+                var socialLinks = new List<string>();
+                var fb = settings.GetValueOrDefault("social-facebook-url");
+                var tw = settings.GetValueOrDefault("social-twitter-url");
+                var ig = settings.GetValueOrDefault("social-instagram-url");
+                var li = settings.GetValueOrDefault("social-linkedin-url");
+                if (!string.IsNullOrEmpty(fb) && fb != "#") socialLinks.Add($"\"{fb}\"");
+                if (!string.IsNullOrEmpty(tw) && tw != "#") socialLinks.Add($"\"{tw}\"");
+                if (!string.IsNullOrEmpty(ig) && ig != "#") socialLinks.Add($"\"{ig}\"");
+                if (!string.IsNullOrEmpty(li) && li != "#") socialLinks.Add($"\"{li}\"");
+            }
+            @Html.Raw(string.Join(",\n            ", socialLinks))
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebSite",
+        "name": "@storeName",
+        "url": "@publicUrl",
+        "potentialAction": {
+            "@@type": "SearchAction",
+            "target": "@(publicUrl)/products?SearchTerm={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    @* Render page-specific structured data *@
+    @await RenderSectionAsync("StructuredData", required: false)
+    @if (!string.IsNullOrEmpty(faviconUrl))
+    {
+        <link rel="icon" href="@faviconUrl" type="image/x-icon" />
+    }
+    else
+    {
+        <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    }
+    <script>
+        (() => {
+            const getStoredTheme = () => localStorage.getItem('theme');
+            const getPreferredTheme = () => {
+                const storedTheme = getStoredTheme();
+                if (storedTheme) {
+                    return storedTheme;
+                }
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            };
+            const theme = getPreferredTheme();
+            if (theme) {
+                document.documentElement.setAttribute('data-bs-theme', theme);
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/StorefrontRazor.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Head", required: false)
+</head>
+
+<body>
+    <div class="bg-animation">
+        <div class="floating-orb orb1"></div>
+        <div class="floating-orb orb2"></div>
+        <div class="floating-orb orb3"></div>
+    </div>
+    
+    <partial name="_NavMenu" />
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <partial name="_FloatingControlsPartial" />
+
+    @* <partial name="_Footer" /> *@
+    @await Component.InvokeAsync("Footer")
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/country-region-selector@4.1.0/dist/crs.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/wishlist.js" asp-append-version="true"></script>
+    <script src="~/js/theme-switcher.js" asp-append-version="true"></script>
+    <script src="~/js/fab.js" asp-append-version="true"></script>
+    <script src="~/js/recommendation-tracking.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    
+    @* AI Shopping Assistant Chat Widget *@
+    <partial name="_AIChatWidgetPartial" />
+</body>
+
+</html>

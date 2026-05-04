@@ -1,0 +1,168 @@
+@page
+@model StorefrontRazor.Pages.Admin.Customers.IndexModel
+@{
+    ViewData["Title"] = "Покупатели";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        @if (Model.CustomerPagination.Data.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Email</th>
+                            <th>Статус</th>
+                            <th>Создан</th>
+                            <th class="text-center">Заказы</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var customer in Model.CustomerPagination.Data)
+                        {
+                            <tr>
+                                <td>@customer.Name</td>
+                                <td>@customer.Email</td>
+                                <td>
+                                    @if (customer.IsLockedOut)
+                                    {
+                                        <span class="badge text-bg-danger">Заблокирован</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge text-bg-success">Активен</span>
+                                    }
+                                </td>
+                                <td>@customer.DateRegistered.ToShortDateString()</td>
+                                <td class="text-center">
+                                    @if (customer.OrderCount > 0)
+                                    {
+                                        <a asp-page="/Admin/Orders/Index" asp-route-customerEmail="@customer.Email" class="btn btn-sm btn-outline-primary">
+                                            @customer.OrderCount
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    @if (customer.IsLockedOut)
+                                    {
+                                        <form method="post" asp-page-handler="UnbanUser" asp-route-id="@customer.Id" asp-route-pageIndex="@Model.PageIndex" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-success" title="Разблокировать">
+                                                <i class="bi bi-unlock-fill"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" asp-page-handler="BanUser" asp-route-id="@customer.Id" asp-route-pageIndex="@Model.PageIndex" class="d-inline" onsubmit="return confirm('Вы уверены, что хотите заблокировать этого пользователя? Он не сможет войти в систему.');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Заблокировать">
+                                                <i class="bi bi-slash-circle-fill"></i>
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            @* --- This card is shown if no customers exist --- *@
+            <div class="text-center p-4">
+                <h4 class="text-muted">Покупатели не найдены</h4>
+                <p>Этот список заполнится по мере регистрации новых покупателей.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@* 3. ADD PAGINATION CONTROLS *@
+@if (Model.CustomerPagination.TotalPages > 1)
+{
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                @{
+                    var currentPage = Model.PageIndex;
+                    var totalPages = Model.CustomerPagination.TotalPages;
+                    var maxPagesToShow = 5;
+                    var startPage = 1;
+                    var endPage = totalPages;
+
+                    if (totalPages > maxPagesToShow)
+                    {
+                        var pagesToShowHalf = maxPagesToShow / 2;
+                        startPage = Math.Max(1, currentPage - pagesToShowHalf);
+                        endPage = startPage + maxPagesToShow - 1;
+
+                        if (endPage > totalPages)
+                        {
+                            endPage = totalPages;
+                            startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+                        }
+                    }
+
+                    // --- Previous Button ---
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a asp-page="/Admin/Customers/Index" asp-route-PageIndex="@(currentPage - 1)"
+                           class="page-link" aria-label="Previous" tabindex="@(currentPage == 1 ? "-1" : null)">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    // --- First Page ---
+                    @if (startPage > 1)
+                    {
+                        <li class="page-item">
+                            <a asp-page="/Admin/Customers/Index" asp-route-PageIndex="1" class="page-link">1</a>
+                        </li>
+                        @if (startPage > 2)
+                        {
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        }
+                    }
+
+                    // --- Page Numbers ---
+                    @for (var i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a asp-page="/Admin/Customers/Index" asp-route-PageIndex="@i" class="page-link">@i</a>
+                        </li>
+                    }
+
+                    // --- Last Page ---
+                    @if (endPage < totalPages)
+                    {
+                        @if (endPage < totalPages - 1)
+                        {
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        }
+                        <li class="page-item">
+                            <a asp-page="/Admin/Customers/Index" asp-route-PageIndex="@totalPages" class="page-link">@totalPages</a>
+                        </li>
+                    }
+
+                    // --- Next Button ---
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a asp-page="/Admin/Customers/Index" asp-route-PageIndex="@(currentPage + 1)"
+                           class="page-link" aria-label="Next" tabindex="@(currentPage == totalPages ? "-1" : null)">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}

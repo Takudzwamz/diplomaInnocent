@@ -1,0 +1,410 @@
+@page "{id:int}"
+@using Core.Entities
+@model StorefrontRazor.Pages.Admin.Products.EditModel
+@{
+    ViewData["Title"] = string.Format("{0}: {1}", "Редактировать товар", Model.Product.Name);
+}
+
+<div class="row">
+    @* --- Main Product Details Column --- *@
+    <div class="col-md-8">
+        <h1 class="mb-3">Редактировать товар: <span class="text-primary">@Model.Product.Name</span></h1>
+        <hr />
+        <form method="post" asp-page-handler="UpdateDetails">
+
+        <input type="hidden" asp-for="PageIndex" />
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            @* --- PRODUCT KIND SELECTION (DISABLED) --- *@
+            <div class="mb-3">
+                <label class="form-label">Тип товара</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" asp-for="ProductUpdate.ProductKind" value="Simple"
+                        id="kindSimple" disabled>
+                    <label class="form-check-label" for="kindSimple">Простой товар</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" asp-for="ProductUpdate.ProductKind" value="Variable"
+                        id="kindVariable" disabled>
+                    <label class="form-check-label" for="kindVariable">Вариативный товар</label>
+                </div>
+                <div class="form-text">Тип товара нельзя изменить после создания.</div>
+            </div>
+
+            @* --- SHARED DETAILS --- *@
+            <div class="mb-3"><label asp-for="ProductUpdate.Name" class="form-label"></label><input
+                    asp-for="ProductUpdate.Name" class="form-control" /></div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label asp-for="ProductUpdate.Description" class="form-label mb-0"></label>
+                    @if (Model.IsAIEnabled)
+                    {
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-outline-primary" onclick="generateAIDescription('Professional')" id="ai-generate-btn">
+                                <i class="bi bi-robot me-1"></i>AI-генерация
+                            </button>
+                            <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Переключить меню</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#" onclick="generateAIDescription('Professional'); return false;"><i class="bi bi-briefcase me-2"></i>Профессиональный</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="generateAIDescription('Casual'); return false;"><i class="bi bi-chat-dots me-2"></i>Повседневный</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="generateAIDescription('Luxury'); return false;"><i class="bi bi-gem me-2"></i>Люкс</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="generateAIDescription('Playful'); return false;"><i class="bi bi-emoji-smile me-2"></i>Игривый</a></li>
+                            </ul>
+                        </div>
+                    }
+                </div>
+                <textarea asp-for="ProductUpdate.Description" class="form-control" rows="5" id="product-description"></textarea>
+                <div id="ai-description-preview" class="mt-2" style="display: none;">
+                    <div class="card border-primary">
+                        <div class="card-header bg-primary bg-opacity-10 d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-robot me-2"></i>AI-сгенерированное описание</span>
+                            <button type="button" class="btn-close" onclick="hideAIPreview()"></button>
+                        </div>
+                        <div class="card-body">
+                            <div id="ai-short-desc" class="mb-3">
+                                <strong class="text-muted small">Краткое описание:</strong>
+                                <p id="ai-short-desc-text" class="mb-1"></p>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="useAIDescription('short')">Использовать</button>
+                            </div>
+                            <div id="ai-long-desc" class="mb-3">
+                                <strong class="text-muted small">Полное описание:</strong>
+                                <p id="ai-long-desc-text" class="mb-1" style="white-space: pre-wrap;"></p>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="useAIDescription('long')">Использовать</button>
+                            </div>
+                            <div id="ai-meta-desc">
+                                <strong class="text-muted small">Мета-описание (SEO):</strong>
+                                <p id="ai-meta-desc-text" class="mb-1 small text-muted"></p>
+                            </div>
+                            <div id="ai-keywords" class="mt-2">
+                                <strong class="text-muted small">Предложенные ключевые слова:</strong>
+                                <div id="ai-keywords-list" class="mt-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3"><label asp-for="ProductUpdate.ProductBrandId"
+                        class="form-label">Бренд</label><select asp-for="ProductUpdate.ProductBrandId"
+                        asp-items="Model.Brands" class="form-select"></select></div>
+                <div class="col-md-4 mb-3"><label asp-for="ProductUpdate.ProductTypeId"
+                        class="form-label">Тип</label><select asp-for="ProductUpdate.ProductTypeId"
+                        asp-items="Model.Types" class="form-select"></select></div>
+                <div class="col-md-4 mb-3"><label asp-for="ProductUpdate.CategoryId"
+                        class="form-label">Категория</label><select asp-for="ProductUpdate.CategoryId"
+                        asp-items="Model.Categories" class="form-select"></select></div>
+            </div>
+
+            @* --- SIMPLE PRODUCT FIELDS --- *@
+            <div id="simple-product-fields">
+                <div class="row">
+                    <div class="col-md-6 mb-3"><label asp-for="ProductUpdate.Price" class="form-label"></label><input
+                            asp-for="ProductUpdate.Price" class="form-control" /></div>
+                    <div class="col-md-6 mb-3"><label asp-for="ProductUpdate.QuantityInStock"
+                            class="form-label">Количество на складе</label><input asp-for="ProductUpdate.QuantityInStock"
+                            class="form-control" /></div>
+                </div>
+            </div>
+
+            @* --- VARIABLE PRODUCT FIELDS --- *@
+            <div id="variable-product-fields" style="display: none;">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">Опции вариантов</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="productOptions" class="form-label">Опции товара:</label>
+                            <select id="productOptions" class="form-select" multiple size="5">
+                                @foreach (var option in Model.AvailableOptions)
+                                {
+                                    var isSelected = Model.SelectedOptionIds.Contains(option.Id);
+                                    <option value="@option.Id"
+                                        data-values='@Json.Serialize(option.Values.Select(v => new { v.Id, v.Name }))'
+                                        selected="@isSelected">@option.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="button" id="generate-variants-btn" class="btn btn-secondary">Перегенерировать варианты</button>
+                        <div class="form-text">Внимание: перегенерация сбросит текущие цены и остатки вариантов.</div>
+                    </div>
+                </div>
+
+                <div id="variants-container"></div>
+                <span asp-validation-for="ProductUpdate.VariantsJson" class="text-danger"></span>
+                <input type="hidden" asp-for="ProductUpdate.VariantsJson" id="variants-json-input" />
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <a asp-page="./Index" class="btn btn-outline-secondary me-2">Отмена</a>
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            </div>
+        </form>
+    </div>
+
+    @* --- Image Management Column --- *@
+    <div class="col-md-4 mt-4 mt-md-0">
+        <div class="card shadow-sm">
+            <div class="card-header">Управление изображениями</div>
+            <div class="card-body">
+                @if (Model.Product.Images.Any())
+                {
+                    <div class="row g-2 mb-3">
+                        @foreach (var image in Model.Product.Images)
+                        {
+                            <div class="col-6 col-sm-4 col-md-6">
+                                <div class="card position-relative">
+                                    <img src="@image.Url" class="card-img-top" alt="Product image" style="height: 120px; object-fit: cover;" />
+                                    @if (image.IsMain)
+                                    {
+                                        <span
+                                            class="badge bg-success position-absolute top-0 start-0 m-1">Главное</span>
+                                    }
+                                    <div
+                                        class="card-body p-1 text-center position-absolute bottom-0 start-0 w-100 bg-dark bg-opacity-75">
+                                        <form method="post" asp-page-handler="SetMainImage" asp-route-imageId="@image.Id"
+                                            class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-light" disabled="@image.IsMain"
+                                                title="Сделать основным"><i class="bi bi-star-fill"></i></button>
+                                        </form>
+                                        <form method="post" asp-page-handler="DeleteImage" asp-route-imageId="@image.Id"
+                                            class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Удалить изображение"><i
+                                                    class="bi bi-trash-fill"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                <hr>
+                <h5 class="mb-3">Загрузить новые изображения</h5>
+                <form method="post" asp-page-handler="UploadImages" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <input asp-for="NewImages" class="form-control" type="file" multiple />
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-secondary">Загрузить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Data from C# (camelCase by default)
+        const productImages = @Json.Serialize(Model.Product.Images.Select(i => new { id = i.Id, url = i.Url }));
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const simpleFields = document.getElementById('simple-product-fields');
+            const variableFields = document.getElementById('variable-product-fields');
+            const variantsJsonInput = document.getElementById('variants-json-input');
+            const variantsContainer = document.getElementById('variants-container');
+            const generateBtn = document.getElementById('generate-variants-btn');
+            const optionsSelect = document.getElementById('productOptions');
+            let variantData = []; // Internal JS data store (camelCase)
+
+            function initializePage() {
+                const currentKind = document.querySelector('input[name="ProductUpdate.ProductKind"]:checked').value;
+                if (currentKind === 'Variable') {
+                    simpleFields.style.display = 'none';
+                    variableFields.style.display = 'block';
+                    const existingJson = variantsJsonInput.value;
+                    if (existingJson) {
+                        try {
+                            variantData = JSON.parse(existingJson);
+                            renderVariantsTable(false); // Render with existing data
+                        } catch (e) { console.error("Failed to parse variant JSON:", e); }
+                    }
+                } else {
+                    simpleFields.style.display = 'block';
+                    variableFields.style.display = 'none';
+                }
+            }
+
+            function renderVariantsTable(clearExistingData) {
+                const selectedOptions = Array.from(optionsSelect.selectedOptions).map(opt => ({
+                    id: opt.value,
+                    name: opt.textContent,
+                    values: JSON.parse(opt.dataset.values)
+                }));
+
+                if (selectedOptions.length === 0) { variantsContainer.innerHTML = ''; return; }
+
+                const cartesian = (...a) => a.reduce((x, y) => x.flatMap(d => y.map(e => [d, e].flat())));
+                const combinations = cartesian(...selectedOptions.map(opt => opt.values));
+                const newVariantData = [];
+
+                let tableHtml = `<div class="card shadow-sm mt-4"><div class="card-header"><h5 class="mb-0">Настройка вариантов</h5></div><div class="card-body p-0"><div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-0"><thead><tr>
+                                ${selectedOptions.map(opt => `<th>${opt.name}</th>`).join('')}
+                                <th style="width: 150px;">Изображение</th> @* Increased width for image preview *@
+                                <th>Цена</th><th>Склад</th><th>SKU</th>
+                                </tr></thead><tbody>`;
+
+                combinations.forEach((combo, index) => {
+                    const comboArray = Array.isArray(combo) ? combo : [combo];
+                    const valueIds = comboArray.map(v => v.id);
+                    const combinationKey = valueIds.sort((a, b) => a - b).join('-');
+
+                    const existingVariant = clearExistingData ? null : variantData.find(v => {
+                        const existingKey = v.valueIds.sort((a, b) => a - b).join('-');
+                        return existingKey === combinationKey;
+                    });
+
+                    // Use camelCase internally
+                    const id = existingVariant ? existingVariant.id : 0;
+                    const price = existingVariant ? existingVariant.price : 0;
+                    const stock = existingVariant ? existingVariant.quantityInStock : 0;
+                    const sku = existingVariant ? existingVariant.sku : '';
+                    const imageId = existingVariant ? existingVariant.imageId : null;
+
+                    newVariantData.push({ id, valueIds, price, quantityInStock: stock, sku, imageId });
+
+                    // --- VISUAL IMAGE SELECTOR LOGIC ---
+                    let imageSelectorHtml = `
+                        <div class="d-flex align-items-center">
+                            <img src="${productImages.find(img => img.id === imageId)?.url || productImages[0]?.url || '/images/placeholder.png'}"
+                                 alt="Variant Image Preview" class="variant-image-preview me-2 rounded" style="width: 40px; height: 40px; object-fit: cover;">
+                            <select class="form-select form-select-sm variant-input variant-image-select" data-index="${index}" data-field="imageId">
+                                <option value="">-- Shared --</option>`;
+                    productImages.forEach(img => {
+                        const isSelected = (imageId === img.id) ? 'selected' : '';
+                        const imageName = img.url.split('/').pop();
+                        imageSelectorHtml += `<option value="${img.id}" data-img-src="${img.url}" ${isSelected}>${imageName}</option>`;
+                    });
+                    imageSelectorHtml += `</select></div>`;
+                    // --- END OF IMAGE SELECTOR LOGIC ---
+
+                    tableHtml += `<tr>
+                                    ${comboArray.map(v => `<td>${v.name}</td>`).join('')}
+                                    <td>${imageSelectorHtml}</td>
+                                    <td><input type="number" step="0.01" class="form-control variant-input" data-index="${index}" data-field="price" value="${price.toFixed(2)}" required /></td>
+                                    <td><input type="number" class="form-control variant-input" data-index="${index}" data-field="quantityInStock" value="${stock}" required /></td>
+                                    <td><input type="text" class="form-control variant-input" data-index="${index}" data-field="sku" value="${sku || ''}" /></td>
+                                  </tr>`;
+                });
+
+                tableHtml += `</tbody></table></div></div></div>`;
+                variantsContainer.innerHTML = tableHtml;
+                variantData = newVariantData;
+                updateVariantsJson();
+            }
+
+            generateBtn.addEventListener('click', () => renderVariantsTable(true));
+
+            // Event listener for all variant inputs (including the new image select)
+            variantsContainer.addEventListener('input', function (e) {
+                if (e.target.classList.contains('variant-input')) {
+                    const index = e.target.dataset.index;
+                    const field = e.target.dataset.field; // Correctly camelCase: "price", "quantityInStock", "sku", "imageId"
+                    let value = e.target.value;
+
+                    if (e.target.type === 'number') {
+                        value = parseFloat(value) || 0; // Default to 0 if parsing fails
+                    }
+                    
+                    // Convert empty string from image dropdown to null
+                    if (field === 'imageId') {
+                        value = (value === '') ? null : parseInt(value, 10); // Ensure it's null or a number
+                        
+                        // Update image preview
+                        const previewImg = e.target.closest('td').querySelector('.variant-image-preview');
+                        const selectedOption = e.target.options[e.target.selectedIndex];
+                        previewImg.src = selectedOption.dataset.imgSrc || productImages[0]?.url || '/images/placeholder.png';
+                    }
+
+                    variantData[index][field] = value;
+                    updateVariantsJson();
+                }
+            });
+
+            // Function to update the hidden input (sends PascalCase to server)
+            function updateVariantsJson() {
+                const dataToSend = variantData.map(v => ({
+                    Id: v.id,
+                    ValueIds: v.valueIds,
+                    Price: v.price,
+                    QuantityInStock: v.quantityInStock,
+                    Sku: v.sku,
+                    ImageId: v.imageId // Correctly null or integer
+                }));
+                variantsJsonInput.value = JSON.stringify(dataToSend);
+            }
+
+            initializePage();
+        });
+
+        // AI Description Generation
+        let aiDescriptionData = null;
+
+        async function generateAIDescription(tone) {
+            const btn = document.getElementById('ai-generate-btn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Генерация...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`?handler=GenerateDescription&id=@Model.Product.Id&tone=${tone}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+
+                aiDescriptionData = data;
+                showAIPreview(data);
+            } catch (error) {
+                alert('Failed to generate description: ' + error.message);
+            } finally {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        }
+
+        function showAIPreview(data) {
+            document.getElementById('ai-short-desc-text').textContent = data.shortDescription || '';
+            document.getElementById('ai-long-desc-text').textContent = data.longDescription || '';
+            document.getElementById('ai-meta-desc-text').textContent = data.metaDescription || '';
+
+            // Display keywords as badges
+            const keywordsContainer = document.getElementById('ai-keywords-list');
+            keywordsContainer.innerHTML = '';
+            (data.suggestedKeywords || []).forEach(keyword => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-secondary me-1 mb-1';
+                badge.textContent = keyword;
+                keywordsContainer.appendChild(badge);
+            });
+
+            // Display tags
+            (data.suggestedTags || []).forEach(tag => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-info me-1 mb-1';
+                badge.textContent = tag;
+                keywordsContainer.appendChild(badge);
+            });
+
+            document.getElementById('ai-description-preview').style.display = 'block';
+        }
+
+        function hideAIPreview() {
+            document.getElementById('ai-description-preview').style.display = 'none';
+        }
+
+        function useAIDescription(type) {
+            if (!aiDescriptionData) return;
+
+            const description = type === 'short' 
+                ? aiDescriptionData.shortDescription 
+                : aiDescriptionData.longDescription;
+
+            document.getElementById('product-description').value = description;
+            hideAIPreview();
+        }
+    </script>
+}

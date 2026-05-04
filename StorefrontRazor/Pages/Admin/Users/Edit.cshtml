@@ -1,0 +1,66 @@
+@page "{id}"
+@model StorefrontRazor.Pages.Admin.Users.EditModel
+@{
+    ViewData["Title"] = "Редактировать";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-page="./Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Назад
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.FirstName" class="form-label"></label>
+                            <input asp-for="Input.FirstName" class="form-control" />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.LastName" class="form-label"></label>
+                            <input asp-for="Input.LastName" class="form-control" />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label"></label>
+                        <input asp-for="Input.Email" class="form-control" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <div class="form-check mb-3">
+                        <input asp-for="Input.IsAdmin" class="form-check-input" />
+                        <label asp-for="Input.IsAdmin" class="form-check-label"></label>
+                        <div class="form-text">Предоставляет полный доступ к панели администратора.</div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm mt-4">
+            <div class="card-header">
+                <h5>Смена пароля</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Управление паролем осуществляется самим пользователем. Если требуется сброс пароля, попросите пользователя использовать ссылку «Забыли пароль?» на странице входа.</p>
+                <a asp-page="/Account/ForgotPassword" class="btn btn-outline-secondary" target="_blank">Перейти к сбросу пароля</a>
+            </div>
+        </div>
+    </div>
+</div>

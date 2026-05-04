@@ -1,0 +1,167 @@
+@page
+@model StorefrontRazor.Pages.Admin.Orders.IndexModel
+@{
+    ViewData["Title"] = "Управление заказами";
+}
+
+@if (!string.IsNullOrEmpty(Model.CustomerEmail))
+{
+    <div class="alert alert-info d-flex justify-content-between align-items-center">
+        <span>Показаны заказы для: <strong>@Model.CustomerEmail</strong></span>
+        <a asp-page="/Admin/Orders/Index" class="btn btn-sm btn-outline-secondary">Сбросить фильтр</a>
+    </div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@ViewData["Title"]</h1>
+    
+    <div style="width: 250px;">
+        <form method="get">
+            <select name="SortOrder" class="form-select" onchange="this.form.submit()">
+                <option value="dateDesc" selected="@(Model.SortOrder == "dateDesc")">По дате: Новые</option>
+                <option value="totalDesc" selected="@(Model.SortOrder == "totalDesc")">По сумме: Убывание</option>
+                <option value="totalAsc" selected="@(Model.SortOrder == "totalAsc")">По сумме: Возрастание</option>
+            </select>
+        </form>
+    </div>
+</div>
+
+@if (Model.OrderPagination == null || !Model.OrderPagination.Data.Any())
+{
+    <div class="text-center p-5 card border rounded ">
+        <i class="bi bi-journal-x fs-1 text-muted"></i>
+        <h4 class="mt-3">Заказы не найдены</h4>
+    </div>
+}
+else
+{
+    @foreach (var order in Model.OrderPagination.Data)
+    {
+        <div class="card order-card shadow-sm mb-4">
+            <div class="card-header  d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <div>
+                    <span class="fw-bold">ЗАКАЗ #@order.Id</span>
+                    <span class="text-muted mx-2">|</span>
+                    <span>@order.BuyerEmail</span>
+                </div>
+                <div class="d-flex gap-2">
+                    <span class="badge @Model.GetStatusBadgeClass(order.Status) fs-6">@order.Status</span>
+                    <span class="badge @Model.GetDeliveryStatusBadgeClass(order.DeliveryStatus) fs-6">@order.DeliveryStatus</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        @foreach (var item in order.OrderItems.Take(3))
+                        {
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="@item.PictureUrl" alt="@item.ProductName" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" />
+                                <span class="ms-3">@item.ProductName x @item.Quantity</span>
+                            </div>
+                        }
+                        @if (order.OrderItems.Count > 3)
+                        {
+                            <p class="text-muted small">+ @(order.OrderItems.Count - 3) ещё товар(ов)</p>
+                        }
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <p class="text-muted mb-1">@order.OrderDate.ToLongDateString()</p>
+                        <h4 class="fw-bold text-primary">@order.Total.ToString("C")</h4>
+                        <a asp-page="./Details" asp-route-id="@order.Id" class="btn btn-outline-primary btn-sm mt-2">
+                            Подробнее <i class="bi bi-arrow-right-short"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    @if (Model.OrderPagination != null && Model.OrderPagination.TotalPages > 1)
+{
+    <nav class="mt-4 d-flex justify-content-center">
+        <ul class="pagination">
+            @{
+                var currentPage = Model.PageIndex;
+                var totalPages = Model.OrderPagination.TotalPages;
+
+                // --- Settings ---
+                var maxPagesToShow = 5;
+                var startPage = 1;
+                var endPage = totalPages;
+
+                if (totalPages > maxPagesToShow)
+                {
+                    var pagesToShowHalf = maxPagesToShow / 2;
+                    startPage = Math.Max(1, currentPage - pagesToShowHalf);
+                    endPage = startPage + maxPagesToShow - 1;
+
+                    if (endPage > totalPages)
+                    {
+                        endPage = totalPages;
+                        startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+                    }
+                }
+
+                // --- Previous Button ---
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a asp-page="./Index"
+                       asp-route-PageIndex="@(currentPage - 1)"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-CustomerEmail="@Model.CustomerEmail"
+                       class="page-link" aria-label="Previous" tabindex="@(currentPage == 1 ? "-1" : null)">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                // --- First Page ---
+                @if (startPage > 1)
+                {
+                    <li class="page-item">
+                        <a asp-page="./Index" asp-route-PageIndex="1" asp-route-SortOrder="@Model.SortOrder" asp-route-CustomerEmail="@Model.CustomerEmail" class="page-link">1</a>
+                    </li>
+                    @if (startPage > 2)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
+                }
+
+                // --- Page Numbers ---
+                @for (var i = startPage; i <= endPage; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a asp-page="./Index"
+                           asp-route-PageIndex="@i"
+                           asp-route-SortOrder="@Model.SortOrder"
+                           asp-route-CustomerEmail="@Model.CustomerEmail"
+                           class="page-link">@i</a>
+                    </li>
+                }
+
+                // --- Last Page ---
+                @if (endPage < totalPages)
+                {
+                    @if (endPage < totalPages - 1)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    }
+                    <li class="page-item">
+                        <a asp-page="./Index" asp-route-PageIndex="@totalPages" asp-route-SortOrder="@Model.SortOrder" asp-route-CustomerEmail="@Model.CustomerEmail" class="page-link">@totalPages</a>
+                    </li>
+                }
+
+                // --- Next Button ---
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a asp-page="./Index"
+                       asp-route-PageIndex="@(currentPage + 1)"
+                       asp-route-SortOrder="@Model.SortOrder"
+                       asp-route-CustomerEmail="@Model.CustomerEmail"
+                       class="page-link" aria-label="Next" tabindex="@(currentPage == totalPages ? "-1" : null)">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+}

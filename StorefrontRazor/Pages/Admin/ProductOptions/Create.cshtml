@@ -1,0 +1,118 @@
+@page
+@model StorefrontRazor.Pages.Admin.ProductOptions.CreateModel
+@{
+    ViewData["Title"] = "Создать";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            
+            <div class="mb-3">
+                <label asp-for="NewOption.Name" class="form-label"></label>
+                <input asp-for="NewOption.Name" class="form-control" placeholder="напр., Цвет, Размер, Материал" />
+                <span asp-validation-for="NewOption.Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Значения опции</label>
+                <div class="form-text mb-2">Добавьте значения для этой опции. Для цветов можно указать HEX-код (напр., #FF0000 для красного).</div>
+                
+                <div id="values-container">
+                    <!-- Values will be added here dynamically -->
+                </div>
+                
+                <button type="button" class="btn btn-outline-secondary mt-2" id="add-value-btn">
+                    <i class="bi bi-plus-circle"></i> Добавить значение
+                </button>
+            </div>
+
+            <input type="hidden" asp-for="NewOption.Values" id="values-input" />
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-page="./Index" class="btn btn-outline-secondary">Отмена</a>
+                <button type="submit" class="btn btn-primary">Создать</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('values-container');
+            const addBtn = document.getElementById('add-value-btn');
+            const valuesInput = document.getElementById('values-input');
+            let valueIndex = 0;
+
+            function createValueRow(name = '', colorHex = '') {
+                const row = document.createElement('div');
+                row.className = 'value-row d-flex gap-2 mb-2 align-items-center';
+                row.innerHTML = `
+                    <input type="text" class="form-control value-name" placeholder="Название (напр., Красный, S)" value="${name}" required style="flex: 2;" />
+                    <div class="input-group" style="flex: 1;">
+                        <input type="color" class="form-control form-control-color color-picker" value="${colorHex || '#ffffff'}" title="Выберите цвет (необязательно)">
+                        <input type="text" class="form-control color-hex" placeholder="#FFFFFF" value="${colorHex}" maxlength="7" style="width: 90px;">
+                    </div>
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-value-btn">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
+                
+                // Sync color picker with hex input
+                const colorPicker = row.querySelector('.color-picker');
+                const colorHexInput = row.querySelector('.color-hex');
+                
+                colorPicker.addEventListener('input', function() {
+                    colorHexInput.value = this.value.toUpperCase();
+                    updateValuesInput();
+                });
+                
+                colorHexInput.addEventListener('input', function() {
+                    let val = this.value;
+                    if (val && !val.startsWith('#')) val = '#' + val;
+                    if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+                        colorPicker.value = val;
+                    }
+                    updateValuesInput();
+                });
+                
+                row.querySelector('.value-name').addEventListener('input', updateValuesInput);
+                row.querySelector('.remove-value-btn').addEventListener('click', function() {
+                    row.remove();
+                    updateValuesInput();
+                });
+                
+                container.appendChild(row);
+                valueIndex++;
+                updateValuesInput();
+            }
+
+            function updateValuesInput() {
+                const rows = container.querySelectorAll('.value-row');
+                const values = [];
+                rows.forEach(row => {
+                    const name = row.querySelector('.value-name').value.trim();
+                    const colorHex = row.querySelector('.color-hex').value.trim();
+                    if (name) {
+                        // Format: Name|ColorHex or just Name
+                        values.push(colorHex ? `${name}|${colorHex}` : name);
+                    }
+                });
+                valuesInput.value = values.join(',');
+            }
+
+            addBtn.addEventListener('click', function() {
+                createValueRow();
+            });
+
+            // Add initial empty row
+            createValueRow();
+        });
+    </script>
+}

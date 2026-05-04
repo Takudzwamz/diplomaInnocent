@@ -1,0 +1,191 @@
+@page
+@model StorefrontRazor.Pages.Admin.Settings.PaymentModel
+@{
+    ViewData["Title"] = "Настройки";
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+<p class="text-muted">Настройте платёжные шлюзы. Переключатель «Режим сайта» определяет, какой набор ключей (тестовый или боевой) используется для всех транзакций.</p>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Общая конфигурация</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.SiteMode" class="form-label"><strong>Режим сайта</strong></label>
+                    <select asp-for="Input.SiteMode" class="form-select">
+                        <option value="Test">Тестовый режим (песочница)</option>
+                        <option value="Live">Боевой режим (реальные транзакции)</option>
+                    </select>
+                    <div class="form-text">Этот переключатель управляет всеми платёжными шлюзами.</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Input.ActiveGateway" class="form-label"><strong>Активный шлюз</strong></label>
+                    <select asp-for="Input.ActiveGateway" class="form-select">
+                        <option value="Paystack">Paystack</option>
+                        <option value="PayFast">PayFast</option>
+                    </select>
+                    <div class="form-text">Платёжный шлюз, который будут использовать ваши покупатели.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Настройки Paystack</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-text mb-3">
+                        Найдите API-ключи в панели Paystack:
+                        <a href="https://dashboard.paystack.com/#/settings/developers" style="text-decoration: none" target="_blank">Settings -> API
+                            Keys & Webhooks</a>.
+                    </div>
+                    <h6>Тестовые ключи</h6>
+                    <div class="mb-3"><label asp-for="Input.PaystackTestSecret" class="form-label">Тестовый секретный
+                            ключ</label><input asp-for="Input.PaystackTestSecret" class="form-control" /></div>
+                    <div class="mb-3"><label asp-for="Input.PaystackTestPublic" class="form-label">Тестовый публичный
+                            ключ</label><input asp-for="Input.PaystackTestPublic" class="form-control" /></div>
+                    <hr />
+                    <h6>Боевые ключи</h6>
+                    <div class="mb-3"><label asp-for="Input.PaystackLiveSecret" class="form-label">Боевой секретный
+                            ключ</label><input asp-for="Input.PaystackLiveSecret" class="form-control" /></div>
+                    <div class="mb-3"><label asp-for="Input.PaystackLivePublic" class="form-label">Боевой публичный
+                            ключ</label><input asp-for="Input.PaystackLivePublic" class="form-control" /></div>
+                    <hr />
+                    <h6>Необходимые URL</h6>
+                    <p class="text-muted small">Скопируйте эти значения в панель Paystack: Settings -> API
+                        Keys & Webhooks.</p>
+                    <div class="mb-3">
+                        <label class="form-label">URL вебхука</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="@(Model.PublicUrl)/Webhooks/Paystack"
+                                readonly />
+                            <button type="button" class="btn btn-outline-secondary copy-url-btn"><i
+                                    class="bi bi-clipboard"></i></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Callback URL (Test & Live)</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="@(Model.PublicUrl)/Orders/Confirmation"
+                                readonly />
+                            <button type="button" class="btn btn-outline-secondary copy-url-btn"><i
+                                    class="bi bi-clipboard"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Настройки PayFast</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-text mb-3">
+                        Найдите ключи в панели PayFast. Парольная фраза находится в
+                        <a href="https://payfast.io/gateway-aggregator-selector/" style="text-decoration: none" target="_blank">Settings -> Integration</a>.
+
+                    </div>
+                    <div class="form-text mb-3">
+                        Для тестирования найдите ключи на
+                        <a href="https://sandbox.payfast.co.za/dashboard" style="text-decoration: none" target="_blank">панели песочницы</a>.
+                        
+                    </div>
+                    <h6>Тестовые ключи (песочница)</h6>
+                    <div class="mb-3"><label asp-for="Input.PayFastTestMerchantId" class="form-label">Тестовый Merchant
+                            ID</label><input asp-for="Input.PayFastTestMerchantId" class="form-control" /></div>
+                    <div class="mb-3"><label asp-for="Input.PayFastTestMerchantKey" class="form-label">Тестовый Merchant
+                            Key</label><input asp-for="Input.PayFastTestMerchantKey" class="form-control" /></div>
+                    <div class="mb-3"><label asp-for="Input.PayFastTestPassphrase" class="form-label">Тестовая
+                            парольная фраза</label><input asp-for="Input.PayFastTestPassphrase" class="form-control" /></div>
+                    <hr />
+                    <h6>Боевые ключи</h6>
+                    <div class="mb-3"><label asp-for="Input.PayFastLiveMerchantId" class="form-label">Боевой Merchant
+                            ID</label><input asp-for="Input.PayFastLiveMerchantId" class="form-control" /></div>
+                    <div class="mb-3"><label asp-for="Input.PayFastLiveMerchantKey" class="form-label">Боевой Merchant
+                            Key</label><input asp-for="Input.PayFastLiveMerchantKey" class="form-control" /></div>
+                    <div class="mb-3"><label asp-for="Input.PayFastLivePassphrase" class="form-label">Боевая
+                            парольная фраза</label><input asp-for="Input.PayFastLivePassphrase" class="form-control" /></div>
+                    <hr />
+                    <h6>Необходимые URL</h6>
+                    <p class="text-muted small">Скопируйте эти значения в панель PayFast: Settings ->
+                        Integration.</p>
+                    <div class="mb-3">
+                        <label class="form-label">Notify URL (ITN)</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="@(Model.PublicUrl)/Webhooks/PayFast"
+                                readonly />
+                            <button type="button" class="btn btn-outline-secondary copy-url-btn"><i
+                                    class="bi bi-clipboard"></i></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Return URL</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="@(Model.PublicUrl)/Orders/Confirmation"
+                                readonly />
+                            <button type="button" class="btn btn-outline-secondary copy-url-btn"><i
+                                    class="bi bi-clipboard"></i></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cancel URL</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="@(Model.PublicUrl)/Orders/Failed" readonly />
+                            <button type="button" class="btn btn-outline-secondary copy-url-btn"><i
+                                    class="bi bi-clipboard"></i></button>
+                        </div>
+                    </div>
+                    @* --- END OF BLOCK --- *@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary btn-lg">Сохранить</button>
+    </div>
+</form>
+
+@* --- ADD THIS SCRIPT SECTION FOR THE COPY BUTTONS --- *@
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const copyButtons = document.querySelectorAll('.copy-url-btn');
+
+            copyButtons.forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    const input = e.currentTarget.closest('.input-group').querySelector('input');
+                    const originalText = e.currentTarget.innerHTML;
+
+                    // Select and copy the text
+                    input.select();
+                    document.execCommand('copy');
+
+                    // Show feedback to the user
+                    e.currentTarget.innerHTML = '<i class="bi bi-check-lg" style="color: white;"></i>';
+                    e.currentTarget.classList.add('btn-success');
+
+                    setTimeout(() => {
+                        e.currentTarget.innerHTML = originalText;
+                        e.currentTarget.classList.remove('btn-success');
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+}

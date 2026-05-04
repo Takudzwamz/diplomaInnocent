@@ -1,0 +1,108 @@
+@model StorefrontRazor.Pages.Checkout.IndexModel
+
+<h3 class="mb-3">Адрес доставки</h3>
+<form method="post" asp-page-handler="Address">
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    @* 1. Name / Last Name *@
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Address.Name" class="form-label"></label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input asp-for="Address.Name" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Address.LastName" class="form-label"></label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input asp-for="Address.LastName" class="form-control" />
+            </div>
+        </div>
+    </div>
+    
+    @* 2. Phone Number *@
+    <div class="mb-3">
+        <label asp-for="Address.PhoneNumber" class="form-label">Номер телефона (необязательно)</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+            <input asp-for="Address.PhoneNumber" class="form-control" />
+        </div>
+    </div>
+
+    @* 3. Country *@
+    <div class="mb-3">
+        <label asp-for="Address.Country" class="form-label"></label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-globe-americas"></i></span>
+            <input asp-for="Address.Country" class="form-control" />
+        </div>
+    </div>
+
+    @* 4. State / 5. City *@
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Address.State" class="form-label">Область / Край</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-map"></i></span>
+                <input asp-for="Address.State" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Address.City" class="form-label"></label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-building"></i></span>
+                <input asp-for="Address.City" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    @* 6. Street Address *@
+    <div class="mb-3">
+        <label asp-for="Address.Line1" class="form-label">Улица</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-house-door"></i></span>
+            <input asp-for="Address.Line1" class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Address.Line2" class="form-label">Квартира, офис и т.д. (необязательно)</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-door-open"></i></span>
+            <input asp-for="Address.Line2" class="form-control" />
+        </div>
+    </div>
+
+    @* 7. Postal Code *@
+    <div class="mb-3">
+        <label asp-for="Address.PostalCode" class="form-label"></label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-mailbox2"></i></span>
+            <input asp-for="Address.PostalCode" class="form-control" />
+        </div>
+    </div>
+
+    @* 8. Delivery Notes *@
+    <div class="mb-3">
+        <label asp-for="Address.DeliveryNotes" class="form-label">Примечания к доставке (необязательно)</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-chat-left-text"></i></span>
+            <textarea asp-for="Address.DeliveryNotes" class="form-control" rows="3" placeholder="например, доступен после 17:00..."></textarea>
+        </div>
+    </div>
+
+    @* Save Address & Buttons *@
+    <div class="form-check my-4">
+        <input asp-for="SaveAddress" type="checkbox" class="form-check-input" />
+        <label asp-for="SaveAddress" class="form-check-label">Сохранить адрес в профиле</label>
+    </div>
+    <div class="d-flex justify-content-between mt-4">
+        <a asp-page="/Cart/Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Назад в корзину
+        </a>
+        <button type="submit" class="btn btn-primary">
+            Далее: Способ доставки <i class="bi bi-arrow-right"></i>
+        </button>
+    </div>
+</form>

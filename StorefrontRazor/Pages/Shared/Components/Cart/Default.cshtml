@@ -1,0 +1,12 @@
+
+
+@model int
+
+<a asp-page="/Cart/Index" class="nav-link cart-summary-link">
+    <span class="position-relative">
+        <i class="bi bi-bag fs-4"></i>
+        <span class="cart-badge-container position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: @(Model > 0 ? "block" : "none");">
+            <span class="cart-badge-count">@Model</span>
+        </span>
+    </span>
+</a>
