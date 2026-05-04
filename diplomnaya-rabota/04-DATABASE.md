@@ -199,10 +199,10 @@ public enum RecommendationEventType
 
 | Таблица | Количество записей | Описание |
 |---------|-------------------|----------|
-| Products | 50 | Товары из JSON-сида |
-| AspNetUsers | 20 | Тестовые пользователи |
-| UserInteractions | ~15 000 | 20 пользователей × 50 товаров × ~15 типов за 30 дней |
-| RecommendationEvents | ~6 000 | Сгенерированные показы и клики |
+| Products | 23 | Товары из JSON-сида |
+| AspNetUsers | 20 | Тестовые пользователи (19 + 1 админ) |
+| UserInteractions | 557 | 20 пользователей × 23 товара |
+| RecommendationEvents | 895 | Сгенерированные показы и клики |
 | ABTestExperiments | 1 | Popular vs Adaptive, 50% трафика |
 | ABTestAssignments | 20 | По одному на пользователя |
 

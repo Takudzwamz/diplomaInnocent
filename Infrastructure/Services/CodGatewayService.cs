@@ -10,18 +10,15 @@ namespace Infrastructure.Services;
 public class CodGatewayService : IPaymentGateway
 {
     private readonly IOrderFinalizationService _orderFinalizer;
-    private readonly ISiteSettingsService _siteSettings;
     private readonly ILogger<CodGatewayService> _logger;
 
     public string GatewayName => "CashOnDelivery";
 
     public CodGatewayService(
         IOrderFinalizationService orderFinalizer,
-        ISiteSettingsService siteSettings,
         ILogger<CodGatewayService> logger)
     {
         _orderFinalizer = orderFinalizer;
-        _siteSettings = siteSettings;
         _logger = logger;
     }
 
@@ -32,11 +29,8 @@ public class CodGatewayService : IPaymentGateway
 
         _logger.LogInformation("COD order {OrderId} finalized immediately.", order.Id);
 
-        var settings = await _siteSettings.GetSettingsAsync();
-        var publicUrl = settings.GetValueOrDefault("PublicUrl") ?? "http://localhost:5106";
-
-        // Redirect to confirmation page
-        var confirmationUrl = $"{publicUrl}/Orders/Confirmation?reference={order.PaymentReference}";
+        // Use relative URL — works regardless of port or PublicUrl setting
+        var confirmationUrl = $"/Orders/Confirmation?reference={order.PaymentReference}";
         return (confirmationUrl, null);
     }
 

@@ -237,7 +237,7 @@ graph LR
     end
 
     subgraph Host["Хост-машина"]
-        App[StorefrontRazor<br/>dotnet run<br/>Порт: 5001/5000]
+        App[StorefrontRazor<br/>dotnet run<br/>Порт: 5249]
     end
 
     subgraph Cloud["Облако Azure"]

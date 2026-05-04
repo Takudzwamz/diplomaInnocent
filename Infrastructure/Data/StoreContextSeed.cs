@@ -79,9 +79,20 @@ public class StoreContextSeed
             ("Ульяна",  "Кузнецова",  "ulyana@test.com"),
         };
 
-        foreach (var (firstName, lastName, email) in testUsers)
+        var addressCities = new[] { "Москва", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург",
+            "Нижний Новгород", "Самара", "Ростов-на-Дону", "Краснодар", "Воронеж", "Пермь", "Волгоград",
+            "Челябинск", "Омск", "Уфа", "Красноярск", "Тюмень", "Иркутск", "Томск" };
+        var addressStreets = new[] { "ул. Ленина", "пр. Мира", "ул. Пушкина", "ул. Гагарина", "пр. Победы",
+            "ул. Кирова", "ул. Советская", "Невский пр.", "ул. Чехова", "ул. Толстого", "бульвар Мира",
+            "пер. Садовый", "ул. Горького", "пр. Науки", "ул. Комсомольская", "ул. Октябрьская",
+            "ул. Строителей", "ул. Молодёжная", "ул. Школьная" };
+        var addrRng = new Random(123);
+
+        for (int idx = 0; idx < testUsers.Length; idx++)
         {
-            if (await userManager.FindByEmailAsync(email) == null)
+            var (firstName, lastName, email) = testUsers[idx];
+            var existingUser = await userManager.FindByEmailAsync(email);
+            if (existingUser == null)
             {
                 var user = new AppUser
                 {
@@ -89,9 +100,32 @@ public class StoreContextSeed
                     Email = email,
                     FirstName = firstName,
                     LastName = lastName,
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    Address = new Address
+                    {
+                        Line1 = $"{addressStreets[idx % addressStreets.Length]}, д. {addrRng.Next(1, 120)}, кв. {addrRng.Next(1, 250)}",
+                        City = addressCities[idx % addressCities.Length],
+                        State = "Россия",
+                        PostalCode = $"{addrRng.Next(100000, 700000)}",
+                        Country = "RU",
+                        PhoneNumber = $"+7{addrRng.Next(900, 999)}{addrRng.Next(1000000, 9999999)}"
+                    }
                 };
                 await userManager.CreateAsync(user, "Pa$$w0rd");
+            }
+            else if (existingUser.Address == null)
+            {
+                // Backfill address for users already created without one
+                existingUser.Address = new Address
+                {
+                    Line1 = $"{addressStreets[idx % addressStreets.Length]}, д. {addrRng.Next(1, 120)}, кв. {addrRng.Next(1, 250)}",
+                    City = addressCities[idx % addressCities.Length],
+                    State = "Россия",
+                    PostalCode = $"{addrRng.Next(100000, 700000)}",
+                    Country = "RU",
+                    PhoneNumber = $"+7{addrRng.Next(900, 999)}{addrRng.Next(1000000, 9999999)}"
+                };
+                await userManager.UpdateAsync(existingUser);
             }
         }
 
@@ -248,7 +282,7 @@ public class StoreContextSeed
             }
         }
 
-        // --- 6. Seed Test Orders (COD) ---
+        // --- 6. Seed Comprehensive Test Orders (COD) ---
         if (!await context.Orders.AnyAsync())
         {
             var rng = new Random(42);
@@ -256,16 +290,17 @@ public class StoreContextSeed
             var deliveryMethods = await context.DeliveryMethods.ToListAsync();
             var users = await userManager.Users.Where(u => u.Email != "admin@test.com").ToListAsync();
 
-            var russianCities = new[] { "Москва", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург", "Нижний Новгород", "Самара", "Ростов-на-Дону" };
-            var russianStreets = new[] { "ул. Ленина", "пр. Мира", "ул. Пушкина", "ул. Гагарина", "пр. Победы", "ул. Кирова", "ул. Советская", "Невский пр." };
+            var russianCities = new[] { "Москва", "Санкт-Петербург", "Казань", "Новосибирск", "Екатеринбург",
+                "Нижний Новгород", "Самара", "Ростов-на-Дону", "Краснодар", "Воронеж", "Пермь", "Волгоград" };
+            var russianStreets = new[] { "ул. Ленина", "пр. Мира", "ул. Пушкина", "ул. Гагарина", "пр. Победы",
+                "ул. Кирова", "ул. Советская", "Невский пр.", "ул. Чехова", "ул. Толстого", "бульвар Мира", "пер. Садовый" };
 
-            var statuses = new[] { OrderStatus.PaymentReceived, OrderStatus.PaymentReceived, OrderStatus.PaymentReceived };
-            var deliveryStatuses = new[] { DeliveryStatus.Processing, DeliveryStatus.Shipped, DeliveryStatus.Delivered };
-
-            for (int i = 0; i < 30; i++)
+            // 75 orders spread over 60 days — realistic distribution
+            var totalOrders = 75;
+            for (int i = 0; i < totalOrders; i++)
             {
                 var user = users[rng.Next(users.Count)];
-                var numItems = rng.Next(1, 4);
+                var numItems = rng.Next(1, 5); // 1-4 items per order
                 var selectedProducts = products.OrderBy(_ => rng.Next()).Take(numItems).ToList();
                 var deliveryMethod = deliveryMethods[rng.Next(deliveryMethods.Count)];
 
@@ -278,11 +313,62 @@ public class StoreContextSeed
                         PictureUrl = p.Images.FirstOrDefault()?.Url ?? "/images/placeholder.png"
                     },
                     Price = p.Price,
-                    Quantity = rng.Next(1, 3)
+                    Quantity = rng.Next(1, 4)
                 }).ToList();
 
                 var subtotal = orderItems.Sum(oi => oi.Price * oi.Quantity);
-                var dStatus = deliveryStatuses[rng.Next(deliveryStatuses.Length)];
+
+                // Apply discount to ~20% of orders
+                var discount = 0m;
+                string? couponCode = null;
+                if (rng.Next(100) < 20)
+                {
+                    discount = Math.Round(subtotal * (rng.Next(5, 20) / 100m), 2);
+                    couponCode = rng.Next(2) == 0 ? "WELCOME10" : "SALE15";
+                }
+
+                // Order date: spread over 60 days, more recent orders more likely
+                var daysAgo = (int)(Math.Pow(rng.NextDouble(), 1.5) * 60); // Bias toward recent
+                var orderDate = DateTime.UtcNow.AddDays(-daysAgo).AddHours(rng.Next(8, 22)).AddMinutes(rng.Next(0, 60));
+
+                // Delivery status distribution based on age
+                DeliveryStatus dStatus;
+                OrderStatus oStatus;
+                if (daysAgo < 2)
+                {
+                    // Very recent — still processing
+                    dStatus = DeliveryStatus.Processing;
+                    oStatus = OrderStatus.PaymentReceived;
+                }
+                else if (daysAgo < 5)
+                {
+                    // Recent — shipped or processing
+                    dStatus = rng.Next(3) == 0 ? DeliveryStatus.Processing : DeliveryStatus.Shipped;
+                    oStatus = OrderStatus.PaymentReceived;
+                }
+                else if (daysAgo < 14)
+                {
+                    // Medium age — mostly shipped or out for delivery
+                    var roll = rng.Next(10);
+                    if (roll < 2) dStatus = DeliveryStatus.Shipped;
+                    else if (roll < 4) dStatus = DeliveryStatus.OutForDelivery;
+                    else dStatus = DeliveryStatus.Delivered;
+                    oStatus = OrderStatus.PaymentReceived;
+                }
+                else
+                {
+                    // Old orders — delivered (with small % refunded)
+                    if (rng.Next(100) < 8)
+                    {
+                        dStatus = DeliveryStatus.Delivered;
+                        oStatus = OrderStatus.Refunded;
+                    }
+                    else
+                    {
+                        dStatus = DeliveryStatus.Delivered;
+                        oStatus = OrderStatus.PaymentReceived;
+                    }
+                }
 
                 var order = new Order
                 {
@@ -291,29 +377,32 @@ public class StoreContextSeed
                     {
                         Name = user.FirstName ?? "Тест",
                         LastName = user.LastName ?? "Пользователь",
-                        Line1 = $"{russianStreets[rng.Next(russianStreets.Length)]}, д. {rng.Next(1, 100)}",
+                        Line1 = $"{russianStreets[rng.Next(russianStreets.Length)]}, д. {rng.Next(1, 150)}, кв. {rng.Next(1, 300)}",
                         City = russianCities[rng.Next(russianCities.Length)],
                         State = "Россия",
-                        PostalCode = $"{rng.Next(100000, 200000)}",
-                        Country = "RU"
+                        PostalCode = $"{rng.Next(100000, 700000)}",
+                        Country = "RU",
+                        PhoneNumber = $"+7{rng.Next(900, 999)}{rng.Next(1000000, 9999999)}"
                     },
                     DeliveryMethod = deliveryMethod,
                     OrderItems = orderItems,
                     Subtotal = subtotal,
-                    Discount = 0,
+                    Discount = discount,
+                    CouponCode = couponCode,
                     PaymentGatewayName = "CashOnDelivery",
                     PaymentReference = Guid.NewGuid().ToString(),
-                    GatewayTransactionId = $"COD-SEED-{i + 1}",
-                    Status = OrderStatus.PaymentReceived,
+                    GatewayTransactionId = $"COD-{orderDate:yyyyMMdd}-{i + 1:D3}",
+                    Status = oStatus,
                     DeliveryStatus = dStatus,
-                    OrderDate = DateTime.UtcNow.AddDays(-rng.Next(1, 30))
+                    OrderDate = orderDate
                 };
 
+                // Tracking events based on delivery status
                 order.TrackingEvents.Add(new TrackingEvent
                 {
                     Status = "Processing",
                     Notes = "Заказ подтверждён. Оплата при получении.",
-                    EventDate = order.OrderDate
+                    EventDate = orderDate
                 });
 
                 if (dStatus >= DeliveryStatus.Shipped)
@@ -321,8 +410,17 @@ public class StoreContextSeed
                     order.TrackingEvents.Add(new TrackingEvent
                     {
                         Status = "Shipped",
-                        Notes = "Заказ передан в службу доставки.",
-                        EventDate = order.OrderDate.AddDays(rng.Next(1, 3))
+                        Notes = $"Отправлен через {deliveryMethod.ShortName}. Трек: {rng.Next(10000000, 99999999)}",
+                        EventDate = orderDate.AddDays(rng.Next(1, 3))
+                    });
+                }
+                if (dStatus >= DeliveryStatus.OutForDelivery)
+                {
+                    order.TrackingEvents.Add(new TrackingEvent
+                    {
+                        Status = "OutForDelivery",
+                        Notes = "Курьер выехал к получателю.",
+                        EventDate = orderDate.AddDays(rng.Next(3, 5))
                     });
                 }
                 if (dStatus == DeliveryStatus.Delivered)
@@ -330,8 +428,17 @@ public class StoreContextSeed
                     order.TrackingEvents.Add(new TrackingEvent
                     {
                         Status = "Delivered",
-                        Notes = "Заказ доставлен получателю.",
-                        EventDate = order.OrderDate.AddDays(rng.Next(3, 7))
+                        Notes = "Заказ доставлен. Подпись получена.",
+                        EventDate = orderDate.AddDays(rng.Next(4, 8))
+                    });
+                }
+                if (oStatus == OrderStatus.Refunded)
+                {
+                    order.TrackingEvents.Add(new TrackingEvent
+                    {
+                        Status = "Refunded",
+                        Notes = "Возврат средств по запросу покупателя.",
+                        EventDate = orderDate.AddDays(rng.Next(8, 14))
                     });
                 }
 
@@ -381,9 +488,9 @@ public class StoreContextSeed
             new() { Key = "IndexNow_ApiKey", Value = "e8b9eacc09364383a7f6c3be8ce49fdb" }, // Merchant should set their own key
 
             // AI Settings - Azure OpenAI Configuration
-            new() { Key = "AI_Enabled", Value = "false" },
+            new() { Key = "AI_Enabled", Value = "true" },
             new() { Key = "AI_Endpoint", Value = "https://storefrontai.openai.azure.com/" }, // Merchant must configure Azure OpenAI endpoint
-            new() { Key = "AI_ApiKey", Value = "" }, // Merchant must configure Azure OpenAI API key
+            new() { Key = "AI_ApiKey", Value = "" }, // Set your Azure OpenAI API key here or via Admin → Settings
             new() { Key = "AI_EmbeddingDeployment", Value = "text-embedding-ada-002" }
 
         };

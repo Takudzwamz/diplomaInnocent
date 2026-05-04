@@ -12,6 +12,7 @@
 
 | # | Файл | Содержание |
 |---|------|----------|
+| 00 | [00-HOW-IT-WORKS.md](00-HOW-IT-WORKS.md) | **НАЧАТЬ ЗДЕСЬ** — Как работает система, навигация, ответы на частые вопросы. |
 | 01 | [01-TECH-STACK.md](01-TECH-STACK.md) | Реальный технологический стек с версиями. **Что заменить в диссертации.** |
 | 02 | [02-ARCHITECTURE.md](02-ARCHITECTURE.md) | Диаграммы архитектуры системы (Mermaid), структура проекта, слоистый дизайн. |
 | 03 | [03-ALGORITHMS.md](03-ALGORITHMS.md) | Все алгоритмы рекомендаций с формулами, весами и ссылками на код. |
@@ -38,6 +39,28 @@
 | Offline-метрики | Precision@K, Recall@K, F1@K, NDCG@K, MRR, Coverage | `OfflineMetricsService.cs` |
 | Online-метрики | CTR, Conversion Rate, AOV, Revenue | `RecommendationMetricsService.cs` |
 | Статистические тесты | z-тест (пропорции), t-тест Уэлча (средние) | `RecommendationMetricsService.cs` |
-| Сид-данные | 20 пользователей × 50 товаров × 30 дней | `RecommendationDataSeeder.cs` |
-| Симулированный рост CTR (treatment) | 87.5% (8% → 15%) | `RecommendationDataSeeder.cs` |
+| Сид-данные | 20 пользователей × 23 товара, 75 заказов, 895 событий | `StoreContextSeed.cs` |
+| CTR: Popular (контроль) | 8.12% (32/394) | Фактические сидированные данные |
+| CTR: Adaptive (эксперимент) | 15.84% (61/385) | Фактические сидированные данные |
+| Лифт CTR | +95% | |
 | Разделение train/test | 80% / 20% (временное) | `OfflineMetricsService.cs` |
+
+---
+
+## Перегенерация диаграмм
+
+Все UML-диаграммы и графики содержат исходный код Mermaid прямо в `.md`-файлах (02, 03, 04, 05, 06, 09, 10). Если какая-либо диаграмма вам не подходит, вы можете:
+
+1. **Отредактировать код Mermaid** прямо в нужном `.md`-файле (блок ` ```mermaid ... ``` `)
+2. **Визуализировать онлайн**: скопируйте блок в [mermaid.live](https://mermaid.live) или [mermaid.ai](https://mermaid.ai/)
+3. **Экспортировать в PNG/SVG** одним из способов:
+   - На сайте mermaid.live нажмите кнопку экспорта
+   - Запустите скрипт автоматической генерации:
+     ```bash
+     cd diplomnaya-rabota
+     python generate_diagrams.py        # PNG (по умолчанию)
+     python generate_diagrams.py --svg  # SVG
+     ```
+     Скрипт использует бесплатный API [kroki.io](https://kroki.io) и сохраняет результаты в папку `graphs/`.
+
+> **Совет:** Если не нравится внешний вид — измените тему Mermaid, добавив директиву `%%{init: {'theme': 'forest'}}%%` в начало блока. Доступные темы: `default`, `forest`, `dark`, `neutral`.
