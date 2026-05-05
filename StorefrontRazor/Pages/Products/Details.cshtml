@@ -560,7 +560,7 @@
 
     </div>
 
-    @if (Model.AIRecommendations.Any() || Model.RelatedByBrand.Any() || Model.RelatedByType.Any())
+    @if (Model.AIRecommendations.Any() || Model.RelatedByBrand.Any() || Model.RelatedByType.Any() || Model.AdaptiveRecommendations.Any() || Model.CollaborativeRecommendations.Any() || Model.ContentBasedRecommendations.Any() || Model.PopularRecommendations.Any())
     {
         <div class="container mt-5 mb-5">
             <hr />
@@ -573,20 +573,116 @@
                         <div class="badge bg-gradient-ai me-3 pulse-animation">
                             <i class="bi bi-stars"></i> AI
                         </div>
-                        <h2 class="mb-0">Вам также может понравиться</h2>
+                        <h2 class="mb-0">ИИ-рекомендации (Azure OpenAI)</h2>
                     </div>
                     <p class="text-center text-muted mb-4">
-                        <small>На основе ИИ • Умные рекомендации по схожести товаров</small>
+                        <small>Семантическое сходство через эмбеддинги • Cosine Similarity</small>
                     </p>
-                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" data-rec-section="product-detail">
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" data-rec-section="product-detail-ai">
                         @{ var recPos = 1; }
                         @foreach (var aiProduct in Model.AIRecommendations)
                         {
-                            <div class="col" data-rec-product-id="@aiProduct.Id" data-rec-strategy="ContentBased" data-rec-position="@recPos" data-rec-source-id="@Model.Product.Id">
+                            <div class="col" data-rec-product-id="@aiProduct.Id" data-rec-strategy="AI" data-rec-position="@recPos" data-rec-source-id="@Model.Product.Id">
                                 <partial name="_ProductCardPartial" model="aiProduct"
                                     view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
                             </div>
                             recPos++;
+                        }
+                    </div>
+                </div>
+            }
+
+            @* Adaptive/Hybrid Recommendations *@
+            @if (Model.AdaptiveRecommendations.Any())
+            {
+                <div class="mt-5">
+                    <h2 class="text-center mb-2">
+                        <i class="bi bi-shuffle text-primary"></i> Адаптивная рекомендация (Hybrid)
+                    </h2>
+                    <p class="text-center text-muted mb-4">
+                        <small>Комбинация коллаборативной + контентной фильтрации + поведение</small>
+                    </p>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" data-rec-section="product-detail-adaptive">
+                        @{ var adaptPos = 1; }
+                        @foreach (var p in Model.AdaptiveRecommendations)
+                        {
+                            <div class="col" data-rec-product-id="@p.Id" data-rec-strategy="Adaptive" data-rec-position="@adaptPos">
+                                <partial name="_ProductCardPartial" model="p"
+                                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                            </div>
+                            adaptPos++;
+                        }
+                    </div>
+                </div>
+            }
+
+            @* Collaborative Filtering *@
+            @if (Model.CollaborativeRecommendations.Any())
+            {
+                <div class="mt-5">
+                    <h2 class="text-center mb-2">
+                        <i class="bi bi-people-fill text-info"></i> Коллаборативная фильтрация
+                    </h2>
+                    <p class="text-center text-muted mb-4">
+                        <small>Пользователи с похожим поведением также смотрели эти товары</small>
+                    </p>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" data-rec-section="product-detail-collaborative">
+                        @{ var collabPos = 1; }
+                        @foreach (var p in Model.CollaborativeRecommendations)
+                        {
+                            <div class="col" data-rec-product-id="@p.Id" data-rec-strategy="Collaborative" data-rec-position="@collabPos">
+                                <partial name="_ProductCardPartial" model="p"
+                                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                            </div>
+                            collabPos++;
+                        }
+                    </div>
+                </div>
+            }
+
+            @* Content-Based *@
+            @if (Model.ContentBasedRecommendations.Any())
+            {
+                <div class="mt-5">
+                    <h2 class="text-center mb-2">
+                        <i class="bi bi-tags-fill text-success"></i> Контентная рекомендация
+                    </h2>
+                    <p class="text-center text-muted mb-4">
+                        <small>Похожие товары по характеристикам (Content-Based Filtering)</small>
+                    </p>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" data-rec-section="product-detail-content">
+                        @{ var contentPos = 1; }
+                        @foreach (var p in Model.ContentBasedRecommendations)
+                        {
+                            <div class="col" data-rec-product-id="@p.Id" data-rec-strategy="ContentBased" data-rec-position="@contentPos">
+                                <partial name="_ProductCardPartial" model="p"
+                                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                            </div>
+                            contentPos++;
+                        }
+                    </div>
+                </div>
+            }
+
+            @* Popular Products *@
+            @if (Model.PopularRecommendations.Any())
+            {
+                <div class="mt-5">
+                    <h2 class="text-center mb-2">
+                        <i class="bi bi-fire text-danger"></i> Популярные товары
+                    </h2>
+                    <p class="text-center text-muted mb-4">
+                        <small>Наиболее просматриваемые и покупаемые товары (Popularity-Based)</small>
+                    </p>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4" data-rec-section="product-detail-popular">
+                        @{ var popPos = 1; }
+                        @foreach (var p in Model.PopularRecommendations)
+                        {
+                            <div class="col" data-rec-product-id="@p.Id" data-rec-strategy="Popular" data-rec-position="@popPos">
+                                <partial name="_ProductCardPartial" model="p"
+                                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                            </div>
+                            popPos++;
                         }
                     </div>
                 </div>

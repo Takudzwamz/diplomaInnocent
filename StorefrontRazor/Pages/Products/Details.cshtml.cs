@@ -23,13 +23,14 @@ public class DetailsModel : BasePageModel
     private readonly IAIRecommendationService _aiRecommendationService;
     private readonly IAIService _aiService;
     private readonly IUserInteractionService _interactionService;
+    private readonly IAdaptiveRecommendationService _adaptiveRecommendationService;
     public HashSet<int> DefaultSelectedValueIds { get; set; } = new();
     public ProductVariant? DefaultVariant { get; set; }
     public CartItem? DefaultVariantCartItem { get; set; }
     public string? PromoHtmlContent { get; set; }
     
 
-    public DetailsModel(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, ISiteSettingsService siteSettings, ICartService cartService, IWishlistService wishlistService, SignInManager<AppUser> signInManager, IAIRecommendationService aiRecommendationService, IAIService aiService, IUserInteractionService interactionService)
+    public DetailsModel(IUnitOfWork unitOfWork, UserManager<AppUser> userManager, ISiteSettingsService siteSettings, ICartService cartService, IWishlistService wishlistService, SignInManager<AppUser> signInManager, IAIRecommendationService aiRecommendationService, IAIService aiService, IUserInteractionService interactionService, IAdaptiveRecommendationService adaptiveRecommendationService)
     {
         _unitOfWork = unitOfWork;
         _userManager = userManager;
@@ -40,6 +41,7 @@ public class DetailsModel : BasePageModel
         _aiRecommendationService = aiRecommendationService;
         _aiService = aiService;
         _interactionService = interactionService;
+        _adaptiveRecommendationService = adaptiveRecommendationService;
     }
 
     public ProductDto Product { get; set; } = null!;
@@ -48,6 +50,10 @@ public class DetailsModel : BasePageModel
     public List<ProductDto> RelatedByBrand { get; set; } = [];
     public List<ProductDto> RelatedByType { get; set; } = [];
     public List<ProductDto> AIRecommendations { get; set; } = [];
+    public List<ProductDto> CollaborativeRecommendations { get; set; } = [];
+    public List<ProductDto> ContentBasedRecommendations { get; set; } = [];
+    public List<ProductDto> PopularRecommendations { get; set; } = [];
+    public List<ProductDto> AdaptiveRecommendations { get; set; } = [];
     public bool IsAIEnabled { get; set; }
     public ReviewSummary? AIReviewSummary { get; set; }
 
@@ -196,6 +202,51 @@ public class DetailsModel : BasePageModel
         RelatedByType = relatedByTypeProducts
             .Select(p => p.ToDto())
             .ToList();
+
+        // --- Load multi-strategy recommendations for logged-in users ---
+        if (_signInManager.IsSignedIn(User))
+        {
+            var email2 = User.FindFirstValue(ClaimTypes.Email);
+            var user2 = !string.IsNullOrEmpty(email2) ? await _userManager.FindByEmailAsync(email2) : null;
+            if (user2 != null)
+            {
+                try
+                {
+                    var adaptive = await _adaptiveRecommendationService
+                        .GetAdaptiveRecommendationsAsync(user2.Id, count: 4);
+                    AdaptiveRecommendations = adaptive.Where(p => p.Id != id).Take(4)
+                        .Select(p => p.ToDto()).ToList();
+                }
+                catch { }
+
+                try
+                {
+                    var collab = await _adaptiveRecommendationService
+                        .GetCollaborativeRecommendationsAsync(user2.Id, count: 4);
+                    CollaborativeRecommendations = collab.Where(p => p.Id != id).Take(4)
+                        .Select(p => p.ToDto()).ToList();
+                }
+                catch { }
+
+                try
+                {
+                    var content = await _adaptiveRecommendationService
+                        .GetContentBasedRecommendationsAsync(id, count: 4);
+                    ContentBasedRecommendations = content.Where(p => p.Id != id).Take(4)
+                        .Select(p => p.ToDto()).ToList();
+                }
+                catch { }
+
+                try
+                {
+                    var popular = await _adaptiveRecommendationService
+                        .GetPopularProductsAsync(count: 4);
+                    PopularRecommendations = popular.Where(p => p.Id != id).Take(4)
+                        .Select(p => p.ToDto()).ToList();
+                }
+                catch { }
+            }
+        }
 
         // Set a default return URL if none is provided
         if (string.IsNullOrEmpty(ReturnUrl))
