@@ -272,6 +272,12 @@
                 </div>
             }
 
+            @if (Model.PersonalizedRecommendations.Any() || Model.PopularRecommendations.Any())
+            {
+                <hr class="my-4" />
+                <h5 class="mb-3 text-muted"><i class="bi bi-grid-3x3-gap me-2"></i>Все товары</h5>
+            }
+
             @* --- Product Grid --- *@
             <div id="product-list-container">
                 <partial name="_ProductListPartial" model="Model" />
