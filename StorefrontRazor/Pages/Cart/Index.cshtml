@@ -105,6 +105,69 @@
             <a asp-page="/Products/Index" class="btn btn-primary mt-3">Продолжить покупки</a>
         </div>
     </template>
+
+    @* --- RECOMMENDATIONS SECTION --- *@
+    @if (Model.ContentBasedRecommendations.Any() || Model.CollaborativeRecommendations.Any() || Model.PopularRecommendations.Any())
+    {
+        <hr class="my-5" />
+
+        @if (Model.ContentBasedRecommendations.Any())
+        {
+            <div class="mb-5">
+                <h4 class="text-center mb-3">
+                    <i class="bi bi-tags-fill text-success"></i> Дополнит вашу покупку
+                </h4>
+                <p class="text-center text-muted small">Похожие товары на основе содержимого корзины (Content-Based)</p>
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                    @foreach (var product in Model.ContentBasedRecommendations)
+                    {
+                        <div class="col" data-rec-strategy="ContentBased">
+                            <partial name="_ProductCardPartial" model="product"
+                                view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.CollaborativeRecommendations.Any())
+        {
+            <div class="mb-5">
+                <h4 class="text-center mb-3">
+                    <i class="bi bi-people-fill text-info"></i> Покупатели также берут
+                </h4>
+                <p class="text-center text-muted small">Коллаборативная фильтрация: пользователи с похожими покупками</p>
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                    @foreach (var product in Model.CollaborativeRecommendations)
+                    {
+                        <div class="col" data-rec-strategy="Collaborative">
+                            <partial name="_ProductCardPartial" model="product"
+                                view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.PopularRecommendations.Any())
+        {
+            <div class="mb-5">
+                <h4 class="text-center mb-3">
+                    <i class="bi bi-fire text-danger"></i> Популярные товары
+                </h4>
+                <p class="text-center text-muted small">Наиболее популярные среди всех покупателей (Popularity-Based)</p>
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+                    @foreach (var product in Model.PopularRecommendations)
+                    {
+                        <div class="col" data-rec-strategy="Popular">
+                            <partial name="_ProductCardPartial" model="product"
+                                view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
 </div>
 
 @section Scripts {

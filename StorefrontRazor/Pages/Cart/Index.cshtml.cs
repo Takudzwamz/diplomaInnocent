@@ -1,7 +1,11 @@
 using Core.Entities;
 using Core.Interfaces;
+using Core.Extensions;
+using Core.DTOs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using StorefrontRazor.Services;
 using System.Security.Claims;
 
@@ -14,15 +18,24 @@ public class IndexModel : PageModel
     private readonly ICartService _cartService;
     public CheckoutService Checkout { get; }
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IAdaptiveRecommendationService _adaptiveRecommendationService;
+    private readonly SignInManager<AppUser> _signInManager;
+    private readonly UserManager<AppUser> _userManager;
 
     public string? PromoHtmlContent { get; set; }
 
+    public List<ProductDto> CollaborativeRecommendations { get; set; } = new();
+    public List<ProductDto> ContentBasedRecommendations { get; set; } = new();
+    public List<ProductDto> PopularRecommendations { get; set; } = new();
 
-    public IndexModel(ICartService cartService, CheckoutService checkout, IUnitOfWork unitOfWork)
+    public IndexModel(ICartService cartService, CheckoutService checkout, IUnitOfWork unitOfWork, IAdaptiveRecommendationService adaptiveRecommendationService, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
     {
         _cartService = cartService;
         Checkout = checkout;
         _unitOfWork = unitOfWork;
+        _adaptiveRecommendationService = adaptiveRecommendationService;
+        _signInManager = signInManager;
+        _userManager = userManager;
     }
 
 
@@ -53,6 +66,56 @@ public class IndexModel : PageModel
         else
         {
             PromoHtmlContent = null;
+        }
+
+        // Load recommendations for logged-in users
+        if (_signInManager.IsSignedIn(User))
+        {
+            try
+            {
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                var user = !string.IsNullOrEmpty(email) ? await _userManager.FindByEmailAsync(email) : null;
+                if (user != null)
+                {
+                    var cartProductIds = Cart.Items.Select(i => i.ProductId).ToHashSet();
+
+                    try
+                    {
+                        // Content-based: similar to items in cart
+                        var firstCartProduct = Cart.Items.FirstOrDefault();
+                        if (firstCartProduct != null)
+                        {
+                            var content = await _adaptiveRecommendationService
+                                .GetContentBasedRecommendationsAsync(firstCartProduct.ProductId, count: 4);
+                            ContentBasedRecommendations = content
+                                .Where(p => !cartProductIds.Contains(p.Id))
+                                .Take(4).Select(p => p.ToDto()).ToList();
+                        }
+                    }
+                    catch { }
+
+                    try
+                    {
+                        var collab = await _adaptiveRecommendationService
+                            .GetCollaborativeRecommendationsAsync(user.Id, count: 4);
+                        CollaborativeRecommendations = collab
+                            .Where(p => !cartProductIds.Contains(p.Id))
+                            .Take(4).Select(p => p.ToDto()).ToList();
+                    }
+                    catch { }
+
+                    try
+                    {
+                        var popular = await _adaptiveRecommendationService
+                            .GetPopularProductsAsync(count: 4);
+                        PopularRecommendations = popular
+                            .Where(p => !cartProductIds.Contains(p.Id))
+                            .Take(4).Select(p => p.ToDto()).ToList();
+                    }
+                    catch { }
+                }
+            }
+            catch { }
         }
     }
 

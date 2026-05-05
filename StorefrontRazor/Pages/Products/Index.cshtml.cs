@@ -17,8 +17,10 @@ public class IndexModel : BasePageModel
     private readonly ICartService _cartService;
     private readonly IWishlistService _wishlistService;
     private readonly SignInManager<AppUser> _signInManager;
+    private readonly UserManager<AppUser> _userManager;
     private readonly ISiteSettingsService _siteSettings;
     private readonly IAIService _aiService;
+    private readonly IAdaptiveRecommendationService _recommendationService;
 
     // Properties to hold the data for the view
     public Pagination<ProductDto> ProductPagination { get; set; } = null!;
@@ -28,6 +30,8 @@ public class IndexModel : BasePageModel
     public ShoppingCart Cart { get; set; } = null!;
     public bool IsAISearchEnabled { get; set; }
     public bool UsedAISearch { get; set; }
+    public IReadOnlyList<Product> PersonalizedRecommendations { get; set; } = [];
+    public IReadOnlyList<Product> PopularRecommendations { get; set; } = [];
 
     // Properties to capture filter values from the URL query string.
     // [BindProperty(SupportsGet = true)] is crucial for this to work on GET requests.
@@ -60,14 +64,16 @@ public class IndexModel : BasePageModel
     [BindProperty(SupportsGet = true)]
     public ProductSpecParams ProductParams { get; set; } = new();
 
-    public IndexModel(IUnitOfWork unitOfWork, ISiteSettingsService siteSettings, ICartService cartService, IWishlistService wishlistService, SignInManager<AppUser> signInManager, IAIService aiService)
+    public IndexModel(IUnitOfWork unitOfWork, ISiteSettingsService siteSettings, ICartService cartService, IWishlistService wishlistService, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, IAIService aiService, IAdaptiveRecommendationService recommendationService)
     {
         _unitOfWork = unitOfWork;
         _siteSettings = siteSettings;
         _cartService = cartService;
         _wishlistService = wishlistService;
         _signInManager = signInManager;
+        _userManager = userManager;
         _aiService = aiService;
+        _recommendationService = recommendationService;
     }
 
     public async Task OnGetAsync()
@@ -162,6 +168,21 @@ public class IndexModel : BasePageModel
         ViewData["Description"] = description;
         ViewData["ImageUrl"] = logoUrl; // Use the store's main logo for list pages
         // --- END OF SEO BLOCK ---
+
+        // --- Load personalized recommendations for logged-in users ---
+        if (_signInManager.IsSignedIn(User))
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    PersonalizedRecommendations = await _recommendationService.GetAdaptiveRecommendationsAsync(user.Id, 6);
+                    PopularRecommendations = await _recommendationService.GetPopularProductsAsync(6);
+                }
+            }
+            catch { /* Recommendations are non-critical */ }
+        }
     }
 
     // --- ADD THIS NEW HANDLER ---
