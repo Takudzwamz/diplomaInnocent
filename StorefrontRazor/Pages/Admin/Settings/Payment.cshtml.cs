@@ -29,8 +29,8 @@ public class PaymentModel : PageModel
 
         Input = new PaymentSettingsInput
         {
-            ActiveGateway = settings.GetValueOrDefault("Payment_ActiveGateway", "Paystack"),
-            SiteMode = settings.GetValueOrDefault("Payment_SiteMode", "Test"),
+            ActiveGateway = settings.GetValueOrDefault("Payment_ActiveGateway", "Paystack") ?? "Paystack",
+            SiteMode = settings.GetValueOrDefault("Payment_SiteMode", "Test") ?? "Test",
 
             PaystackTestSecret = settings.GetValueOrDefault("Paystack_Test_SecretKey"),
             PaystackTestPublic = settings.GetValueOrDefault("Paystack_Test_PublicKey"),
@@ -46,7 +46,7 @@ public class PaymentModel : PageModel
         };
         
         // Get the PublicUrl from settings to display on the page
-        PublicUrl = settings.GetValueOrDefault("PublicUrl", "https-your-site.com");
+        PublicUrl = settings.GetValueOrDefault("PublicUrl", "https-your-site.com") ?? string.Empty;
     }
 
     public async Task<IActionResult> OnPostAsync()

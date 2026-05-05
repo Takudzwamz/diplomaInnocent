@@ -78,7 +78,7 @@ public class CreateModel : PageModel
         {
             // FIX: Use case-insensitive deserialization for robustness
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var variantInputs = JsonSerializer.Deserialize<List<VariantInputDto>>(NewProduct.VariantsJson, options);
+            var variantInputs = JsonSerializer.Deserialize<List<VariantInputDto>>(NewProduct.VariantsJson ?? "[]", options);
 
             if (variantInputs == null || !variantInputs.Any())
             {

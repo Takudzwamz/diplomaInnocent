@@ -68,13 +68,13 @@ public class IndexModel : PageModel
         Vm.StoreName = settings.GetValueOrDefault("StoreName");
         Vm.CurrentLogoUrl = settings.GetValueOrDefault("StoreLogoUrl");
         Vm.CurrentFaviconUrl = settings.GetValueOrDefault("StoreFaviconUrl");
-        Vm.PublicUrl = settings.GetValueOrDefault("PublicUrl", "https://example.com");
-        Vm.AdminNotificationEmail = settings.GetValueOrDefault("AdminNotificationEmail", "admin@example.com");
+        Vm.PublicUrl = settings.GetValueOrDefault("PublicUrl", "https://example.com") ?? string.Empty;
+        Vm.AdminNotificationEmail = settings.GetValueOrDefault("AdminNotificationEmail", "admin@example.com") ?? string.Empty;
         
-        Vm.SendGridKey = settings.GetValueOrDefault("SendGrid_ApiKey");
-        Vm.CloudinaryCloudName = settings.GetValueOrDefault("Cloudinary_CloudName");
-        Vm.CloudinaryApiKey = settings.GetValueOrDefault("Cloudinary_ApiKey");
-        Vm.CloudinaryApiSecret = settings.GetValueOrDefault("Cloudinary_ApiSecret");
+        Vm.SendGridKey = settings.GetValueOrDefault("SendGrid_ApiKey") ?? string.Empty;
+        Vm.CloudinaryCloudName = settings.GetValueOrDefault("Cloudinary_CloudName") ?? string.Empty;
+        Vm.CloudinaryApiKey = settings.GetValueOrDefault("Cloudinary_ApiKey") ?? string.Empty;
+        Vm.CloudinaryApiSecret = settings.GetValueOrDefault("Cloudinary_ApiSecret") ?? string.Empty;
     }
 
     public async Task<IActionResult> OnPostAsync()

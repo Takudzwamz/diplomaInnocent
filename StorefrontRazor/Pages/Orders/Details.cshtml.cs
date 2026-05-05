@@ -30,14 +30,14 @@ public class DetailsModel : PageModel
     [BindProperty(SupportsGet = true)]
     public int Id { get; set; }
 
-    public OrderDto Order { get; set; }
+    public OrderDto Order { get; set; } = default!;
 
     public HashSet<int> ReviewedProductIds { get; set; } = new();
 
     public async Task<IActionResult> OnGetAsync()
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
-        var spec = new OrderSpecification(email, Id);
+        var spec = new OrderSpecification(email!, Id);
         var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
 
         if (order == null)
@@ -72,7 +72,7 @@ public class DetailsModel : PageModel
     public async Task<IActionResult> OnPostRetryPaymentAsync()
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
-        var spec = new OrderSpecification(email, Id);
+        var spec = new OrderSpecification(email!, Id);
         var orderToRetry = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
 
         if (orderToRetry == null)
@@ -83,7 +83,7 @@ public class DetailsModel : PageModel
         try
         {
             // Call the service with the gateway name AND the order ID
-            var (order, authUrl) = await _paymentService.CreateRetryPaymentTransactionAsync(orderToRetry.PaymentGatewayName, Id);
+            var (order, authUrl) = await _paymentService.CreateRetryPaymentTransactionAsync(orderToRetry.PaymentGatewayName!, Id);
             
             if (!string.IsNullOrEmpty(authUrl))
             {

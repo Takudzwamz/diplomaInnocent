@@ -97,8 +97,8 @@ public class IndexModel : PageModel
                 .FirstOrDefaultAsync(u => u.Email == User.FindFirstValue(ClaimTypes.Email));
 
             // Pre-fill the form with the user's name and saved address
-            Address.Name = user.FirstName;
-            Address.LastName = user.LastName;
+            Address.Name = user?.FirstName ?? string.Empty;
+            Address.LastName = user?.LastName ?? string.Empty;
             if (user?.Address != null)
             {
                 Address.Line1 = user.Address.Line1;
@@ -247,7 +247,6 @@ public class IndexModel : PageModel
             {
                 ProductItemOrdered itemOrdered;
                 decimal price;
-                int currentStock = 0;
 
                 if (item.ProductVariantId.HasValue)
                 {
@@ -288,7 +287,7 @@ public class IndexModel : PageModel
                 items.Add(orderItem);
             }
 
-            var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(Cart.DeliveryMethodId.Value);
+            var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(Cart.DeliveryMethodId.GetValueOrDefault());
             var subtotal = items.Sum(i => i.Price * i.Quantity);
 
             // 2. CALCULATE DISCOUNT
@@ -315,9 +314,9 @@ public class IndexModel : PageModel
             var order = new Order
             {
                 OrderItems = items,
-                BuyerEmail = User.FindFirstValue(ClaimTypes.Email),
+                BuyerEmail = User.FindFirstValue(ClaimTypes.Email)!,
                 ShippingAddress = Checkout.ShippingAddress,
-                DeliveryMethod = deliveryMethod,
+                DeliveryMethod = deliveryMethod!,
                 Subtotal = subtotal,
                 Discount = discount,
                 CouponCode = Cart.Coupon?.PromotionCode,

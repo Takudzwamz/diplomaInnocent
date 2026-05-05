@@ -104,7 +104,7 @@
                     </li>
                     <li class="mb-2">
                         <a asp-page="/Admin/Orders/Index"
-                            class="nav-link  @(ViewData["Title"]?.ToString().Contains("Order") ?? false ? "active" : "")">
+                            class="nav-link  @(ViewData["Title"]?.ToString()?.Contains("Order") ?? false ? "active" : "")">
                             <i class="bi bi-receipt-cutoff me-2"></i> Заказы
                         </a>
                     </li>
@@ -129,14 +129,14 @@
 
                     <li class="mb-2">
                         <a asp-page="/Admin/ProductOptions/Index"
-                            class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString().StartsWith("/Admin/ProductOptions") ?? false ? "active" : "")">
+                            class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Admin/ProductOptions") ?? false ? "active" : "")">
                             <i class="bi bi-sliders me-2"></i> Опции товаров
                         </a>
                     </li>
 
                     <li class="mb-2">
                         <a asp-page="/Admin/Coupons/Index"
-                            class="nav-link  @(ViewData["Title"]?.ToString().Contains("Coupon") ?? false ? "active" : "")">
+                            class="nav-link  @(ViewData["Title"]?.ToString()?.Contains("Coupon") ?? false ? "active" : "")">
                             <i class="bi bi-ticket-fill me-2"></i> Купоны
                         </a>
                     </li>
@@ -150,13 +150,13 @@
 
                     <li class="mb-2">
                         <a asp-page="/Admin/Brands/Index"
-                            class="nav-link  @(ViewData["Title"]?.ToString().Contains("Brand") ?? false ? "active" : "")">
+                            class="nav-link  @(ViewData["Title"]?.ToString()?.Contains("Brand") ?? false ? "active" : "")">
                             <i class="bi bi-tags-fill me-2"></i> Бренды
                         </a>
                     </li>
                     <li class="mb-2">
                         <a asp-page="/Admin/Types/Index"
-                            class="nav-link  @(ViewData["Title"]?.ToString().Contains("Type") ?? false ? "active" : "")">
+                            class="nav-link  @(ViewData["Title"]?.ToString()?.Contains("Type") ?? false ? "active" : "")">
                             <i class="bi bi-bookmark-fill me-2"></i> Типы
                         </a>
                     </li>
@@ -170,7 +170,7 @@
                     </li>
                     <li>
                         <a asp-page="/Admin/DeliveryMethods/Index"
-                            class="nav-link  @(ViewData["Title"]?.ToString().Contains("Delivery Method") ?? false ? "active" : "")">
+                            class="nav-link  @(ViewData["Title"]?.ToString()?.Contains("Delivery Method") ?? false ? "active" : "")">
                             <i class="bi bi-truck me-2"></i> Способы доставки
                         </a>
                     </li>
@@ -183,7 +183,7 @@
                     </li>
                     <li>
                         <a asp-page="/Admin/Customers/Index"
-                            class="nav-link  @(ViewData["Title"]?.ToString().Contains("Customer") ?? false ? "active" : "")">
+                            class="nav-link  @(ViewData["Title"]?.ToString()?.Contains("Customer") ?? false ? "active" : "")">
                             <i class="bi bi-people-fill me-2"></i> Покупатели
                         </a>
                     </li>
@@ -197,19 +197,19 @@
                     </li>
                     <li class="mb-2">
                         <a asp-page="/Admin/Content/Index"
-                            class="nav-link  @(ViewData["Title"]?.ToString().Contains("Content") ?? false ? "active" : "")">
+                            class="nav-link  @(ViewData["Title"]?.ToString()?.Contains("Content") ?? false ? "active" : "")">
                             <i class="bi bi-file-text-fill me-2"></i> Блоки контента
                         </a>
                     </li>
                     <li class="mb-2">
                         <a asp-page="/Admin/Hero/Index"
-                            class="nav-link  @(ViewData["Title"]?.ToString().Contains("Hero") ?? false ? "active" : "")">
+                            class="nav-link  @(ViewData["Title"]?.ToString()?.Contains("Hero") ?? false ? "active" : "")">
                             <i class="bi bi-images me-2"></i> Карусель баннеров
                         </a>
                     </li>
                     <li class="mb-2">
                         <a asp-page="/Admin/Faqs/Index"
-                            class="nav-link @(ViewData["Title"]?.ToString().Contains("FAQ") ?? false ? "active" : "")">
+                            class="nav-link @(ViewData["Title"]?.ToString()?.Contains("FAQ") ?? false ? "active" : "")">
                             <i class="bi bi-question-circle-fill me-2"></i> Управление FAQ
                         </a>
                     </li>
@@ -251,13 +251,13 @@
                     </li>
                     <li class="mb-2">
                         <a asp-page="/Admin/Marketing/Index"
-                            class="nav-link  @(ViewData["Title"]?.ToString().Contains("Marketing") ?? false ? "active" : "")">
+                            class="nav-link  @(ViewData["Title"]?.ToString()?.Contains("Marketing") ?? false ? "active" : "")">
                             <i class="bi bi-megaphone-fill me-2"></i> Email-рассылки
                         </a>
                     </li>
                     <li class="mb-2">
                         <a asp-page="/Admin/Marketing/Templates/Index"
-                            class="nav-link @(ViewData["Title"]?.ToString().Contains("Template") ?? false ? "active" : "")">
+                            class="nav-link @(ViewData["Title"]?.ToString()?.Contains("Template") ?? false ? "active" : "")">
                             <i class="bi bi-journal-richtext me-2"></i> Управление шаблонами
                         </a>
                     </li>

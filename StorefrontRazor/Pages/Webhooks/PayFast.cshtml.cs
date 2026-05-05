@@ -40,7 +40,7 @@ public class PayFastModel : PageModel
             // 2. Pass the raw payload to the service.
             //    We pass 'null' for the signature because our PayFast service
             //    handles all validation internally from the raw payload.
-            await _paymentService.HandleWebhookAsync("PayFast", payload, null);
+            await _paymentService.HandleWebhookAsync("PayFast", payload, null!);
             
             _logger.LogInformation("PayFast ITN webhook processed successfully.");
             return new OkResult();

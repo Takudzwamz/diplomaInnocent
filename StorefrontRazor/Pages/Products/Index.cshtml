@@ -365,12 +365,12 @@
         <h5 class="fw-bold">Категории</h5>
         <ul class="list-group list-group-flush mb-4">
             <a asp-page="/Products/Index"
-                asp-all-route-data="@(new Dictionary<string, string> { { "SearchTerm", Model.SearchTerm }, { "BrandFilter", Model.BrandFilter?.ToString() }, { "TypeFilter", Model.TypeFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                asp-all-route-data="@(new Dictionary<string, string> { { "SearchTerm", Model.SearchTerm ?? "" }, { "BrandFilter", Model.BrandFilter?.ToString() ?? "" }, { "TypeFilter", Model.TypeFilter?.ToString() ?? "" }, { "SortOrder", Model.SortOrder ?? "" } })"
                 class="list-group-item list-group-item-action @(Model.CategoryFilter == null ? "active" : "")">Все</a>
             @foreach (var category in Model.Categories)
             {
                 <a asp-page="/Products/Index"
-                    asp-all-route-data="@(new Dictionary<string, string> { { "CategoryFilter", category.Id.ToString() }, { "SearchTerm", Model.SearchTerm }, { "BrandFilter", Model.BrandFilter?.ToString() }, { "TypeFilter", Model.TypeFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                    asp-all-route-data="@(new Dictionary<string, string> { { "CategoryFilter", category.Id.ToString() }, { "SearchTerm", Model.SearchTerm ?? "" }, { "BrandFilter", Model.BrandFilter?.ToString() ?? "" }, { "TypeFilter", Model.TypeFilter?.ToString() ?? "" }, { "SortOrder", Model.SortOrder ?? "" } })"
                     class="list-group-item list-group-item-action @(Model.CategoryFilter == category.Id ? "active" : "")">@category.Name</a>
             }
         </ul>
@@ -378,12 +378,12 @@
         <h5 class="fw-bold">Бренды</h5>
         <ul class="list-group list-group-flush mb-4">
             <a asp-page="/Products/Index"
-                asp-all-route-data="@(new Dictionary<string, string> { { "SearchTerm", Model.SearchTerm }, { "TypeFilter", Model.TypeFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                asp-all-route-data="@(new Dictionary<string, string> { { "SearchTerm", Model.SearchTerm ?? "" }, { "TypeFilter", Model.TypeFilter?.ToString() ?? "" }, { "SortOrder", Model.SortOrder ?? "" } })"
                 class="list-group-item list-group-item-action @(Model.BrandFilter == null ? "active" : "")">Все</a>
             @foreach (var brand in Model.Brands)
             {
                 <a asp-page="/Products/Index"
-                    asp-all-route-data="@(new Dictionary<string, string> { { "BrandFilter", brand.Id.ToString() }, { "SearchTerm", Model.SearchTerm }, { "TypeFilter", Model.TypeFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                    asp-all-route-data="@(new Dictionary<string, string> { { "BrandFilter", brand.Id.ToString() }, { "SearchTerm", Model.SearchTerm ?? "" }, { "TypeFilter", Model.TypeFilter?.ToString() ?? "" }, { "SortOrder", Model.SortOrder ?? "" } })"
                     class="list-group-item list-group-item-action @(Model.BrandFilter == brand.Id ? "active" : "")">@brand.Name</a>
             }
         </ul>
@@ -391,12 +391,12 @@
         <h5 class="fw-bold">Типы</h5>
         <ul class="list-group list-group-flush">
             <a asp-page="/Products/Index"
-                asp-all-route-data="@(new Dictionary<string, string> { { "SearchTerm", Model.SearchTerm }, { "BrandFilter", Model.BrandFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                asp-all-route-data="@(new Dictionary<string, string> { { "SearchTerm", Model.SearchTerm ?? "" }, { "BrandFilter", Model.BrandFilter?.ToString() ?? "" }, { "SortOrder", Model.SortOrder ?? "" } })"
                 class="list-group-item list-group-item-action @(Model.TypeFilter == null ? "active" : "")">Все</a>
             @foreach (var type in Model.Types)
             {
                 <a asp-page="/Products/Index"
-                    asp-all-route-data="@(new Dictionary<string, string> { { "TypeFilter", type.Id.ToString() }, { "SearchTerm", Model.SearchTerm }, { "BrandFilter", Model.BrandFilter?.ToString() }, { "SortOrder", Model.SortOrder } })"
+                    asp-all-route-data="@(new Dictionary<string, string> { { "TypeFilter", type.Id.ToString() }, { "SearchTerm", Model.SearchTerm ?? "" }, { "BrandFilter", Model.BrandFilter?.ToString() ?? "" }, { "SortOrder", Model.SortOrder ?? "" } })"
                     class="list-group-item list-group-item-action @(Model.TypeFilter == type.Id ? "active" : "")">@type.Name</a>
             }
         </ul>

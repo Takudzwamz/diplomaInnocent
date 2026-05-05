@@ -70,9 +70,9 @@ public class IndexModel : PageModel
         {
             Id = u.Id,
             Name = $"{u.FirstName} {u.LastName}",
-            Email = u.Email,
+            Email = u.Email ?? string.Empty,
             DateRegistered = u.DateRegistered,
-            OrderCount = orderCounts.TryGetValue(u.Email, out var count) ? count : 0,
+            OrderCount = orderCounts.TryGetValue(u.Email ?? string.Empty, out var count) ? count : 0,
             IsLockedOut = u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTimeOffset.UtcNow
         }).ToList();
         

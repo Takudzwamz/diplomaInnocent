@@ -260,10 +260,10 @@ public class DetailsModel : BasePageModel
 
         HasPurchasedProduct = false;
         HasReviewedProduct = false;
-        if (User.Identity.IsAuthenticated)
+        if (User.Identity?.IsAuthenticated == true)
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email!);
 
             var purchaseSpec = new BaseSpecification<Order>(
                 o => o.BuyerEmail == email &&
@@ -275,7 +275,7 @@ public class DetailsModel : BasePageModel
 
             // Set our new, more specific properties
             HasPurchasedProduct = purchaseCount > 0;
-            HasReviewedProduct = product.Reviews.Any(r => r.AppUserId == user.Id);
+            HasReviewedProduct = product.Reviews.Any(r => r.AppUserId == user!.Id);
 
             // The original logic remains for the ProductDto, which is fine
             canUserReview = HasPurchasedProduct && !HasReviewedProduct;
@@ -344,17 +344,17 @@ public class DetailsModel : BasePageModel
     {
         if (!_signInManager.IsSignedIn(User)) return Unauthorized();
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var isInWishlist = await _wishlistService.IsItemInWishlistAsync(userId, productId);
+        var isInWishlist = await _wishlistService.IsItemInWishlistAsync(userId!, productId);
 
         if (isInWishlist)
         {
-            var wishlist = await _wishlistService.GetOrCreateWishlistForUserAsync(userId);
+            var wishlist = await _wishlistService.GetOrCreateWishlistForUserAsync(userId!);
             var item = wishlist.Items.FirstOrDefault(i => i.ProductId == productId);
             if (item != null) await _wishlistService.RemoveItemFromWishlistAsync(item.Id);
         }
         else
         {
-            await _wishlistService.AddItemToWishlistAsync(userId, productId);
+            await _wishlistService.AddItemToWishlistAsync(userId!, productId);
         }
         return new JsonResult(new { isInWishlist = !isInWishlist });
     }
@@ -373,7 +373,7 @@ public class DetailsModel : BasePageModel
         {
             ProductId = id,
             AppUserId = user.Id,
-            ReviewerName = user.FirstName ?? user.UserName,
+            ReviewerName = user.FirstName ?? user.UserName ?? string.Empty,
             Rating = NewReview.Rating,
             Comment = NewReview.Comment
         };

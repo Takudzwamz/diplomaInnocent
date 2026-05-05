@@ -22,18 +22,18 @@ public class ForgotPasswordModel : PageModel
     }
 
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = default!;
 
     // This property will hold the confirmation message after the form is submitted.
     [TempData]
-    public string Message { get; set; }
+    public string Message { get; set; } = string.Empty;
 
     public class InputModel
     {
         [Required(ErrorMessage = "Введите email.")]
         [EmailAddress(ErrorMessage = "Некорректный формат email.")]
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
     }
 
     /* public async Task<IActionResult> OnPostAsync()

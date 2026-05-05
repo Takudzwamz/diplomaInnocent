@@ -274,7 +274,7 @@ public class IndexModel : PageModel
         {
             itemCount = cart.Items.Sum(i => i.Quantity),
             newQuantity = cart.Items.FirstOrDefault(i => i.ProductId == productId)?.Quantity ?? 0,
-            stock = product.QuantityInStock
+            stock = product?.QuantityInStock ?? 0
         });
     }
 

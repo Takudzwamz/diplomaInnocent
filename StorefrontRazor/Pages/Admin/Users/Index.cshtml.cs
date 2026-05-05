@@ -55,9 +55,9 @@ public class IndexModel : PageModel
             userViewModels.Add(new UserViewModel
             {
                 Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                Email = user.Email ?? string.Empty,
+                FirstName = user.FirstName ?? string.Empty,
+                LastName = user.LastName ?? string.Empty,
                 Roles = await _userManager.GetRolesAsync(user)
             });
         }
@@ -76,7 +76,7 @@ public class IndexModel : PageModel
             return RedirectToPage("./Index", new { PageIndex = this.PageIndex });
         }
 
-        if (user.Email.Equals("admin@production.com", StringComparison.OrdinalIgnoreCase))
+        if (user.Email!.Equals("admin@production.com", StringComparison.OrdinalIgnoreCase))
         {
             TempData["ErrorMessage"] = "Аккаунт суперадминистратора по умолчанию не может быть удалён.";
             return RedirectToPage("./Index", new { PageIndex = this.PageIndex });

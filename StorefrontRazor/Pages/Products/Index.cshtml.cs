@@ -95,8 +95,8 @@ public class IndexModel : BasePageModel
         {
             PageIndex = this.PageIndex,
             PageSize = 12,
-            Search = this.SearchTerm,
-            Sort = this.SortOrder,
+            Search = this.SearchTerm ?? "",
+            Sort = this.SortOrder ?? "name",
             BrandId = this.BrandFilter,
             TypeId = this.TypeFilter,
             CategoryId = this.CategoryFilter,
@@ -197,8 +197,8 @@ public class IndexModel : BasePageModel
         {
             PageIndex = this.PageIndex,
             PageSize = 12,
-            Search = this.SearchTerm,
-            Sort = this.SortOrder,
+            Search = this.SearchTerm ?? "",
+            Sort = this.SortOrder ?? "name",
             BrandId = this.BrandFilter,
             TypeId = this.TypeFilter,
             CategoryId = this.CategoryFilter,
@@ -233,12 +233,12 @@ public class IndexModel : BasePageModel
         {
             itemCount = cart.Items.Sum(i => i.Quantity),
             newQuantity = cart.Items.FirstOrDefault(i => i.ProductId == productId)?.Quantity ?? 0,
-            stock = product.QuantityInStock // This is the crucial part that was missing
+            stock = product!.QuantityInStock // This is the crucial part that was missing
         });
     }
 
 
-    public Dictionary<string, string> GetAllRouteData(string remove = null, Dictionary<string, string> add = null)
+    public Dictionary<string, string> GetAllRouteData(string? remove = null, Dictionary<string, string>? add = null)
     {
         var routeData = new Dictionary<string, string>();
 
@@ -269,17 +269,17 @@ public class IndexModel : BasePageModel
     {
         if (!_signInManager.IsSignedIn(User)) return Unauthorized();
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var isInWishlist = await _wishlistService.IsItemInWishlistAsync(userId, productId);
+        var isInWishlist = await _wishlistService.IsItemInWishlistAsync(userId!, productId);
 
         if (isInWishlist)
         {
-            var wishlist = await _wishlistService.GetOrCreateWishlistForUserAsync(userId);
+            var wishlist = await _wishlistService.GetOrCreateWishlistForUserAsync(userId!);
             var item = wishlist.Items.FirstOrDefault(i => i.ProductId == productId);
             if (item != null) await _wishlistService.RemoveItemFromWishlistAsync(item.Id);
         }
         else
         {
-            await _wishlistService.AddItemToWishlistAsync(userId, productId);
+            await _wishlistService.AddItemToWishlistAsync(userId!, productId);
         }
         return new JsonResult(new { isInWishlist = !isInWishlist });
     }

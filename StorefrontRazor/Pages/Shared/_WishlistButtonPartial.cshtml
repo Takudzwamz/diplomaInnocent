@@ -9,7 +9,7 @@
     if (SignInManager.IsSignedIn(User))
     {
         var userId = UserManager.GetUserId(User);
-        isInWishlist = await WishlistService.IsItemInWishlistAsync(userId, productId);
+        isInWishlist = await WishlistService.IsItemInWishlistAsync(userId!, productId);
     }
 }
 

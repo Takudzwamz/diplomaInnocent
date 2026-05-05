@@ -71,8 +71,8 @@ public class IndexModel : PageModel
             .Where(o => o.Status == OrderStatus.PaymentReceived)
             .SumAsync(o => o.Subtotal - o.Discount + o.DeliveryMethod.Price);
 
-        TotalOrders = await _unitOfWork.Repository<Order>().CountAsync(null);
-        TotalProducts = await _unitOfWork.Repository<Product>().CountAsync(null);
+        TotalOrders = await _unitOfWork.Repository<Order>().CountAsync(null!);
+        TotalProducts = await _unitOfWork.Repository<Product>().CountAsync(null!);
 
 
         // --- FETCH RECENT CUSTOMERS (REVISED LOGIC) ---
@@ -96,9 +96,9 @@ public class IndexModel : PageModel
         {
             Id = u.Id,
             Name = $"{u.FirstName} {u.LastName}",
-            Email = u.Email,
+            Email = u.Email ?? string.Empty,
             DateRegistered = u.DateRegistered,
-            OrderCount = orderCounts.TryGetValue(u.Email, out var count) ? count : 0
+            OrderCount = orderCounts.TryGetValue(u.Email ?? string.Empty, out var count) ? count : 0
         }).ToList();
 
         // --- FIX THE CUSTOMER COUNT ---
@@ -146,8 +146,6 @@ public class IndexModel : PageModel
     private async Task GetSalesDataAsync()
     {
         DateTime startDate = DateTime.UtcNow.Date;
-        Func<DateTime, string> xValueFormatter;
-        Action<Dictionary<string, decimal>, DateTime, decimal> dictionaryUpdater;
 
         switch (Period)
         {

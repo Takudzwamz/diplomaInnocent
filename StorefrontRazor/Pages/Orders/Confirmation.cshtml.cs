@@ -27,9 +27,9 @@ public class ConfirmationModel : PageModel
     }
 
     [BindProperty(SupportsGet = true)]
-    public string Reference { get; set; }
+    public string Reference { get; set; } = string.Empty;
 
-    public OrderDto Order { get; set; }
+    public OrderDto Order { get; set; } = default!;
     public bool IsSuccess { get; set; }
     public List<ProductDto> CollaborativeRecommendations { get; set; } = new();
     public List<ProductDto> PopularRecommendations { get; set; } = new();

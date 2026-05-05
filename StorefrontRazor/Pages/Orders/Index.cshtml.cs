@@ -21,7 +21,7 @@ public class IndexModel : PageModel
         _unitOfWork = unitOfWork;
     }
 
-    public Pagination<OrderDto> Orders { get; set; }
+    public Pagination<OrderDto> Orders { get; set; } = default!;
 
     [BindProperty(SupportsGet = true)]
     public int PageIndex { get; set; } = 1;
@@ -39,7 +39,7 @@ public class IndexModel : PageModel
             Sort = SortOrder
         };
 
-        var spec = new OrderSpecification(email, orderParams);
+        var spec = new OrderSpecification(email!, orderParams);
         var countSpec = new BaseSpecification<Order>(o => o.BuyerEmail == email);
 
         var totalItems = await _unitOfWork.Repository<Order>().CountAsync(countSpec);

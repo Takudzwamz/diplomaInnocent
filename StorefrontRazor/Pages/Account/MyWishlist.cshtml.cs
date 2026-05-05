@@ -23,7 +23,7 @@ public class MyWishlistModel : PageModel
 
     public async Task OnGetAsync()
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
         var wishlist = await _wishlistService.GetOrCreateWishlistForUserAsync(userId);
         WishlistItems = wishlist.Items;
     }

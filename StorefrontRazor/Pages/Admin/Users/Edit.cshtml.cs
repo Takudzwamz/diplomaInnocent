@@ -52,9 +52,9 @@ public class EditModel : PageModel
 
         Input = new UserEditInput
         {
-            Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
+            Email = user.Email ?? string.Empty,
+            FirstName = user.FirstName ?? string.Empty,
+            LastName = user.LastName ?? string.Empty,
             IsAdmin = await _userManager.IsInRoleAsync(user, "Admin")
         };
         
@@ -75,7 +75,7 @@ public class EditModel : PageModel
         }
         
         // Prevent changing the email of the super admin
-        if (user.Email.Equals("admin@test.com", StringComparison.OrdinalIgnoreCase) && 
+        if (user.Email!.Equals("admin@test.com", StringComparison.OrdinalIgnoreCase) && 
             !Input.Email.Equals("admin@test.com", StringComparison.OrdinalIgnoreCase))
         {
             ModelState.AddModelError(string.Empty, "Нельзя изменить email суперадминистратора по умолчанию.");

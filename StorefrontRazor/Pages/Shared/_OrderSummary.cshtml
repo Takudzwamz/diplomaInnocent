@@ -11,8 +11,8 @@
     
     // --- THIS IS THE FIX ---
     // This logic is now more specific and correctly identifies which page is being rendered.
-    var isCartPage = ((object)Model).GetType().FullName.Contains("StorefrontRazor.Pages.Cart");
-    var isCheckoutPage = ((object)Model).GetType().FullName.Contains("StorefrontRazor.Pages.Checkout");
+    var isCartPage = ((object)Model).GetType().FullName?.Contains("StorefrontRazor.Pages.Cart") ?? false;
+    var isCheckoutPage = ((object)Model).GetType().FullName?.Contains("StorefrontRazor.Pages.Checkout") ?? false;
     var currentStep = isCheckoutPage ? (int)Model.Step : 0;
 
     // Perform calculations
@@ -72,7 +72,7 @@
 
         @if (isCartPage)
         {
-            @if (cart.Coupon == null)
+            @if (cart?.Coupon == null)
             {
                <p class="mb-2">Применить купон</p>
                <form method="post" asp-page="/Cart/Index" asp-page-handler="ApplyCoupon" class="input-group">
