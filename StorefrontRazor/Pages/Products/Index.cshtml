@@ -236,60 +236,38 @@
             @* --- Personalized Recommendations Banner --- *@
             @if (Model.PersonalizedRecommendations.Any())
             {
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">
-                            <i class="bi bi-stars text-primary me-2"></i>Рекомендовано для вас
-                            <span class="badge bg-info ms-2">Адаптивный алгоритм</span>
-                        </h5>
-                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-3">
-                            @foreach (var product in Model.PersonalizedRecommendations)
-                            {
-                                <div class="col">
-                                    <a asp-page="/Products/Details" asp-route-id="@product.Id" class="text-decoration-none">
-                                        <div class="card h-100 border-0 shadow-sm hover-lift">
-                                            <img src="@(product.Images.FirstOrDefault()?.Url ?? "/images/placeholder.png")"
-                                                 class="card-img-top" alt="@product.Name"
-                                                 style="height: 120px; object-fit: contain; padding: 8px;">
-                                            <div class="card-body p-2 text-center">
-                                                <p class="card-text small text-dark mb-1 text-truncate">@product.Name</p>
-                                                <span class="fw-bold text-primary small">$@product.Price.ToString("F2")</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            }
-                        </div>
+                <div class="mb-4">
+                    <h5 class="mb-3">
+                        <i class="bi bi-stars text-primary me-2"></i>Рекомендовано для вас
+                        <span class="badge bg-info ms-2">Адаптивный алгоритм</span>
+                    </h5>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-3">
+                        @foreach (var product in Model.PersonalizedRecommendations)
+                        {
+                            <div class="col" data-rec-strategy="Adaptive">
+                                <partial name="_ProductCardPartial" model="product"
+                                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                            </div>
+                        }
                     </div>
                 </div>
             }
 
             @if (Model.PopularRecommendations.Any())
             {
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">
-                            <i class="bi bi-fire text-danger me-2"></i>Популярные товары
-                            <span class="badge bg-warning text-dark ms-2">По популярности</span>
-                        </h5>
-                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-3">
-                            @foreach (var product in Model.PopularRecommendations)
-                            {
-                                <div class="col">
-                                    <a asp-page="/Products/Details" asp-route-id="@product.Id" class="text-decoration-none">
-                                        <div class="card h-100 border-0 shadow-sm hover-lift">
-                                            <img src="@(product.Images.FirstOrDefault()?.Url ?? "/images/placeholder.png")"
-                                                 class="card-img-top" alt="@product.Name"
-                                                 style="height: 120px; object-fit: contain; padding: 8px;">
-                                            <div class="card-body p-2 text-center">
-                                                <p class="card-text small text-dark mb-1 text-truncate">@product.Name</p>
-                                                <span class="fw-bold text-primary small">$@product.Price.ToString("F2")</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            }
-                        </div>
+                <div class="mb-4">
+                    <h5 class="mb-3">
+                        <i class="bi bi-fire text-danger me-2"></i>Популярные товары
+                        <span class="badge bg-warning text-dark ms-2">По популярности</span>
+                    </h5>
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-3">
+                        @foreach (var product in Model.PopularRecommendations)
+                        {
+                            <div class="col" data-rec-strategy="Popular">
+                                <partial name="_ProductCardPartial" model="product"
+                                    view-data='@new ViewDataDictionary(ViewData) { { "Cart", Model.Cart } }' />
+                            </div>
+                        }
                     </div>
                 </div>
             }

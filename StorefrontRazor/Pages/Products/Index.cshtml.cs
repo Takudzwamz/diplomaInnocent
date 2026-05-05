@@ -30,8 +30,8 @@ public class IndexModel : BasePageModel
     public ShoppingCart Cart { get; set; } = null!;
     public bool IsAISearchEnabled { get; set; }
     public bool UsedAISearch { get; set; }
-    public IReadOnlyList<Product> PersonalizedRecommendations { get; set; } = [];
-    public IReadOnlyList<Product> PopularRecommendations { get; set; } = [];
+    public List<ProductDto> PersonalizedRecommendations { get; set; } = new();
+    public List<ProductDto> PopularRecommendations { get; set; } = new();
 
     // Properties to capture filter values from the URL query string.
     // [BindProperty(SupportsGet = true)] is crucial for this to work on GET requests.
@@ -177,8 +177,11 @@ public class IndexModel : BasePageModel
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
                 {
-                    PersonalizedRecommendations = await _recommendationService.GetAdaptiveRecommendationsAsync(user.Id, 6);
-                    PopularRecommendations = await _recommendationService.GetPopularProductsAsync(6);
+                    var adaptiveProducts = await _recommendationService.GetAdaptiveRecommendationsAsync(user.Id, 6);
+                    PersonalizedRecommendations = adaptiveProducts.Select(p => p.ToDto()).ToList();
+
+                    var popularProducts = await _recommendationService.GetPopularProductsAsync(6);
+                    PopularRecommendations = popularProducts.Select(p => p.ToDto()).ToList();
                 }
             }
             catch { /* Recommendations are non-critical */ }
