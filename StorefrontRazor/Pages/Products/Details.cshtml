@@ -573,7 +573,7 @@
                         <div class="badge bg-gradient-ai me-3 pulse-animation">
                             <i class="bi bi-stars"></i> AI
                         </div>
-                        <h2 class="mb-0">ИИ-рекомендации (Azure OpenAI)</h2>
+                        <h2 class="mb-0"><span class="rec-info-trigger" data-bs-toggle="modal" data-bs-target="#modal-ai">ИИ-рекомендации <i class="bi bi-info-circle small"></i></span></h2>
                     </div>
                     <p class="text-center text-muted mb-4">
                         <small>Семантическое сходство через эмбеддинги • Cosine Similarity</small>
@@ -597,7 +597,7 @@
             {
                 <div class="mt-5">
                     <h2 class="text-center mb-2">
-                        <i class="bi bi-shuffle text-primary"></i> Адаптивная рекомендация (Hybrid)
+                        <i class="bi bi-shuffle text-primary"></i> <span class="rec-info-trigger" data-bs-toggle="modal" data-bs-target="#modal-adaptive">Адаптивная рекомендация (Hybrid) <i class="bi bi-info-circle small"></i></span>
                     </h2>
                     <p class="text-center text-muted mb-4">
                         <small>Комбинация коллаборативной + контентной фильтрации + поведение</small>
@@ -621,7 +621,7 @@
             {
                 <div class="mt-5">
                     <h2 class="text-center mb-2">
-                        <i class="bi bi-people-fill text-info"></i> Коллаборативная фильтрация
+                        <i class="bi bi-people-fill text-info"></i> <span class="rec-info-trigger" data-bs-toggle="modal" data-bs-target="#modal-collaborative">Коллаборативная фильтрация <i class="bi bi-info-circle small"></i></span>
                     </h2>
                     <p class="text-center text-muted mb-4">
                         <small>Пользователи с похожим поведением также смотрели эти товары</small>
@@ -645,7 +645,7 @@
             {
                 <div class="mt-5">
                     <h2 class="text-center mb-2">
-                        <i class="bi bi-tags-fill text-success"></i> Контентная рекомендация
+                        <i class="bi bi-tags-fill text-success"></i> <span class="rec-info-trigger" data-bs-toggle="modal" data-bs-target="#modal-contentbased">Контентная рекомендация <i class="bi bi-info-circle small"></i></span>
                     </h2>
                     <p class="text-center text-muted mb-4">
                         <small>Похожие товары по характеристикам (Content-Based Filtering)</small>
@@ -669,7 +669,7 @@
             {
                 <div class="mt-5">
                     <h2 class="text-center mb-2">
-                        <i class="bi bi-fire text-danger"></i> Популярные товары
+                        <i class="bi bi-fire text-danger"></i> <span class="rec-info-trigger" data-bs-toggle="modal" data-bs-target="#modal-popular">Популярные товары <i class="bi bi-info-circle small"></i></span>
                     </h2>
                     <p class="text-center text-muted mb-4">
                         <small>Наиболее просматриваемые и покупаемые товары (Popularity-Based)</small>
@@ -757,6 +757,7 @@
     </div>
 </template>
 
+<partial name="Shared/_RecommendationInfoModals" />
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

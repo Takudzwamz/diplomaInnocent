@@ -239,7 +239,7 @@
                 <div class="mb-4">
                     <h5 class="mb-3">
                         <i class="bi bi-stars text-primary me-2"></i>Рекомендовано для вас
-                        <span class="badge bg-info ms-2">Адаптивный алгоритм</span>
+                        <span class="badge bg-info ms-2 rec-info-trigger" data-bs-toggle="modal" data-bs-target="#modal-adaptive">Адаптивный алгоритм <i class="bi bi-info-circle"></i></span>
                     </h5>
                     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-3">
                         @foreach (var product in Model.PersonalizedRecommendations)
@@ -258,7 +258,7 @@
                 <div class="mb-4">
                     <h5 class="mb-3">
                         <i class="bi bi-fire text-danger me-2"></i>Популярные товары
-                        <span class="badge bg-warning text-dark ms-2">По популярности</span>
+                        <span class="badge bg-warning text-dark ms-2 rec-info-trigger" data-bs-toggle="modal" data-bs-target="#modal-popular">По популярности <i class="bi bi-info-circle"></i></span>
                     </h5>
                     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-3 g-3">
                         @foreach (var product in Model.PopularRecommendations)
@@ -402,6 +402,8 @@
         </ul>
     </div>
 </div>
+
+<partial name="Shared/_RecommendationInfoModals" />
 
 @section Scripts {
     <script>

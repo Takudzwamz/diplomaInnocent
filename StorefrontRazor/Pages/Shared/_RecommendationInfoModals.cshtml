@@ -1,0 +1,172 @@
+@* 
+    Shared partial: Recommendation Strategy Info Modals
+    Each modal explains how the algorithm works in the context of this thesis project.
+    Trigger with: data-bs-toggle="modal" data-bs-target="#modal-{strategy}"
+*@
+
+<!-- Adaptive/Hybrid Algorithm Modal -->
+<div class="modal fade" id="modal-adaptive" tabindex="-1" aria-labelledby="modal-adaptive-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="modal-adaptive-label">
+                    <i class="bi bi-shuffle text-primary me-2"></i>Адаптивный/гибридный алгоритм
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Реализация в дипломном проекте:</strong> адаптивная система рекомендаций комбинирует
+                    результаты нескольких алгоритмов (коллаборативная фильтрация, контентная фильтрация и анализ популярности)
+                    с динамическим взвешиванием на основе А/Б-тестирования.
+                </p>
+                <p>
+                    <strong>Как это работает:</strong> система анализирует историю взаимодействий пользователя
+                    (просмотры, покупки, добавления в корзину), применяет веса к каждой стратегии по результатам
+                    текущего эксперимента и формирует персонализированный список товаров. Веса стратегий
+                    автоматически корректируются по метрикам конверсии (CTR, CR).
+                </p>
+                <div class="alert alert-light border small mb-0">
+                    <i class="bi bi-diagram-3 me-1"></i>
+                    <strong>Формула:</strong> Score = w₁·Collaborative + w₂·ContentBased + w₃·Popularity, где веса wᵢ определяются результатами А/Б-эксперимента.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Collaborative Filtering Modal -->
+<div class="modal fade" id="modal-collaborative" tabindex="-1" aria-labelledby="modal-collaborative-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="modal-collaborative-label">
+                    <i class="bi bi-people-fill text-info me-2"></i>Коллаборативная фильтрация
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Реализация в дипломном проекте:</strong> алгоритм user-based коллаборативной фильтрации
+                    анализирует взаимодействия всех пользователей и находит «соседей» — пользователей с наиболее
+                    похожими паттернами поведения.
+                </p>
+                <p>
+                    <strong>Как это работает:</strong> система строит матрицу «пользователь–товар» на основе
+                    просмотров, покупок и добавлений в корзину. Для каждого пользователя вычисляется косинусное
+                    сходство с другими пользователями. Товары, которые приобрели похожие пользователи, но ещё не
+                    видел текущий — рекомендуются ему с приоритетом по частоте покупок у «соседей».
+                </p>
+                <div class="alert alert-light border small mb-0">
+                    <i class="bi bi-calculator me-1"></i>
+                    <strong>Метрика:</strong> Cosine Similarity между векторами взаимодействий пользователей. Учитываются типы взаимодействий: просмотр (1), добавление в корзину (3), покупка (5).
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Content-Based Filtering Modal -->
+<div class="modal fade" id="modal-contentbased" tabindex="-1" aria-labelledby="modal-contentbased-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="modal-contentbased-label">
+                    <i class="bi bi-tags-fill text-success me-2"></i>Контентная фильтрация
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Реализация в дипломном проекте:</strong> алгоритм Content-Based Filtering подбирает
+                    товары на основе атрибутов текущего товара — бренд, тип, категория, ценовой диапазон и ключевые слова.
+                </p>
+                <p>
+                    <strong>Как это работает:</strong> для каждого товара формируется вектор характеристик
+                    (категория, бренд, тип, ценовой сегмент). Система находит товары с максимально похожим
+                    набором атрибутов. Приоритет отдаётся товарам из той же категории, затем — того же бренда,
+                    и далее — близким по цене. Результаты фильтруются, чтобы исключить уже просмотренные
+                    или купленные товары.
+                </p>
+                <div class="alert alert-light border small mb-0">
+                    <i class="bi bi-intersect me-1"></i>
+                    <strong>Критерии сходства:</strong> совпадение категории (+3 балла), бренда (+2), типа (+2), ценового диапазона ±30% (+1).
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popularity-Based Modal -->
+<div class="modal fade" id="modal-popular" tabindex="-1" aria-labelledby="modal-popular-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="modal-popular-label">
+                    <i class="bi bi-fire text-danger me-2"></i>Рекомендации по популярности
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Реализация в дипломном проекте:</strong> алгоритм Popularity-Based ранжирует товары
+                    по общей активности пользователей за определённый период, решая проблему «холодного старта»
+                    для новых пользователей.
+                </p>
+                <p>
+                    <strong>Как это работает:</strong> система подсчитывает взвешенную сумму взаимодействий с каждым
+                    товаром: просмотры, добавления в корзину и покупки. Товары ранжируются по совокупному «показателю
+                    популярности». Этот метод не требует персонализации и используется как fallback-стратегия, когда
+                    у пользователя недостаточно данных для персональных рекомендаций.
+                </p>
+                <div class="alert alert-light border small mb-0">
+                    <i class="bi bi-bar-chart me-1"></i>
+                    <strong>Формула:</strong> Popularity Score = Σ(просмотры × 1 + корзина × 3 + покупки × 5) за последние 30 дней.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI / Semantic Search Modal -->
+<div class="modal fade" id="modal-ai" tabindex="-1" aria-labelledby="modal-ai-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="modal-ai-label">
+                    <i class="bi bi-robot text-purple me-2"></i>ИИ-рекомендации (эмбеддинги)
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Реализация в дипломном проекте:</strong> ИИ-рекомендации используют модель
+                    text-embedding для преобразования описаний товаров в числовые векторы (эмбеддинги) и
+                    нахождение семантически похожих товаров.
+                </p>
+                <p>
+                    <strong>Как это работает:</strong> при добавлении товара система генерирует эмбеддинг из его
+                    названия, описания и характеристик. Для рекомендации вычисляется косинусное сходство (Cosine
+                    Similarity) между эмбеддингом текущего товара и всеми остальными. Товары с наивысшим сходством
+                    попадают в рекомендации. Этот подход улавливает смысловую близость, недоступную классическим
+                    фильтрам (например, «спортивная обувь» ↔ «кроссовки для бега»).
+                </p>
+                <div class="alert alert-light border small mb-0">
+                    <i class="bi bi-vector-pen me-1"></i>
+                    <strong>Технология:</strong> Cosine Similarity между векторами размерности 1536 (text-embedding модель). Порог сходства ≥ 0.75.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rec-info-trigger {
+        cursor: pointer;
+        border-bottom: 1px dashed currentColor;
+        transition: opacity 0.2s;
+    }
+    .rec-info-trigger:hover {
+        opacity: 0.8;
+    }
+</style>
