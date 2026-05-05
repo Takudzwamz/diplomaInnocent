@@ -55,7 +55,8 @@ builder.Services.AddDataProtection()
 // Register your DbContext (from the Infrastructure project).
 builder.Services.AddDbContext<StoreContext>(opt =>
 {
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOpt => sqlOpt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 });
 
 // Register your services and repositories from Core/Infrastructure.

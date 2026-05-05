@@ -31,8 +31,8 @@ public static class RecommendationDataSeeder
 
         logger.LogInformation("Seeding recommendation system data...");
 
-        var users = await context.Users.Take(20).ToListAsync();
-        var products = await context.Products.Take(50).ToListAsync();
+        var users = await context.Users.OrderBy(u => u.Id).Take(20).ToListAsync();
+        var products = await context.Products.OrderBy(p => p.Id).Take(50).ToListAsync();
 
         if (users.Count == 0 || products.Count == 0)
         {
