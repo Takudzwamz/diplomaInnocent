@@ -30,6 +30,11 @@ public class IndexModel : PageModel
     public List<ProductDto> NewArrivals { get; set; } = new();
     public List<ProductDto> BestSellers { get; set; } = new();
     public List<ProductDto> PersonalizedRecommendations { get; set; } = new();
+    public List<ProductDto> CollaborativeRecommendations { get; set; } = new();
+    public List<ProductDto> ContentBasedRecommendations { get; set; } = new();
+    public List<ProductDto> PopularRecommendations { get; set; } = new();
+    public List<ProductDto> AIRecommendations { get; set; } = new();
+    public string ActiveStrategy { get; set; } = "";
     public IReadOnlyList<Category> Categories { get; set; } = new List<Category>();
     public IReadOnlyList<ProductBrand> Brands { get; set; } = new List<ProductBrand>();
 
@@ -151,6 +156,7 @@ public class IndexModel : PageModel
                             PersonalizedRecommendations = adaptiveProducts
                                 .Select(p => p.ToDto())
                                 .ToList();
+                            ActiveStrategy = "Adaptive/Hybrid";
                         }
                         else if (IsAIEnabled)
                         {
@@ -177,8 +183,70 @@ public class IndexModel : PageModel
                                 PersonalizedRecommendations = personalizedProducts
                                     .Select(p => p.ToDto())
                                     .ToList();
+                                ActiveStrategy = "AI (Azure OpenAI)";
                             }
                         }
+
+                        // --- Load ALL strategies for comparison display ---
+                        try
+                        {
+                            // Collaborative Filtering
+                            var collabProducts = await _adaptiveRecommendationService
+                                .GetCollaborativeRecommendationsAsync(user.Id, count: 4);
+                            CollaborativeRecommendations = collabProducts.Select(p => p.ToDto()).ToList();
+                        }
+                        catch { /* optional */ }
+
+                        try
+                        {
+                            // Content-Based (based on first product user interacted with)
+                            var interactionRepo = _unitOfWork.Repository<UserInteraction>();
+                            var recentInteraction = await interactionRepo.GetQueryable()
+                                .Where(ui => ui.UserId == user.Id)
+                                .OrderByDescending(ui => ui.Timestamp)
+                                .FirstOrDefaultAsync();
+                            if (recentInteraction != null)
+                            {
+                                var contentProducts = await _adaptiveRecommendationService
+                                    .GetContentBasedRecommendationsAsync(recentInteraction.ProductId, count: 4);
+                                ContentBasedRecommendations = contentProducts.Select(p => p.ToDto()).ToList();
+                            }
+                        }
+                        catch { /* optional */ }
+
+                        try
+                        {
+                            // Popular Products
+                            var popularProducts = await _adaptiveRecommendationService
+                                .GetPopularProductsAsync(count: 4);
+                            PopularRecommendations = popularProducts.Select(p => p.ToDto()).ToList();
+                        }
+                        catch { /* optional */ }
+
+                        try
+                        {
+                            // AI Recommendations (if enabled)
+                            if (IsAIEnabled)
+                            {
+                                var orderSpec2 = new OrderSpecification(email!, new OrderSpecParams 
+                                { 
+                                    PageSize = 3, Sort = "dateDesc" 
+                                });
+                                var orders2 = await _unitOfWork.Repository<Order>().ListAsync(orderSpec2);
+                                var purchasedIds = orders2
+                                    .SelectMany(o => o.OrderItems)
+                                    .Select(oi => oi.ItemOrdered.ProductId)
+                                    .Distinct().Take(10).ToList();
+
+                                if (purchasedIds.Any())
+                                {
+                                    var aiProducts = await _aiRecommendationService
+                                        .GetPersonalizedRecommendationsAsync(purchasedIds, count: 4);
+                                    AIRecommendations = aiProducts.Select(p => p.ToDto()).ToList();
+                                }
+                            }
+                        }
+                        catch { /* optional */ }
                     }
                 }
             }
