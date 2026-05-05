@@ -10,9 +10,9 @@ public class EmailSender : IEmailSender
 {
     private readonly ISiteSettingsService _siteSettings; // 1. Add this
     private readonly ILogger<EmailSender> _logger; // 2. Add this
-    private readonly string _storeName;
-    private readonly string _adminEmail;
-    private readonly string _apiKey;
+    private readonly string _storeName = string.Empty;
+    private readonly string _adminEmail = string.Empty;
+    private readonly string _apiKey = string.Empty;
 
     public EmailSender(ISiteSettingsService siteSettings, ILogger<EmailSender> logger) // 3. Change constructor
     {
@@ -20,9 +20,9 @@ public class EmailSender : IEmailSender
         _logger = logger;
         
         var settings = _siteSettings.GetSettingsAsync().Result;
-        _apiKey = settings.GetValueOrDefault("SendGrid_ApiKey");
-        _storeName = settings.GetValueOrDefault("StoreName", "Devs Store");
-        _adminEmail = settings.GetValueOrDefault("AdminNotificationEmail", "sputnikdevs@sputnikdevs.com");
+        _apiKey = settings.GetValueOrDefault("SendGrid_ApiKey") ?? string.Empty;
+        _storeName = settings.GetValueOrDefault("StoreName", "Devs Store") ?? "Devs Store";
+        _adminEmail = settings.GetValueOrDefault("AdminNotificationEmail", "sputnikdevs@sputnikdevs.com") ?? "sputnikdevs@sputnikdevs.com";
     }
 
     public async Task SendEmailAsync(string toEmail, string subject, string message)

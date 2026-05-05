@@ -30,8 +30,8 @@ public class CartService : ICartService
     // Helper method to get the user's unique cart ID from a cookie
     private string GetOrCreateCartId()
     {
-        var request = _httpContextAccessor.HttpContext.Request;
-        var response = _httpContextAccessor.HttpContext.Response;
+        var request = _httpContextAccessor.HttpContext!.Request;
+        var response = _httpContextAccessor.HttpContext!.Response;
 
         var cartId = request.Cookies[CartCookieKey];
 
@@ -68,8 +68,8 @@ public class CartService : ICartService
 
     private string GetOrCreateCartIdFromCookie()
     {
-        var request = _httpContextAccessor.HttpContext.Request;
-        var response = _httpContextAccessor.HttpContext.Response;
+        var request = _httpContextAccessor.HttpContext!.Request;
+        var response = _httpContextAccessor.HttpContext!.Response;
         var cartId = request.Cookies[CartCookieKey];
         if (string.IsNullOrEmpty(cartId))
         {
@@ -96,7 +96,7 @@ public class CartService : ICartService
             variantSpec.AddInclude("Product.Images");
             variantSpec.AddInclude("Product.Coupons.Coupon"); // Crucial for coupon logic
             variantSpec.AddInclude("OptionValues.ProductOption");
-            variantSpec.AddInclude(v => v.Image);
+            variantSpec.AddInclude(v => v.Image!);
 
             var variant = await _unitOfWork.Repository<ProductVariant>().GetEntityWithSpec(variantSpec);
             if (variant == null) return cart; // Variant not found
@@ -270,7 +270,7 @@ public class CartService : ICartService
         var cartId = GetOrCreateCartId();
         await _database.KeyDeleteAsync(cartId);
         // Also remove the cookie
-        _httpContextAccessor.HttpContext.Response.Cookies.Delete(CartCookieKey);
+        _httpContextAccessor.HttpContext!.Response.Cookies.Delete(CartCookieKey);
     }
 
     public async Task<bool> ApplyCouponAsync(string couponCode, string userEmail)

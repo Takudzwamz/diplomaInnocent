@@ -36,12 +36,12 @@ public class Product : BaseEntity
 
 
     public int ProductTypeId { get; set; }
-    public ProductType ProductType { get; set; }
+    public ProductType ProductType { get; set; } = null!;
     public int ProductBrandId { get; set; }
-    public ProductBrand ProductBrand { get; set; }
+    public ProductBrand ProductBrand { get; set; } = null!;
 
     public int CategoryId { get; set; }
-    public Category Category { get; set; }
+    public Category Category { get; set; } = null!;
 
     
     public int QuantityInStock { get; set; }

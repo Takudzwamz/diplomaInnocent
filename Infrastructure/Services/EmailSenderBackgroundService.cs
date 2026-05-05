@@ -45,7 +45,7 @@ public class EmailSenderBackgroundService : BackgroundService
                 _logger.LogInformation("Sending campaign to {CustomerCount} customers.", customers.Count);
                 foreach (var customer in customers)
                 {
-                    await emailSender.SendEmailAsync(customer.Email, message.Subject, message.Body);
+                    await emailSender.SendEmailAsync(customer.Email!, message.Subject, message.Body);
                     // Add a small delay to avoid overwhelming the email provider's API limits
                     await Task.Delay(200, stoppingToken); 
                 }

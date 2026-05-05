@@ -49,7 +49,7 @@ public class PaymentService : IPaymentService
     private IPaymentGateway GetActiveGateway()
     {
         var settings = _siteSettings.GetSettingsAsync().Result;
-        var activeGatewayName = settings.GetValueOrDefault("Payment_ActiveGateway", "Paystack");
+        var activeGatewayName = settings.GetValueOrDefault("Payment_ActiveGateway", "Paystack") ?? "Paystack";
 
         return GetGateway(activeGatewayName);
     }
@@ -86,12 +86,12 @@ public class PaymentService : IPaymentService
     public async Task<(Order? Order, string? AuthorizationUrl)> CreateRetryPaymentTransactionAsync(string gatewayName, int orderId)
     {
         var email = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Email);
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(email!);
 
         if (user == null) throw new Exception("User not found.");
 
         var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
-        var spec = isAdmin ? new OrderSpecification(orderId) : new OrderSpecification(email, orderId);
+        var spec = isAdmin ? new OrderSpecification(orderId) : new OrderSpecification(email!, orderId);
 
         var order = await _unit.Repository<Order>().GetEntityWithSpec(spec);
         if (order == null) return (null, null);

@@ -117,9 +117,9 @@ public class OrderFinalizationService : IOrderFinalizationService
 
         var settings = await _siteSettings.GetSettingsAsync();
         var publicUrl = settings.GetValueOrDefault("PublicUrl", "https://localhost:5001");
-        var storeName = settings.GetValueOrDefault("StoreName", "Your Store");
+        var storeName = settings.GetValueOrDefault("StoreName", "Your Store") ?? "Your Store";
         var orderUrl = $"{publicUrl}/Orders/Details/{order.Id}";
-        var adminEmail = settings.GetValueOrDefault("AdminNotificationEmail", "sputnikdevs@sputnikdevs.com");
+        var adminEmail = settings.GetValueOrDefault("AdminNotificationEmail", "sputnikdevs@sputnikdevs.com") ?? "sputnikdevs@sputnikdevs.com";
         var adminOrderUrl = $"{publicUrl}/Admin/Orders/Details/{order.Id}";
 
         // --- 4. SEND CUSTOMER CONFIRMATION EMAIL ---

@@ -54,19 +54,19 @@ public class PayFastGatewayService : IPaymentGateway
         _httpClientFactory = httpClientFactory;
 
         var settings = _siteSettings.GetSettingsAsync().Result;
-        _siteMode = settings.GetValueOrDefault("Payment_SiteMode", "Test");
+        _siteMode = settings.GetValueOrDefault("Payment_SiteMode", "Test") ?? "Test";
 
         if (_siteMode == "Live")
         {
-            _merchantId = settings.GetValueOrDefault("PayFast_Live_MerchantId");
-            _merchantKey = settings.GetValueOrDefault("PayFast_Live_MerchantKey");
-            _passphrase = settings.GetValueOrDefault("PayFast_Live_Passphrase");
+            _merchantId = settings.GetValueOrDefault("PayFast_Live_MerchantId") ?? string.Empty;
+            _merchantKey = settings.GetValueOrDefault("PayFast_Live_MerchantKey") ?? string.Empty;
+            _passphrase = settings.GetValueOrDefault("PayFast_Live_Passphrase") ?? string.Empty;
         }
         else
         {
-            _merchantId = settings.GetValueOrDefault("PayFast_Test_MerchantId");
-            _merchantKey = settings.GetValueOrDefault("PayFast_Test_MerchantKey");
-            _passphrase = settings.GetValueOrDefault("PayFast_Test_Passphrase");
+            _merchantId = settings.GetValueOrDefault("PayFast_Test_MerchantId") ?? string.Empty;
+            _merchantKey = settings.GetValueOrDefault("PayFast_Test_MerchantKey") ?? string.Empty;
+            _passphrase = settings.GetValueOrDefault("PayFast_Test_Passphrase") ?? string.Empty;
         }
 
         if (string.IsNullOrEmpty(_merchantId) ||
@@ -373,7 +373,7 @@ public class PayFastGatewayService : IPaymentGateway
         // 1. Get settings
         var settings = await _siteSettings.GetSettingsAsync();
         var siteMode = settings.GetValueOrDefault("Payment_SiteMode", "Test");
-        string merchantId, passphrase;
+        string? merchantId, passphrase;
 
         if (siteMode == "Live")
         {
@@ -470,7 +470,7 @@ public class PayFastGatewayService : IPaymentGateway
         // 1. Get the fresh settings *inside* the method, just like in CreatePaymentTransactionAsync
         var settings = await _siteSettings.GetSettingsAsync();
         var siteMode = settings.GetValueOrDefault("Payment_SiteMode", "Test");
-        string merchantId, merchantKey, passphrase;
+        string? merchantId, merchantKey, passphrase;
 
         if (siteMode == "Live")
         {

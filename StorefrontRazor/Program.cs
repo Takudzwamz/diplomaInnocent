@@ -185,8 +185,8 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
     // These lines are crucial for ngrok and other non-standard proxies.
     // In a production environment with a known proxy, you would configure
-    // options.KnownProxies and options.KnownNetworks instead.
-    options.KnownNetworks.Clear();
+    // options.KnownProxies and options.KnownIPNetworks instead.
+    options.KnownIPNetworks.Clear();
     options.KnownProxies.Clear();
 });
 
