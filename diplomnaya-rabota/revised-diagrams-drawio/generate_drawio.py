@@ -40,19 +40,19 @@ plt.rcParams.update({
 
 def diagram_01_architecture():
     """Диаграмма 1: Общая архитектура системы."""
-    fig, ax = plt.subplots(1, 1, figsize=(12, 8))
-    ax.set_xlim(0, 12)
-    ax.set_ylim(0, 8)
+    fig, ax = plt.subplots(1, 1, figsize=(14, 10))
+    ax.set_xlim(0, 14)
+    ax.set_ylim(0, 10)
     ax.axis('off')
-    ax.set_title('Архитектура системы', fontsize=20, fontweight='bold', pad=20)
+    ax.set_title('Архитектура системы', fontsize=22, fontweight='bold', pad=30)
 
     # Define boxes: (x, y, width, height, color, label, sublabel)
     boxes = [
-        (4.5, 6.5, 3, 1.2, '#E3F2FD', 'Пользователь', 'Браузер (HTML/CSS/JS)'),
-        (4.5, 4.2, 3, 1.5, '#FFF3E0', 'Веб-сервер', 'ASP.NET Razor Pages\n+ Рекомендательная система'),
-        (1.0, 1.5, 3, 1.2, '#E8F5E9', 'SQL Server', 'Товары, заказы,\nвзаимодействия, эмбеддинги'),
-        (5.0, 1.5, 2.5, 1.2, '#E8F5E9', 'Redis', 'Корзина, кэш\nсессий'),
-        (8.5, 1.5, 3, 1.2, '#F3E5F5', 'Azure OpenAI', 'Генерация\nвекторов-эмбеддингов'),
+        (5.0, 8.0, 4, 1.4, '#E3F2FD', 'Пользователь', 'Браузер (HTML/CSS/JS)'),
+        (5.0, 5.2, 4, 1.8, '#FFF3E0', 'Веб-сервер', 'ASP.NET Razor Pages\n+ Рекомендательная система'),
+        (0.8, 1.5, 3.5, 1.5, '#E8F5E9', 'SQL Server', 'Товары, заказы,\nвзаимодействия, эмбеддинги'),
+        (5.5, 1.5, 3.0, 1.5, '#E8F5E9', 'Redis', 'Корзина, кэш\nсессий'),
+        (9.8, 1.5, 3.5, 1.5, '#F3E5F5', 'Azure OpenAI', 'Генерация\nвекторов-эмбеддингов'),
     ]
 
     for (x, y, w, h, color, label, sublabel) in boxes:
@@ -65,24 +65,24 @@ def diagram_01_architecture():
                 fontsize=9, color='#555')
 
     # Arrows
-    arrow_props = dict(arrowstyle='->', linewidth=2, color='#333')
+    arrow_props = dict(arrowstyle='->', linewidth=2.5, color='#333')
     # User -> Server
-    ax.annotate('', xy=(6, 5.7), xytext=(6, 6.5),
+    ax.annotate('', xy=(7, 7.0), xytext=(7, 8.0),
                 arrowprops=arrow_props)
-    ax.text(6.3, 6.05, 'HTTP', fontsize=9, color='#666')
+    ax.text(7.4, 7.5, 'HTTP', fontsize=11, color='#666')
     
     # Server -> SQL
-    ax.annotate('', xy=(2.5, 2.7), xytext=(5.0, 4.2),
+    ax.annotate('', xy=(2.55, 3.0), xytext=(5.5, 5.2),
                 arrowprops=arrow_props)
     
     # Server -> Redis
-    ax.annotate('', xy=(6.25, 2.7), xytext=(6.0, 4.2),
+    ax.annotate('', xy=(7.0, 3.0), xytext=(7.0, 5.2),
                 arrowprops=arrow_props)
     
     # Server -> Azure
-    ax.annotate('', xy=(10.0, 2.7), xytext=(7.5, 4.2),
+    ax.annotate('', xy=(11.55, 3.0), xytext=(8.5, 5.2),
                 arrowprops=arrow_props)
-    ax.text(9.2, 3.6, 'API', fontsize=9, color='#666')
+    ax.text(10.5, 4.3, 'API', fontsize=11, color='#666')
 
     plt.savefig(OUTPUT_DIR / '01_архитектура_системы.png')
     plt.close()
@@ -94,11 +94,14 @@ def diagram_02_er():
     dot_code = '''
     digraph ER {
         rankdir=TB;
-        node [shape=record, style=filled, fontname="DejaVu Sans", fontsize=12];
-        edge [fontname="DejaVu Sans", fontsize=10];
+        nodesep=1.0;
+        ranksep=1.2;
+        pad="0.8,0.6";
+        node [shape=record, style=filled, fontname="DejaVu Sans", fontsize=13, margin="0.3,0.2"];
+        edge [fontname="DejaVu Sans", fontsize=11, penwidth=1.3];
         
         graph [label="Схема базы данных\\n(таблицы рекомендательной системы)", 
-               labelloc=t, fontsize=18, fontname="DejaVu Sans Bold"];
+               labelloc=t, fontsize=20, fontname="DejaVu Sans Bold"];
         
         Products [fillcolor="#E3F2FD" label="{Products (Товары)|Id : int (PK)\\lName : строка\\lPrice : число\\lEmbedding : вектор ИИ [1536]\\l}"];
         
@@ -135,11 +138,14 @@ def diagram_03_algorithm_flowchart():
     dot_code = '''
     digraph Algorithm {
         rankdir=TB;
-        node [shape=box, style="filled,rounded", fontname="DejaVu Sans", fontsize=13, margin="0.3,0.2"];
-        edge [fontname="DejaVu Sans", fontsize=11];
+        nodesep=1.0;
+        ranksep=1.2;
+        pad="1.0,0.8";
+        node [shape=box, style="filled,rounded", fontname="DejaVu Sans", fontsize=14, margin="0.5,0.35"];
+        edge [fontname="DejaVu Sans", fontsize=12, penwidth=1.5];
         
         graph [label="Алгоритм генерации рекомендаций", 
-               labelloc=t, fontsize=18, fontname="DejaVu Sans Bold"];
+               labelloc=t, fontsize=22, fontname="DejaVu Sans Bold"];
         
         start [label="Пользователь\\nоткрывает страницу", fillcolor="#E3F2FD"];
         check [label="Есть ли история\\nвзаимодействий?", shape=diamond, fillcolor="#FFF9C4"];
@@ -183,55 +189,55 @@ def diagram_03_algorithm_flowchart():
 
 def diagram_04_hybrid_formula():
     """Диаграмма 4: Визуализация формулы гибридного алгоритма."""
-    fig, ax = plt.subplots(1, 1, figsize=(11, 6))
-    ax.set_xlim(0, 11)
-    ax.set_ylim(0, 6)
+    fig, ax = plt.subplots(1, 1, figsize=(14, 8))
+    ax.set_xlim(0, 14)
+    ax.set_ylim(0, 8)
     ax.axis('off')
-    ax.set_title('Формула гибридного адаптивного алгоритма', fontsize=18, fontweight='bold', pad=15)
+    ax.set_title('Формула гибридного адаптивного алгоритма', fontsize=20, fontweight='bold', pad=25)
 
     # Components on the left
     components = [
-        (0.5, 4.5, '#BBDEFB', 'Коллаборативная\nфильтрация', '×0.40'),
-        (0.5, 3.2, '#C8E6C9', 'Контентный\nанализ (ИИ)', '×0.35'),
-        (0.5, 1.9, '#FFF9C4', 'Тренды\n(7 дней)', '×0.15'),
-        (0.5, 0.6, '#FFCCBC', 'Категории\nпользователя', '×0.10'),
+        (0.5, 6.2, '#BBDEFB', 'Коллаборативная\nфильтрация', '×0.40'),
+        (0.5, 4.5, '#C8E6C9', 'Контентный\nанализ (ИИ)', '×0.35'),
+        (0.5, 2.8, '#FFF9C4', 'Тренды\n(7 дней)', '×0.15'),
+        (0.5, 1.1, '#FFCCBC', 'Категории\nпользователя', '×0.10'),
     ]
 
     for (x, y, color, label, weight) in components:
-        rect = FancyBboxPatch((x, y), 3.0, 0.9, boxstyle="round,pad=0.08",
+        rect = FancyBboxPatch((x, y), 3.5, 1.1, boxstyle="round,pad=0.1",
                               facecolor=color, edgecolor='#333', linewidth=1.5)
         ax.add_patch(rect)
-        ax.text(x + 1.5, y + 0.45, label, ha='center', va='center', fontsize=11)
+        ax.text(x + 1.75, y + 0.55, label, ha='center', va='center', fontsize=13)
         
         # Weight box
-        rect2 = FancyBboxPatch((4.0, y + 0.15), 0.9, 0.6, boxstyle="round,pad=0.05",
+        rect2 = FancyBboxPatch((4.6, y + 0.2), 1.1, 0.7, boxstyle="round,pad=0.06",
                                facecolor='white', edgecolor='#666', linewidth=1)
         ax.add_patch(rect2)
-        ax.text(4.45, y + 0.45, weight, ha='center', va='center', fontsize=12, fontweight='bold')
+        ax.text(5.15, y + 0.55, weight, ha='center', va='center', fontsize=14, fontweight='bold')
         
         # Arrow to sum
-        ax.annotate('', xy=(5.5, y + 0.45), xytext=(4.9, y + 0.45),
+        ax.annotate('', xy=(7.0, y + 0.55), xytext=(5.7, y + 0.55),
                     arrowprops=dict(arrowstyle='->', linewidth=1.5, color='#666'))
 
     # Sum circle
-    circle = plt.Circle((6.2, 2.95), 0.6, facecolor='#E1BEE7', edgecolor='#333', linewidth=2)
+    circle = plt.Circle((7.8, 4.0), 0.7, facecolor='#E1BEE7', edgecolor='#333', linewidth=2)
     ax.add_patch(circle)
-    ax.text(6.2, 2.95, 'Σ', ha='center', va='center', fontsize=24, fontweight='bold')
+    ax.text(7.8, 4.0, 'Σ', ha='center', va='center', fontsize=28, fontweight='bold')
 
     # Arrow from sum to result
-    ax.annotate('', xy=(7.5, 2.95), xytext=(6.8, 2.95),
-                arrowprops=dict(arrowstyle='->', linewidth=2, color='#333'))
+    ax.annotate('', xy=(9.5, 4.0), xytext=(8.5, 4.0),
+                arrowprops=dict(arrowstyle='->', linewidth=2.5, color='#333'))
 
     # Result box
-    rect = FancyBboxPatch((7.5, 2.2), 3.2, 1.5, boxstyle="round,pad=0.1",
+    rect = FancyBboxPatch((9.5, 3.0), 4.0, 2.0, boxstyle="round,pad=0.12",
                           facecolor='#A5D6A7', edgecolor='#333', linewidth=2)
     ax.add_patch(rect)
-    ax.text(9.1, 3.1, 'Итоговый балл', ha='center', va='center', fontsize=13, fontweight='bold')
-    ax.text(9.1, 2.6, '→ ТОП-8 товаров', ha='center', va='center', fontsize=11, color='#333')
+    ax.text(11.5, 4.3, 'Итоговый балл', ha='center', va='center', fontsize=15, fontweight='bold')
+    ax.text(11.5, 3.6, '→ ТОП-8 товаров', ha='center', va='center', fontsize=13, color='#333')
 
     # Formula text at bottom
-    ax.text(5.5, -0.2, 'Score = 0.40·CF + 0.35·CB + 0.15·Trending + 0.10·Recency',
-            ha='center', va='center', fontsize=12, style='italic',
+    ax.text(7.0, -0.1, 'Score = 0.40·CF + 0.35·CB + 0.15·Trending + 0.10·Recency',
+            ha='center', va='center', fontsize=13, style='italic',
             bbox=dict(boxstyle='round', facecolor='#F5F5F5', edgecolor='#CCC'))
 
     plt.savefig(OUTPUT_DIR / '04_формула_гибрид.png')
@@ -244,11 +250,14 @@ def diagram_05_ab_test():
     dot_code = '''
     digraph ABTest {
         rankdir=TB;
-        node [shape=box, style="filled,rounded", fontname="DejaVu Sans", fontsize=13, margin="0.3,0.2"];
-        edge [fontname="DejaVu Sans", fontsize=11];
+        nodesep=1.2;
+        ranksep=1.4;
+        pad="1.0,0.8";
+        node [shape=box, style="filled,rounded", fontname="DejaVu Sans", fontsize=14, margin="0.5,0.35"];
+        edge [fontname="DejaVu Sans", fontsize=12, penwidth=1.5];
         
         graph [label="Процесс A/B тестирования", 
-               labelloc=t, fontsize=18, fontname="DejaVu Sans Bold"];
+               labelloc=t, fontsize=22, fontname="DejaVu Sans Bold"];
         
         user [label="Новый пользователь\\nзаходит на сайт", fillcolor="#E3F2FD"];
         split [label="Случайное распределение\\n50% / 50%", shape=diamond, fillcolor="#FFF9C4"];
@@ -283,7 +292,7 @@ def diagram_05_ab_test():
 
 def diagram_06_ctr_results():
     """Диаграмма 6: Сравнение CTR по стратегиям."""
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 7))
     
     strategies = ['Popular\n(Контроль)', 'Adaptive\n(Эксперимент)']
     ctrs = [8.0, 15.0]
@@ -315,7 +324,7 @@ def diagram_06_ctr_results():
 
 def diagram_07_funnel():
     """Диаграмма 7: Воронка конверсии."""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 7))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 8))
     
     stages = ['Показы', 'Клики', 'В корзину', 'Покупки']
     
@@ -355,11 +364,14 @@ def diagram_08_use_case():
     dot_code = '''
     digraph UseCase {
         rankdir=LR;
-        node [fontname="DejaVu Sans", fontsize=12];
-        edge [fontname="DejaVu Sans", fontsize=10];
+        nodesep=0.8;
+        ranksep=1.5;
+        pad="1.0,0.8";
+        node [fontname="DejaVu Sans", fontsize=13, margin="0.3,0.2"];
+        edge [fontname="DejaVu Sans", fontsize=11, penwidth=1.3];
         
         graph [label="Диаграмма вариантов использования (Use Case)", 
-               labelloc=t, fontsize=18, fontname="DejaVu Sans Bold"];
+               labelloc=t, fontsize=20, fontname="DejaVu Sans Bold"];
         
         // Actors
         buyer [label="Покупатель", shape=box, style=filled, fillcolor="#E3F2FD", 
