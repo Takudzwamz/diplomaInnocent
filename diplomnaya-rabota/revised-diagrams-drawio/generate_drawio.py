@@ -367,52 +367,68 @@ def diagram_08_use_case():
     dot_code = '''
     digraph UseCase {
         rankdir=TB;
-        nodesep=1.5;
-        ranksep=1.8;
+        nodesep=2.0;
+        ranksep=2.0;
         pad="1.5,1.0";
-        node [fontname="DejaVu Sans", fontsize=26, margin="0.5,0.4"];
+        node [fontname="DejaVu Sans", fontsize=28, margin="0.6,0.5"];
         edge [fontname="DejaVu Sans", fontsize=20, penwidth=2.0];
         
         graph [label="Диаграмма вариантов использования", 
-               labelloc=t, fontsize=36, fontname="DejaVu Sans Bold"];
+               labelloc=t, fontsize=40, fontname="DejaVu Sans Bold"];
         
         // Actors on top row
         buyer [label="Покупатель", shape=box, style="filled,bold", fillcolor="#E3F2FD", 
-               width=3.5, height=1.2, fontsize=32];
+               width=4.0, height=1.4, fontsize=36];
         admin [label="Администратор", shape=box, style="filled,bold", fillcolor="#FFF3E0",
-               width=4.0, height=1.2, fontsize=32];
+               width=4.5, height=1.4, fontsize=36];
         
         // Force actors on same rank (side by side)
         {rank=same; buyer; admin;}
         
-        // Buyer use cases in a horizontal cluster
+        // Buyer use cases — 2 rows for readability
         subgraph cluster_buyer {
             label="Функции покупателя";
             style=filled;
             fillcolor="#F5F5F5";
-            fontsize=26;
+            fontsize=30;
             labelloc=t;
+            margin="30";
             
-            {rank=same; uc1; uc2; uc3; uc4; uc5;}
-            uc1 [label="Просмотр\\nкаталога", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
-            uc2 [label="Получение\\nрекомендаций", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
-            uc3 [label="Добавление\\nв корзину", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
-            uc4 [label="Оформление\\nзаказа", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
-            uc5 [label="Написание\\nотзыва", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
+            uc1 [label="Просмотр\\nкаталога", shape=ellipse, style=filled, fillcolor="white", fontsize=34, width=3.5, height=1.8];
+            uc2 [label="Получение\\nрекомендаций", shape=ellipse, style=filled, fillcolor="white", fontsize=34, width=4.0, height=1.8];
+            uc3 [label="Добавление\\nв корзину", shape=ellipse, style=filled, fillcolor="white", fontsize=34, width=3.5, height=1.8];
+            uc4 [label="Оформление\\nзаказа", shape=ellipse, style=filled, fillcolor="white", fontsize=34, width=3.5, height=1.8];
+            uc5 [label="Написание\\nотзыва", shape=ellipse, style=filled, fillcolor="white", fontsize=34, width=3.5, height=1.8];
+            
+            // Row 1: 3 items
+            {rank=same; uc1; uc2; uc3;}
+            // Row 2: 2 items
+            {rank=same; uc4; uc5;}
+            
+            // invisible edges to force rows
+            uc1 -> uc4 [style=invis];
+            uc3 -> uc5 [style=invis];
         }
         
-        // Admin use cases in a horizontal cluster
+        // Admin use cases — 2 rows
         subgraph cluster_admin {
             label="Функции администратора";
             style=filled;
             fillcolor="#FFF8E1";
-            fontsize=26;
+            fontsize=30;
             labelloc=t;
+            margin="30";
             
-            {rank=same; uc6; uc7; uc8;}
-            uc6 [label="Управление\\nтоварами", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
-            uc7 [label="Просмотр\\nстатистики", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
-            uc8 [label="Управление\\nзаказами", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
+            uc6 [label="Управление\\nтоварами", shape=ellipse, style=filled, fillcolor="white", fontsize=34, width=3.5, height=1.8];
+            uc7 [label="Просмотр\\nстатистики", shape=ellipse, style=filled, fillcolor="white", fontsize=34, width=3.5, height=1.8];
+            uc8 [label="Управление\\nзаказами", shape=ellipse, style=filled, fillcolor="white", fontsize=34, width=4.0, height=1.8];
+            
+            // Row 1: 2 items
+            {rank=same; uc6; uc7;}
+            // Row 2: 1 item
+            
+            // invisible edge to force layout
+            uc6 -> uc8 [style=invis];
         }
         
         buyer -> uc1;
