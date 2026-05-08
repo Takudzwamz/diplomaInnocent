@@ -366,47 +366,53 @@ def diagram_08_use_case():
     """Диаграмма 8: Диаграмма вариантов использования."""
     dot_code = '''
     digraph UseCase {
-        rankdir=LR;
-        nodesep=0.8;
-        ranksep=1.5;
-        pad="1.0,0.8";
-        node [fontname="DejaVu Sans", fontsize=20, margin="0.4,0.3"];
-        edge [fontname="DejaVu Sans", fontsize=16, penwidth=1.5];
+        rankdir=TB;
+        nodesep=1.5;
+        ranksep=1.8;
+        pad="1.5,1.0";
+        node [fontname="DejaVu Sans", fontsize=26, margin="0.5,0.4"];
+        edge [fontname="DejaVu Sans", fontsize=20, penwidth=2.0];
         
-        graph [label="Диаграмма вариантов использования (Use Case)", 
-               labelloc=t, fontsize=28, fontname="DejaVu Sans Bold"];
+        graph [label="Диаграмма вариантов использования", 
+               labelloc=t, fontsize=36, fontname="DejaVu Sans Bold"];
         
-        // Actors
-        buyer [label="Покупатель", shape=box, style=filled, fillcolor="#E3F2FD", 
-               width=2.2, height=0.8, fontsize=22];
-        admin [label="Администратор", shape=box, style=filled, fillcolor="#FFF3E0",
-               width=2.5, height=0.8, fontsize=22];
+        // Actors on top row
+        buyer [label="Покупатель", shape=box, style="filled,bold", fillcolor="#E3F2FD", 
+               width=3.5, height=1.2, fontsize=32];
+        admin [label="Администратор", shape=box, style="filled,bold", fillcolor="#FFF3E0",
+               width=4.0, height=1.2, fontsize=32];
         
-        // Use cases - buyer
+        // Force actors on same rank (side by side)
+        {rank=same; buyer; admin;}
+        
+        // Buyer use cases in a horizontal cluster
         subgraph cluster_buyer {
             label="Функции покупателя";
             style=filled;
             fillcolor="#F5F5F5";
-            fontsize=20;
+            fontsize=26;
+            labelloc=t;
             
-            uc1 [label="Просмотр каталога\\nтоваров", shape=ellipse, style=filled, fillcolor="white"];
-            uc2 [label="Получение персональных\\nрекомендаций", shape=ellipse, style=filled, fillcolor="white"];
-            uc3 [label="Добавление\\nв корзину", shape=ellipse, style=filled, fillcolor="white"];
-            uc4 [label="Оформление\\nзаказа", shape=ellipse, style=filled, fillcolor="white"];
-            uc5 [label="Написание\\nотзыва", shape=ellipse, style=filled, fillcolor="white"];
+            {rank=same; uc1; uc2; uc3; uc4; uc5;}
+            uc1 [label="Просмотр\\nкаталога", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
+            uc2 [label="Получение\\nрекомендаций", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
+            uc3 [label="Добавление\\nв корзину", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
+            uc4 [label="Оформление\\nзаказа", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
+            uc5 [label="Написание\\nотзыва", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
         }
         
-        // Use cases - admin
+        // Admin use cases in a horizontal cluster
         subgraph cluster_admin {
             label="Функции администратора";
             style=filled;
             fillcolor="#FFF8E1";
-            fontsize=20;
+            fontsize=26;
+            labelloc=t;
             
-            uc6 [label="Управление\\nтоварами", shape=ellipse, style=filled, fillcolor="white"];
-            uc7 [label="Запуск A/B\\nтестов", shape=ellipse, style=filled, fillcolor="white"];
-            uc8 [label="Просмотр метрик\\nрекомендаций", shape=ellipse, style=filled, fillcolor="white"];
-            uc9 [label="Управление\\nзаказами", shape=ellipse, style=filled, fillcolor="white"];
+            {rank=same; uc6; uc7; uc8;}
+            uc6 [label="Управление\\nтоварами", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
+            uc7 [label="Просмотр\\nстатистики", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
+            uc8 [label="Управление\\nзаказами", shape=ellipse, style=filled, fillcolor="white", fontsize=24];
         }
         
         buyer -> uc1;
@@ -417,7 +423,6 @@ def diagram_08_use_case():
         admin -> uc6;
         admin -> uc7;
         admin -> uc8;
-        admin -> uc9;
     }
     '''
     
