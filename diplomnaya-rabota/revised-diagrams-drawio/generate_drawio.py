@@ -93,40 +93,99 @@ def diagram_01_architecture():
 
 
 def diagram_02_er():
-    """Диаграмма 2: ER-диаграмма таблиц рекомендательной системы."""
+    """Диаграмма 2: ER-диаграмма таблиц рекомендательной системы.
+    Табличный стиль: тип | имя | PK/FK | описание на русском."""
     dot_code = '''
     digraph ER {
         rankdir=TB;
-        nodesep=1.0;
-        ranksep=1.2;
+        nodesep=0.8;
+        ranksep=1.5;
         pad="0.8,0.6";
-        node [shape=record, style=filled, fontname="DejaVu Sans", fontsize=18, margin="0.4,0.3"];
-        edge [fontname="DejaVu Sans", fontsize=15, penwidth=1.5];
-        
-        graph [label="Схема базы данных\\n(таблицы рекомендательной системы)", 
+        node [shape=none, fontname="DejaVu Sans", fontsize=16, margin="0"];
+        edge [fontname="DejaVu Sans", fontsize=14, penwidth=2.0, color="#5c3d7a"];
+
+        graph [label="Схема базы данных\\n(таблицы рекомендательной системы)",
                labelloc=t, fontsize=28, fontname="DejaVu Sans Bold"];
-        
-        Products [fillcolor="#E3F2FD" label="{Products (Товары)|Id : int (PK)\\lName : строка\\lPrice : число\\lEmbedding : вектор ИИ [1536]\\l}"];
-        
-        UserInteractions [fillcolor="#C8E6C9" label="{UserInteractions\\n(Взаимодействия)|Id : int (PK)\\lUserId : FK → Пользователь\\lProductId : FK → Товар\\lType : Просмотр/Клик/Корзина/Покупка\\lTimestamp : дата и время\\l}"];
-        
-        RecommendationEvents [fillcolor="#FFF9C4" label="{RecommendationEvents\\n(События рекомендаций)|Id : int (PK)\\lUserId : FK → Пользователь\\lProductId : FK → Товар\\lStrategy : Popular/CF/CB/Adaptive\\lPosition : 1-8\\lEventType : Показ/Клик/Покупка\\l}"];
-        
-        ABTestExperiments [fillcolor="#FFCCBC" label="{ABTestExperiments\\n(Эксперименты A/B)|Id : int (PK)\\lName : название теста\\lControlStrategy : контроль\\lTreatmentStrategy : эксперимент\\lTrafficPercent : 50%\\lIsActive : да/нет\\l}"];
-        
-        ABTestAssignments [fillcolor="#E1BEE7" label="{ABTestAssignments\\n(Назначения в группы)|Id : int (PK)\\lUserId : FK → Пользователь\\lExperimentId : FK → Эксперимент\\lIsTreatment : контроль или эксперимент\\l}"];
-        
-        Users [fillcolor="#F5F5F5" label="{AspNetUsers\\n(Пользователи)|Id : строка (PK)\\lEmail : электронная почта\\lFirstName : имя\\l}"];
-        
-        Users -> UserInteractions [label="1 : *\\nсоздаёт"];
-        Users -> RecommendationEvents [label="1 : *\\nполучает"];
-        Users -> ABTestAssignments [label="1 : *\\nназначен"];
-        Products -> UserInteractions [label="1 : *\\nучаствует"];
-        Products -> RecommendationEvents [label="1 : *\\nрекомендован"];
-        ABTestExperiments -> ABTestAssignments [label="1 : *\\nсодержит"];
+
+        Products [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD COLSPAN="4" BGCOLOR="#d5e8f5" ALIGN="CENTER"><B><FONT POINT-SIZE="18">Products</FONT></B></TD></TR>
+                <TR><TD>int</TD>     <TD><B>Id</B></TD>        <TD><B>PK</B></TD> <TD></TD></TR>
+                <TR><TD>string</TD>  <TD><B>Name</B></TD>      <TD></TD>           <TD>Название товара</TD></TR>
+                <TR><TD>decimal</TD> <TD><B>Price</B></TD>     <TD></TD>           <TD>Цена</TD></TR>
+                <TR><TD>string</TD>  <TD><B>Embedding</B></TD> <TD></TD>           <TD>Вектор ИИ (1536 чисел)</TD></TR>
+            </TABLE>
+        >];
+
+        Users [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD COLSPAN="4" BGCOLOR="#F5F5F5" ALIGN="CENTER"><B><FONT POINT-SIZE="18">AspNetUsers</FONT></B></TD></TR>
+                <TR><TD>string</TD> <TD><B>Id</B></TD>        <TD><B>PK</B></TD> <TD></TD></TR>
+                <TR><TD>string</TD> <TD><B>Email</B></TD>     <TD></TD>           <TD>Электронная почта</TD></TR>
+                <TR><TD>string</TD> <TD><B>FirstName</B></TD> <TD></TD>           <TD>Имя</TD></TR>
+            </TABLE>
+        >];
+
+        ABTestExperiments [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD COLSPAN="4" BGCOLOR="#FFCCBC" ALIGN="CENTER"><B><FONT POINT-SIZE="18">ABTestExperiments</FONT></B></TD></TR>
+                <TR><TD>int</TD>    <TD><B>Id</B></TD>              <TD><B>PK</B></TD> <TD></TD></TR>
+                <TR><TD>string</TD> <TD><B>Name</B></TD>            <TD></TD>           <TD>Название теста</TD></TR>
+                <TR><TD>string</TD> <TD><B>Control</B></TD>         <TD></TD>           <TD>Контрольная стратегия</TD></TR>
+                <TR><TD>string</TD> <TD><B>Treatment</B></TD>       <TD></TD>           <TD>Экспериментальная</TD></TR>
+                <TR><TD>int</TD>    <TD><B>TrafficPercent</B></TD>   <TD></TD>           <TD>50/50</TD></TR>
+                <TR><TD>bool</TD>   <TD><B>IsActive</B></TD>        <TD></TD>           <TD>Активен</TD></TR>
+            </TABLE>
+        >];
+
+        UserInteractions [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD COLSPAN="4" BGCOLOR="#C8E6C9" ALIGN="CENTER"><B><FONT POINT-SIZE="18">UserInteractions</FONT></B></TD></TR>
+                <TR><TD>int</TD>      <TD><B>Id</B></TD>        <TD><B>PK</B></TD> <TD></TD></TR>
+                <TR><TD>string</TD>   <TD><B>UserId</B></TD>    <TD><B>FK</B></TD> <TD>Кто</TD></TR>
+                <TR><TD>int</TD>      <TD><B>ProductId</B></TD> <TD><B>FK</B></TD> <TD>Что</TD></TR>
+                <TR><TD>int</TD>      <TD><B>Type</B></TD>      <TD></TD>           <TD>Тип действия</TD></TR>
+                <TR><TD>datetime</TD> <TD><B>Timestamp</B></TD> <TD></TD>           <TD>Когда</TD></TR>
+            </TABLE>
+        >];
+
+        RecommendationEvents [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD COLSPAN="4" BGCOLOR="#FFF9C4" ALIGN="CENTER"><B><FONT POINT-SIZE="18">RecommendationEvents</FONT></B></TD></TR>
+                <TR><TD>int</TD>    <TD><B>Id</B></TD>        <TD><B>PK</B></TD> <TD></TD></TR>
+                <TR><TD>string</TD> <TD><B>UserId</B></TD>    <TD><B>FK</B></TD> <TD>Кому показали</TD></TR>
+                <TR><TD>int</TD>    <TD><B>ProductId</B></TD> <TD><B>FK</B></TD> <TD>Что рекомендовали</TD></TR>
+                <TR><TD>string</TD> <TD><B>Strategy</B></TD>  <TD></TD>           <TD>Какой алгоритм</TD></TR>
+                <TR><TD>int</TD>    <TD><B>Position</B></TD>  <TD></TD>           <TD>Позиция 1-8</TD></TR>
+                <TR><TD>string</TD> <TD><B>EventType</B></TD> <TD></TD>           <TD>Показ или Клик</TD></TR>
+            </TABLE>
+        >];
+
+        ABTestAssignments [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD COLSPAN="4" BGCOLOR="#E1BEE7" ALIGN="CENTER"><B><FONT POINT-SIZE="18">ABTestAssignments</FONT></B></TD></TR>
+                <TR><TD>int</TD>    <TD><B>Id</B></TD>           <TD><B>PK</B></TD> <TD></TD></TR>
+                <TR><TD>string</TD> <TD><B>UserId</B></TD>       <TD><B>FK</B></TD> <TD>Пользователь</TD></TR>
+                <TR><TD>int</TD>    <TD><B>ExperimentId</B></TD> <TD><B>FK</B></TD> <TD>Эксперимент</TD></TR>
+                <TR><TD>bool</TD>   <TD><B>IsTreatment</B></TD>  <TD></TD>           <TD>В какой группе</TD></TR>
+            </TABLE>
+        >];
+
+        /* Layout: top row */
+        { rank=same; Products; Users; ABTestExperiments; }
+        /* Layout: bottom row */
+        { rank=same; RecommendationEvents; UserInteractions; ABTestAssignments; }
+
+        /* Relationships */
+        Products -> UserInteractions [label="  1 : *\\nтовар", dir=both, arrowhead=crow, arrowtail=tee];
+        Products -> RecommendationEvents [label="  1 : *\\nрекомендован", dir=both, arrowhead=crow, arrowtail=tee];
+        Users -> UserInteractions [label="  1 : *\\nсоздаёт", dir=both, arrowhead=crow, arrowtail=tee];
+        Users -> RecommendationEvents [label="  1 : *\\nполучает", dir=both, arrowhead=crow, arrowtail=tee];
+        Users -> ABTestAssignments [label="  1 : *\\nназначен", dir=both, arrowhead=crow, arrowtail=tee];
+        ABTestExperiments -> ABTestAssignments [label="  1 : *\\nсодержит", dir=both, arrowhead=crow, arrowtail=tee];
     }
     '''
-    
+
     dot_path = OUTPUT_DIR / '_temp_er.dot'
     out_path = OUTPUT_DIR / '02_база_данных_ER.png'
     dot_path.write_text(dot_code, encoding='utf-8')
@@ -451,6 +510,260 @@ def diagram_08_use_case():
     print("  ✓ 08_варианты_использования.png")
 
 
+def diagram_09a_class_entities():
+    """Диаграмма 9а: UML классы — сущности рекомендательной системы."""
+    dot_code = '''
+    digraph ClassEntities {
+        rankdir=TB;
+        nodesep=1.2;
+        ranksep=1.5;
+        pad="1.0,0.8";
+        node [shape=none, fontname="DejaVu Sans", fontsize=18, margin="0"];
+        edge [fontname="DejaVu Sans", fontsize=16, penwidth=2.0, color="#5c3d7a"];
+
+        graph [label="Диаграмма классов — Часть 1: Сущности\\n(рекомендательная система)",
+               labelloc=t, fontsize=28, fontname="DejaVu Sans Bold"];
+
+        BaseEntity [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#E3F2FD" ALIGN="CENTER"><B><FONT POINT-SIZE="22">BaseEntity</FONT></B><BR/><FONT POINT-SIZE="14">(Базовая сущность)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ Id : int</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="14"> </FONT></TD></TR>
+            </TABLE>
+        >];
+
+        UserInteraction [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#C8E6C9" ALIGN="CENTER"><B><FONT POINT-SIZE="22">UserInteraction</FONT></B><BR/><FONT POINT-SIZE="14">(Взаимодействие пользователя)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ UserId : string<BR/>+ ProductId : int<BR/>+ Type : InteractionType<BR/>+ Timestamp : DateTime<BR/>+ SessionId : string?<BR/>+ DurationSeconds : int?</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="14"> </FONT></TD></TR>
+            </TABLE>
+        >];
+
+        RecommendationEvent [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#FFF9C4" ALIGN="CENTER"><B><FONT POINT-SIZE="22">RecommendationEvent</FONT></B><BR/><FONT POINT-SIZE="14">(Событие рекомендации)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ UserId : string<BR/>+ RecommendedProductId : int<BR/>+ SourceProductId : int?<BR/>+ EventType : RecommendationEventType<BR/>+ Strategy : RecommendationStrategy<BR/>+ Position : int<BR/>+ ExperimentId : int?<BR/>+ Timestamp : DateTime</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="14"> </FONT></TD></TR>
+            </TABLE>
+        >];
+
+        ABTestExperiment [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#FFCCBC" ALIGN="CENTER"><B><FONT POINT-SIZE="22">ABTestExperiment</FONT></B><BR/><FONT POINT-SIZE="14">(Эксперимент A/B)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ Name : string<BR/>+ Description : string?<BR/>+ ControlStrategy : RecommendationStrategy<BR/>+ TreatmentStrategy : RecommendationStrategy<BR/>+ TreatmentPercentage : int<BR/>+ StartDate : DateTime<BR/>+ EndDate : DateTime?<BR/>+ IsActive : bool</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="14"> </FONT></TD></TR>
+            </TABLE>
+        >];
+
+        ABTestAssignment [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#E1BEE7" ALIGN="CENTER"><B><FONT POINT-SIZE="22">ABTestAssignment</FONT></B><BR/><FONT POINT-SIZE="14">(Назначение в группу)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ ExperimentId : int<BR/>+ UserId : string<BR/>+ IsTreatment : bool<BR/>+ AssignedAt : DateTime</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="14"> </FONT></TD></TR>
+            </TABLE>
+        >];
+
+        /* Наследование */
+        BaseEntity -> UserInteraction [arrowhead=onormal, style=solid, label="  наследует", fontsize=16, color="#333333"];
+        BaseEntity -> RecommendationEvent [arrowhead=onormal, style=solid, label="  наследует", fontsize=16, color="#333333"];
+        BaseEntity -> ABTestExperiment [arrowhead=onormal, style=solid, label="  наследует", fontsize=16, color="#333333"];
+        BaseEntity -> ABTestAssignment [arrowhead=onormal, style=solid, label="  наследует", fontsize=16, color="#333333"];
+
+        /* Ассоциации */
+        ABTestExperiment -> ABTestAssignment [arrowhead=open, label="  1 : *  содержит", fontsize=16, color="#5c3d7a"];
+        ABTestExperiment -> RecommendationEvent [arrowhead=open, style=dashed, label="  0..1 : *  связан", fontsize=14, color="#999999"];
+
+        /* Компоновка */
+        { rank=same; UserInteraction; RecommendationEvent; }
+        { rank=same; ABTestExperiment; ABTestAssignment; }
+    }
+    '''
+    dot_path = OUTPUT_DIR / '_temp_class_a.dot'
+    out_path = OUTPUT_DIR / '09а_классы_сущности.png'
+    dot_path.write_text(dot_code, encoding='utf-8')
+    subprocess.run(['dot', '-Tpng', f'-Gdpi={GRAPHVIZ_DPI}', str(dot_path), '-o', str(out_path)],
+                   check=True, capture_output=True)
+    dot_path.unlink()
+    print("  ✓ 09а_классы_сущности.png")
+
+
+def diagram_09b_class_enums():
+    """Диаграмма 9б: UML классы — перечисления рекомендательной системы."""
+    dot_code = '''
+    digraph ClassEnums {
+        rankdir=LR;
+        nodesep=1.5;
+        ranksep=2.0;
+        pad="1.0,0.8";
+        node [shape=none, fontname="DejaVu Sans", fontsize=18, margin="0"];
+
+        graph [label="Диаграмма классов — Часть 2: Перечисления\\n(рекомендательная система)",
+               labelloc=t, fontsize=28, fontname="DejaVu Sans Bold"];
+
+        InteractionType [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#FFFDE7" ALIGN="CENTER"><FONT POINT-SIZE="14">«перечисление / enum»</FONT><BR/><B><FONT POINT-SIZE="22">InteractionType</FONT></B><BR/><FONT POINT-SIZE="14">(Тип взаимодействия)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="18">View = 0        — Просмотр<BR/>Click = 1       — Клик<BR/>AddToCart = 2    — В корзину<BR/>Purchase = 3    — Покупка<BR/>Wishlist = 4    — Избранное<BR/>Search = 5      — Поиск<BR/>RecommendationClick = 6 — Клик по рекомендации</FONT></TD></TR>
+            </TABLE>
+        >];
+
+        RecommendationEventType [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#FFFDE7" ALIGN="CENTER"><FONT POINT-SIZE="14">«перечисление / enum»</FONT><BR/><B><FONT POINT-SIZE="22">RecommendationEventType</FONT></B><BR/><FONT POINT-SIZE="14">(Тип события рекомендации)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="18">Impression = 0 — Показ<BR/>Click = 1      — Клик<BR/>AddToCart = 2   — В корзину<BR/>Purchase = 3   — Покупка</FONT></TD></TR>
+            </TABLE>
+        >];
+
+        RecommendationStrategy [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10" COLOR="#9673a6" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#FFFDE7" ALIGN="CENTER"><FONT POINT-SIZE="14">«перечисление / enum»</FONT><BR/><B><FONT POINT-SIZE="22">RecommendationStrategy</FONT></B><BR/><FONT POINT-SIZE="14">(Стратегия рекомендаций)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="18">None = 0                  — Нет<BR/>Popular = 1               — Популярные<BR/>CollaborativeFiltering = 2 — Коллаборативная<BR/>ContentBased = 3          — Контентная (ИИ)<BR/>Adaptive = 4              — Адаптивная</FONT></TD></TR>
+            </TABLE>
+        >];
+    }
+    '''
+    dot_path = OUTPUT_DIR / '_temp_class_b.dot'
+    out_path = OUTPUT_DIR / '09б_классы_перечисления.png'
+    dot_path.write_text(dot_code, encoding='utf-8')
+    subprocess.run(['dot', '-Tpng', f'-Gdpi={GRAPHVIZ_DPI}', str(dot_path), '-o', str(out_path)],
+                   check=True, capture_output=True)
+    dot_path.unlink()
+    print("  ✓ 09б_классы_перечисления.png")
+
+
+def diagram_09v_class_interfaces():
+    """Диаграмма 9в: UML классы — интерфейсы сервисов (часть 1: рекомендации + действия)."""
+    dot_code = '''
+    digraph ClassInterfaces1 {
+        rankdir=TB;
+        nodesep=1.5;
+        ranksep=1.5;
+        pad="1.0,0.8";
+        node [shape=none, fontname="DejaVu Sans", fontsize=18, margin="0"];
+        edge [fontname="DejaVu Sans", fontsize=16, penwidth=2.0];
+
+        graph [label="Диаграмма классов — Часть 3: Интерфейсы\\n(рекомендации и действия пользователей)",
+               labelloc=t, fontsize=28, fontname="DejaVu Sans Bold"];
+
+        IAdaptiveRecommendationService [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10" COLOR="#336699" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#BBDEFB" ALIGN="CENTER"><FONT POINT-SIZE="15">«интерфейс»</FONT><BR/><B><FONT POINT-SIZE="22">IAdaptiveRecommendationService</FONT></B><BR/><FONT POINT-SIZE="15">(Адаптивные рекомендации)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="15"> </FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ GetAdaptiveRecommendationsAsync(userId, count)<BR/>    → Task&lt;List&lt;Product&gt;&gt;<BR/>+ GetPopularProductsAsync(count)<BR/>    → Task&lt;List&lt;Product&gt;&gt;<BR/>+ GetCollaborativeRecommendationsAsync(userId, count)<BR/>    → Task&lt;List&lt;Product&gt;&gt;<BR/>+ GetContentBasedRecommendationsAsync(productId, count)<BR/>    → Task&lt;List&lt;Product&gt;&gt;</FONT></TD></TR>
+            </TABLE>
+        >];
+
+        IUserInteractionService [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10" COLOR="#336699" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#BBDEFB" ALIGN="CENTER"><FONT POINT-SIZE="15">«интерфейс»</FONT><BR/><B><FONT POINT-SIZE="22">IUserInteractionService</FONT></B><BR/><FONT POINT-SIZE="15">(Отслеживание действий)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="15"> </FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ TrackInteractionAsync(userId, productId, type, ...)<BR/>    → Task<BR/>+ GetUserInteractionsAsync(userId, limit)<BR/>    → Task&lt;List&lt;UserInteraction&gt;&gt;<BR/>+ GetUserTopProductsAsync(userId, count)<BR/>    → Task&lt;List&lt;int&gt;&gt;</FONT></TD></TR>
+            </TABLE>
+        >];
+
+        IProductEmbeddingService [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10" COLOR="#336699" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#BBDEFB" ALIGN="CENTER"><FONT POINT-SIZE="15">«интерфейс»</FONT><BR/><B><FONT POINT-SIZE="22">IProductEmbeddingService</FONT></B><BR/><FONT POINT-SIZE="15">(ИИ-эмбеддинги товаров)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="15"> </FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ GenerateMissingEmbeddingsAsync() → Task<BR/>+ GetProductEmbeddingAsync(productId)<BR/>    → Task&lt;float[]?&gt;<BR/>+ RegenerateProductEmbeddingAsync(productId)<BR/>    → Task</FONT></TD></TR>
+            </TABLE>
+        >];
+
+        /* Мини-боксы сущностей */
+        UserInteraction_ref [label=<
+            <TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#C8E6C9">
+                <TR><TD ALIGN="CENTER"><B><FONT POINT-SIZE="18">UserInteraction</FONT></B></TD></TR>
+            </TABLE>
+        >];
+        Product_ref [label=<
+            <TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#E3F2FD">
+                <TR><TD ALIGN="CENTER"><B><FONT POINT-SIZE="18">Product</FONT></B></TD></TR>
+            </TABLE>
+        >];
+
+        IUserInteractionService -> UserInteraction_ref [arrowhead=open, style=dashed, label="  создаёт", color="#5c3d7a"];
+        IAdaptiveRecommendationService -> UserInteraction_ref [arrowhead=open, style=dashed, label="  читает", color="#5c3d7a"];
+        IAdaptiveRecommendationService -> Product_ref [arrowhead=open, style=dashed, label="  возвращает", color="#5c3d7a"];
+        IProductEmbeddingService -> Product_ref [arrowhead=open, style=dashed, label="  обогащает", color="#5c3d7a"];
+
+        { rank=same; IAdaptiveRecommendationService; IUserInteractionService; }
+        { rank=same; UserInteraction_ref; Product_ref; }
+    }
+    '''
+    dot_path = OUTPUT_DIR / '_temp_class_v.dot'
+    out_path = OUTPUT_DIR / '09в_классы_интерфейсы.png'
+    dot_path.write_text(dot_code, encoding='utf-8')
+    subprocess.run(['dot', '-Tpng', f'-Gdpi={GRAPHVIZ_DPI}', str(dot_path), '-o', str(out_path)],
+                   check=True, capture_output=True)
+    dot_path.unlink()
+    print("  ✓ 09в_классы_интерфейсы.png")
+
+
+def diagram_09g_class_interfaces2():
+    """Диаграмма 9г: UML классы — интерфейсы сервисов (часть 2: A/B тесты + метрики)."""
+    dot_code = '''
+    digraph ClassInterfaces2 {
+        rankdir=TB;
+        nodesep=1.5;
+        ranksep=1.5;
+        pad="1.0,0.8";
+        node [shape=none, fontname="DejaVu Sans", fontsize=18, margin="0"];
+        edge [fontname="DejaVu Sans", fontsize=16, penwidth=2.0];
+
+        graph [label="Диаграмма классов — Часть 4: Интерфейсы\\n(A/B тестирование и метрики)",
+               labelloc=t, fontsize=28, fontname="DejaVu Sans Bold"];
+
+        IABTestService [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10" COLOR="#336699" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#BBDEFB" ALIGN="CENTER"><FONT POINT-SIZE="15">«интерфейс»</FONT><BR/><B><FONT POINT-SIZE="22">IABTestService</FONT></B><BR/><FONT POINT-SIZE="15">(Управление A/B тестами)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="15"> </FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ GetActiveExperimentAsync()<BR/>    → Task&lt;ABTestExperiment?&gt;<BR/>+ GetOrAssignUserAsync(userId, experimentId)<BR/>    → Task&lt;ABTestAssignment&gt;<BR/>+ GetUserStrategyAsync(userId)<BR/>    → Task&lt;RecommendationStrategy&gt;<BR/>+ CreateExperimentAsync(...)<BR/>    → Task&lt;ABTestExperiment&gt;<BR/>+ EndExperimentAsync(experimentId) → Task</FONT></TD></TR>
+            </TABLE>
+        >];
+
+        IRecommendationMetricsService [label=<
+            <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" CELLPADDING="10" COLOR="#336699" BGCOLOR="#ffffff">
+                <TR><TD BGCOLOR="#BBDEFB" ALIGN="CENTER"><FONT POINT-SIZE="15">«интерфейс»</FONT><BR/><B><FONT POINT-SIZE="22">IRecommendationMetricsService</FONT></B><BR/><FONT POINT-SIZE="15">(Метрики рекомендаций)</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="15"> </FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="17">+ RecordImpressionAsync(...) → Task<BR/>+ RecordClickAsync(...) → Task<BR/>+ RecordPurchaseAsync(...) → Task<BR/>+ GetExperimentMetricsAsync(experimentId)<BR/>    → Task&lt;ExperimentMetrics&gt;<BR/>+ GetSystemMetricsAsync(from, to)<BR/>    → Task&lt;RecommendationSystemMetrics&gt;</FONT></TD></TR>
+            </TABLE>
+        >];
+
+        /* Мини-боксы сущностей */
+        ABTestExperiment_ref [label=<
+            <TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#FFCCBC">
+                <TR><TD ALIGN="CENTER"><B><FONT POINT-SIZE="18">ABTestExperiment</FONT></B></TD></TR>
+            </TABLE>
+        >];
+        ABTestAssignment_ref [label=<
+            <TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#E1BEE7">
+                <TR><TD ALIGN="CENTER"><B><FONT POINT-SIZE="18">ABTestAssignment</FONT></B></TD></TR>
+            </TABLE>
+        >];
+        RecommendationEvent_ref [label=<
+            <TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#9673a6" BGCOLOR="#FFF9C4">
+                <TR><TD ALIGN="CENTER"><B><FONT POINT-SIZE="18">RecommendationEvent</FONT></B></TD></TR>
+            </TABLE>
+        >];
+
+        IABTestService -> ABTestExperiment_ref [arrowhead=open, style=dashed, label="  управляет", color="#5c3d7a"];
+        IABTestService -> ABTestAssignment_ref [arrowhead=open, style=dashed, label="  назначает", color="#5c3d7a"];
+        IRecommendationMetricsService -> RecommendationEvent_ref [arrowhead=open, style=dashed, label="  записывает", color="#5c3d7a"];
+
+        { rank=same; IABTestService; IRecommendationMetricsService; }
+        { rank=same; ABTestExperiment_ref; ABTestAssignment_ref; RecommendationEvent_ref; }
+    }
+    '''
+    dot_path = OUTPUT_DIR / '_temp_class_g.dot'
+    out_path = OUTPUT_DIR / '09г_классы_AB_метрики.png'
+    dot_path.write_text(dot_code, encoding='utf-8')
+    subprocess.run(['dot', '-Tpng', f'-Gdpi={GRAPHVIZ_DPI}', str(dot_path), '-o', str(out_path)],
+                   check=True, capture_output=True)
+    dot_path.unlink()
+    print("  ✓ 09г_классы_AB_метрики.png")
+
+
 def main():
     print("=" * 55)
     print("  Генерация диаграмм для дипломной работы")
@@ -466,10 +779,14 @@ def main():
     diagram_06_ctr_results()
     diagram_07_funnel()
     diagram_08_use_case()
+    diagram_09a_class_entities()
+    diagram_09b_class_enums()
+    diagram_09v_class_interfaces()
+    diagram_09g_class_interfaces2()
     
     print()
     print("=" * 55)
-    print(f"  Готово! 8 диаграмм сохранены в:")
+    print(f"  Готово! 12 диаграмм сохранены в:")
     print(f"  {OUTPUT_DIR}")
     print("=" * 55)
 

@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Teacher private notes (local only)
+TEACHER-NOTES-*.md
+
 # dotenv files
 .env
 
