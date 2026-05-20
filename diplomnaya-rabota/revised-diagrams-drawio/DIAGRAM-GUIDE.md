@@ -23,10 +23,11 @@
 | 06 | `06_результаты_CTR.png` | Результаты CTR |
 | 07 | `07_воронка_конверсии.png` | Воронка конверсии |
 | 08 | `08_варианты_использования.png` | Диаграмма вариантов использования (Use Case) |
-| 09а | `09а_классы_сущности.png` | Диаграмма классов: Сущности |
-| 09б | `09б_классы_перечисления.png` | Диаграмма классов: Перечисления (Enum) |
-| 09в | `09в_классы_интерфейсы.png` | Диаграмма классов: Интерфейсы (часть 1) |
-| 09г | `09г_классы_AB_метрики.png` | Диаграмма классов: Интерфейсы (часть 2) |
+| 09а | `09а_классы_товары.png` | Диаграмма классов: Домен товаров |
+| 09б | `09б_классы_заказы.png` | Диаграмма классов: Домен заказов |
+| 09в | `09в_классы_пользователь.png` | Диаграмма классов: Пользователь и избранное |
+| 09г | `09г_классы_рекомендации.png` | Диаграмма классов: Рекомендации и A/B тестирование |
+| 09д | `09д_классы_купоны_CMS.png` | Диаграмма классов: Купоны и CMS |
 
 ---
 
@@ -537,254 +538,259 @@ This is a **UML Use Case diagram** showing the two main actors (user roles) and 
 ---
 
 # ═══════════════════════════════════════════════
-# 09а — Диаграмма классов: Сущности
-# `09а_классы_сущности.png`
+# 09а — Диаграмма классов: Домен товаров
+# `09а_классы_товары.png`
 # ═══════════════════════════════════════════════
 
 ## Понимание диаграммы / Understanding the Diagram / Comprendre le diagramme
 
 ### English
-This is **Part 1 of the UML class diagram** showing the **entity classes** — the C# objects that map directly to database tables via Entity Framework.
+**Part 1 of the UML class diagram** showing the **Product domain** — all entities related to product catalog management. This diagram covers 10 classes and 1 enum with full PK/FK annotations and relationship multiplicities.
 
 **Classes shown:**
-- **BaseEntity** — abstract base class with just `Id : int`. All other entities inherit from it (shown by hollow-triangle arrows labeled "наследует").
-- **UserInteraction** — records user actions. Fields: UserId, ProductId, Type (enum InteractionType), Timestamp, optional SessionId and DurationSeconds.
-- **RecommendationEvent** — records what the system recommended. Fields: UserId, RecommendedProductId, SourceProductId, EventType, Strategy, Position (1-8), optional ExperimentId, Timestamp.
-- **ABTestExperiment** — an A/B test configuration. Fields: Name, Description, ControlStrategy, TreatmentStrategy, TreatmentPercentage, StartDate, EndDate, IsActive.
-- **ABTestAssignment** — links a user to an experiment. Fields: ExperimentId, UserId, IsTreatment, AssignedAt.
+- **Product** — central entity with Id [PK], Name, Description, Price, QuantityInStock, ProductKind enum, Embedding (AI vector), and three foreign keys: ProductTypeId, ProductBrandId, CategoryId.
+- **ProductType** / **ProductBrand** / **Category** — reference tables (dictionaries) linked 1:* to Product.
+- **ProductImage** — product photos. FK → Product (1:* with Cascade delete).
+- **ProductReview** — customer reviews with Rating, Comment, ReviewDate. FK → Product and FK → AppUser.
+- **ProductOption** — option names (e.g., "Color", "Size"). M:M relationship with Product.
+- **ProductOptionValue** — specific values (e.g., "Red", "XL") with optional ColorHex. FK → ProductOption (1:*).
+- **ProductVariant** — price/stock combinations per option selection. FK → Product (1:*, Restrict delete). M:M with ProductOptionValue. Optional FK → ProductImage (SetNull).
+- **ProductKind** — enum: Simple | Variable.
 
-**Relationships:**
-- All 4 entities inherit from BaseEntity (generalization).
-- ABTestExperiment → ABTestAssignment: 1:* (one experiment has many assignments).
-- ABTestExperiment → RecommendationEvent: 0..1:* (an event may optionally be linked to an experiment).
+**Key relationships:**
+- ProductType/Brand/Category → Product: 1:* (reference dictionaries)
+- Product → ProductImage: 1:* (Cascade — deleting product deletes images)
+- Product → ProductVariant: 1:* (Restrict — can't delete product with variants)
+- Product ↔ ProductOption: M:M (join table)
+- ProductVariant ↔ ProductOptionValue: M:M (join table)
+- ProductVariant → ProductImage: 0..1 (SetNull — image deletion nullifies reference)
 
 ### Русский
-**Часть 1 UML-диаграммы классов** — классы-сущности (Entity), которые отображаются на таблицы БД через Entity Framework.
+**Часть 1 UML-диаграммы классов** — домен товаров. 10 классов и 1 перечисление с полной разметкой PK/FK и кардинальностей связей.
 
-**Классы:**
-- **BaseEntity** — абстрактный базовый класс с полем Id : int. Все сущности наследуют от него.
-- **UserInteraction** — действия пользователя (UserId, ProductId, Type, Timestamp и др.).
-- **RecommendationEvent** — события рекомендаций (что показали, каким алгоритмом, позиция).
-- **ABTestExperiment** — конфигурация A/B теста.
-- **ABTestAssignment** — привязка пользователя к эксперименту.
-
-**Связи:** Наследование от BaseEntity. ABTestExperiment → ABTestAssignment (1:*). ABTestExperiment → RecommendationEvent (0..1:*).
+**Ключевые связи:**
+- Справочники (ProductType, ProductBrand, Category) → Product: 1:*
+- Product → ProductImage: 1:* (Cascade), Product → ProductReview: 1:*, Product → ProductVariant: 1:* (Restrict)
+- Product ↔ ProductOption: M:M (многие-ко-многим)
+- ProductVariant ↔ ProductOptionValue: M:M
+- ProductVariant → ProductImage: 0..1 (SetNull)
 
 ### Français
-**Partie 1 du diagramme de classes UML** — les classes entités (C# → tables DB via Entity Framework).
-
-**Classes :** BaseEntity (base abstraite), UserInteraction, RecommendationEvent, ABTestExperiment, ABTestAssignment. Toutes héritent de BaseEntity. Relations : ABTestExperiment → ABTestAssignment (1:*).
+**Partie 1** — domaine des produits : Product, ProductType, ProductBrand, Category, ProductImage, ProductReview, ProductOption, ProductOptionValue, ProductVariant, enum ProductKind. Relations 1:*, M:M avec annotations Cascade/Restrict/SetNull.
 
 ## Что писать в дипломе
 
-> **Раздел: «Проектирование классов» (первая часть)**
+> **Раздел: «Проектирование классов» (часть 1 — товары)**
 
-На рисунках 09а–09г представлена диаграмма классов рекомендательной системы, разделённая на четыре части для удобства восприятия.
+На рисунках 09а–09д представлена полная диаграмма классов платформы электронной коммерции, разделённая на пять частей по предметным областям для удобства восприятия. Каждый класс соответствует таблице базы данных через механизм ORM (Entity Framework Core). Все связи содержат аннотации первичных (PK) и внешних (FK) ключей, а также правила каскадного поведения при удалении.
 
-На рисунке 09а показаны классы-сущности (entities), которые отображаются на таблицы базы данных через механизм ORM (Entity Framework Core). Все сущности наследуют от абстрактного базового класса BaseEntity, содержащего поле Id типа int, что обеспечивает единообразие идентификации объектов.
+На рисунке 09а показан домен товаров. Центральный класс Product содержит основные атрибуты товара (наименование, описание, цена, количество на складе), а также поле Embedding для хранения ИИ-вектора размерностью 1536, используемого в алгоритме контентных рекомендаций.
 
-Класс UserInteraction хранит информацию о действиях пользователя: идентификатор пользователя (UserId), идентификатор товара (ProductId), тип действия (Type — перечисление InteractionType), временную метку (Timestamp), а также опциональные поля для идентификатора сессии и продолжительности взаимодействия в секундах.
+Три справочника — ProductType, ProductBrand и Category — связаны с Product отношением «один ко многим» и обеспечивают классификацию товаров.
 
-Класс RecommendationEvent фиксирует каждый факт выдачи или клика по рекомендации, включая идентификаторы пользователя и товара, стратегию алгоритма, позицию в списке рекомендаций (1–8) и опциональную привязку к эксперименту A/B.
+Класс ProductImage хранит изображения товара со связью 1:* и каскадным удалением. Класс ProductReview — отзывы покупателей с рейтингом и привязкой к пользователю.
 
-Классы ABTestExperiment и ABTestAssignment реализуют модель данных для A/B тестирования: эксперимент определяет контрольную и экспериментальную стратегии, а назначение связывает каждого пользователя с конкретным экспериментом и группой.
+Для поддержки вариантов товаров (например, разные размеры и цвета) используется система опций: ProductOption (название опции) и ProductOptionValue (значение опции) связаны отношением 1:*, а Product и ProductOption — связью «многие ко многим». Класс ProductVariant хранит конкретные комбинации опций с индивидуальными ценой и складским остатком, связан с Product (1:*, Restrict) и ProductOptionValue (M:M).
 
 ## Что говорить на презентации
 
-«На этой диаграмме показаны основные классы-сущности рекомендательной системы. Все наследуют от BaseEntity. UserInteraction — это запись каждого действия пользователя. RecommendationEvent — запись каждого показа и клика рекомендации. ABTestExperiment и ABTestAssignment — модель данных для A/B тестов. Эти классы через Entity Framework отображаются непосредственно на таблицы базы данных, которые мы видели на ER-диаграмме.»
+«На первой диаграмме классов показан домен товаров — 10 классов. Центральный класс Product связан с тремя справочниками: тип, бренд и категория. Для поддержки вариантов товаров — например, один товар в разных цветах и размерах — используется система ProductOption и ProductVariant со связями многие-ко-многим. Обратите внимание на поле Embedding в Product — это ИИ-вектор для контентных рекомендаций. Все связи аннотированы правилами удаления: Cascade, Restrict или SetNull.»
 
 ---
 
 # ═══════════════════════════════════════════════
-# 09б — Диаграмма классов: Перечисления
-# `09б_классы_перечисления.png`
+# 09б — Диаграмма классов: Домен заказов
+# `09б_классы_заказы.png`
 # ═══════════════════════════════════════════════
 
 ## Понимание диаграммы / Understanding the Diagram / Comprendre le diagramme
 
 ### English
-This is **Part 2 of the class diagram** showing the three **enum types** used by the recommendation system.
+**Part 2 of the class diagram** showing the **Order domain** — orders, order items, delivery, tracking, and owned value types.
+
+**Classes shown:**
+- **Order** — main order entity with OrderDate, BuyerEmail, Subtotal, Discount, CouponCode, Status, DeliveryStatus, payment fields, and FK → DeliveryMethod.
+- **OrderItem** — line items with Price, Quantity, and FK → Order (1:* with Cascade delete).
+- **DeliveryMethod** — shipping methods (ShortName, DeliveryTime, Price). 1:* to Order.
+- **TrackingEvent** — delivery tracking events (EventDate, Status, Notes). FK → Order (1:*).
+
+**Owned types (value objects, no separate tables):**
+- **ShippingAddress** — owned by Order. Contains Name, LastName, Line1, City, State, PostalCode, Country, PhoneNumber, DeliveryNotes.
+- **PaymentSummary** — owned by Order. Contains Last4, Brand, ExpMonth, ExpYear.
+- **ProductItemOrdered** — owned by OrderItem. A snapshot of the product at order time (ProductId, ProductName, PictureUrl, SelectedOptions).
 
 **Enums:**
-1. **InteractionType** — categorizes user actions:
-   - View = 0 (viewed a product page)
-   - Click = 1 (clicked on a product)
-   - AddToCart = 2 (added to shopping cart)
-   - Purchase = 3 (bought the product)
-   - Wishlist = 4 (added to wishlist/favorites)
-   - Search = 5 (searched for a product)
-   - RecommendationClick = 6 (clicked a recommended product — important for CTR!)
-
-2. **RecommendationEventType** — categorizes recommendation tracking events:
-   - Impression = 0 (recommendation was shown to user)
-   - Click = 1 (user clicked the recommendation)
-   - AddToCart = 2 (user added recommended product to cart)
-   - Purchase = 3 (user bought the recommended product)
-
-3. **RecommendationStrategy** — the available recommendation algorithms:
-   - None = 0 (no strategy)
-   - Popular = 1 (popularity-based, the control strategy)
-   - CollaborativeFiltering = 2 (based on similar users)
-   - ContentBased = 3 (based on AI embeddings)
-   - Adaptive = 4 (the hybrid algorithm combining all of the above)
-
-**Key insight:** The `RecommendationStrategy` enum is what the A/B test switches between. Group A gets `Popular`, Group B gets `Adaptive`.
+- **OrderStatus**: Pending, PaymentReceived, PaymentFailed, PaymentMismatch, Refunded.
+- **DeliveryStatus**: AwaitingProcessing, Processing, Shipped, OutForDelivery, Delivered.
 
 ### Русский
-**Часть 2 диаграммы классов** — три перечисления (enum).
+**Часть 2** — домен заказов: Order, OrderItem, DeliveryMethod, TrackingEvent, три owned type (ShippingAddress, PaymentSummary, ProductItemOrdered) и два enum (OrderStatus, DeliveryStatus).
 
-1. **InteractionType** — типы действий: View, Click, AddToCart, Purchase, Wishlist, Search, RecommendationClick.
-2. **RecommendationEventType** — типы событий рекомендаций: Impression, Click, AddToCart, Purchase.
-3. **RecommendationStrategy** — стратегии алгоритмов: None, Popular, CollaborativeFiltering, ContentBased, Adaptive.
-
-**Ключевой момент:** В A/B тесте переключается именно RecommendationStrategy: группа А — Popular, группа Б — Adaptive.
+**Owned types** — объекты-значения, хранимые в той же таблице, что и владелец (не имеют собственного PK).
 
 ### Français
-**Partie 2** — trois types enum : InteractionType (7 valeurs), RecommendationEventType (4 valeurs), RecommendationStrategy (5 valeurs dont Adaptive = l'algorithme hybride).
+**Partie 2** — domaine des commandes : Order, OrderItem, DeliveryMethod, TrackingEvent, 3 types possédés, 2 enums.
 
 ## Что писать в дипломе
 
-> **Раздел: «Проектирование классов» (продолжение)**
+> **Раздел: «Проектирование классов» (часть 2 — заказы)**
 
-На рисунке 09б представлены перечисления (enum), используемые в рекомендательной системе.
+На рисунке 09б представлен домен заказов. Класс Order содержит дату заказа, электронную почту покупателя, сумму, скидку, статус оплаты и статус доставки. Внешний ключ DeliveryMethodId связывает заказ со способом доставки.
 
-Перечисление InteractionType определяет 7 типов взаимодействий пользователя с платформой: просмотр (View), клик (Click), добавление в корзину (AddToCart), покупка (Purchase), добавление в избранное (Wishlist), поиск (Search) и клик по рекомендации (RecommendationClick). Последний тип особенно важен для вычисления CTR рекомендательной системы.
+Класс OrderItem представляет позицию заказа (товар, цена, количество) и связан с Order отношением 1:* с каскадным удалением. Каждый OrderItem содержит embedded-объект ProductItemOrdered — снимок товара на момент заказа, что позволяет сохранить информацию даже при изменении или удалении исходного товара.
 
-Перечисление RecommendationEventType описывает 4 стадии воронки конверсии рекомендаций: показ (Impression), клик (Click), добавление в корзину (AddToCart) и покупка (Purchase).
+Класс TrackingEvent хранит историю отслеживания доставки с привязкой к заказу.
 
-Перечисление RecommendationStrategy определяет доступные алгоритмы рекомендаций: без стратегии (None), популярные товары (Popular), коллаборативная фильтрация (CollaborativeFiltering), контентный анализ (ContentBased) и адаптивный гибридный алгоритм (Adaptive). В рамках A/B тестирования контрольная группа использует стратегию Popular, экспериментальная — Adaptive.
+Embedded-объекты ShippingAddress и PaymentSummary реализуют паттерн Value Object — они не имеют собственного первичного ключа и хранятся непосредственно в таблице Order, но моделируются как отдельные классы в коде для обеспечения инкапсуляции.
 
 ## Что говорить на презентации
 
-«На этой диаграмме показаны три перечисления. InteractionType — 7 типов действий пользователя, от просмотра до клика по рекомендации. RecommendationEventType — 4 стадии воронки. И RecommendationStrategy — 5 стратегий рекомендаций. В A/B тесте мы сравниваем Popular и Adaptive.»
+«Домен заказов включает Order с позициями OrderItem, способ доставки и отслеживание. Важная деталь — owned types: адрес доставки и данные оплаты не имеют отдельных таблиц, а хранятся прямо в таблице заказа как Value Object. ProductItemOrdered — это снимок товара на момент покупки, что гарантирует целостность данных.»
 
 ---
 
 # ═══════════════════════════════════════════════
-# 09в — Диаграмма классов: Интерфейсы (часть 1)
-# `09в_классы_интерфейсы.png`
+# 09в — Диаграмма классов: Пользователь и избранное
+# `09в_классы_пользователь.png`
 # ═══════════════════════════════════════════════
 
 ## Понимание диаграммы / Understanding the Diagram / Comprendre le diagramme
 
 ### English
-This is **Part 3 of the class diagram** showing 3 **service interfaces** related to recommendations and user tracking.
+**Part 3 of the class diagram** showing the **User domain** — identity, address, and wishlist, with cross-references to Product, ProductReview, and Order from other parts.
 
-**Interfaces:**
-1. **IAdaptiveRecommendationService** — the main recommendation interface:
-   - `GetAdaptiveRecommendationsAsync(userId, count)` — runs the full hybrid algorithm for a user
-   - `GetPopularProductsAsync(count)` — gets popular products (cold start fallback)
-   - `GetCollaborativeRecommendationsAsync(userId, count)` — runs collaborative filtering only
-   - `GetContentBasedRecommendationsAsync(productId, count)` — runs content-based analysis only
+**Classes shown:**
+- **AppUser** — inherits from ASP.NET Identity's IdentityUser. Adds: FirstName, LastName, DateRegistered. Id is string (GUID).
+- **Address** — user's saved address. Linked 1:0..1 to AppUser.
+- **Wishlist** — user's wishlist container. FK → AppUser (1:0..1).
+- **WishlistItem** — items in wishlist. FK → Wishlist (1:*) and FK → Product.
 
-2. **IUserInteractionService** — tracks what users do:
-   - `TrackInteractionAsync(userId, productId, type, ...)` — records a user action
-   - `GetUserInteractionsAsync(userId, limit)` — retrieves a user's action history
-   - `GetUserTopProductsAsync(userId, count)` — gets the user's most-interacted products
-
-3. **IProductEmbeddingService** — manages AI vector embeddings:
-   - `GenerateMissingEmbeddingsAsync()` — batch-generates embeddings for all products that don't have one
-   - `GetProductEmbeddingAsync(productId)` — gets the 1536-float vector for one product
-   - `RegenerateProductEmbeddingAsync(productId)` — regenerates a single product's embedding
-
-**Dashed arrows show dependencies:**
-- IAdaptiveRecommendationService *reads* UserInteraction data and *returns* Product objects
-- IUserInteractionService *creates* UserInteraction records
-- IProductEmbeddingService *enriches* Product with embedding data
-
-**Why interfaces?** Using interfaces (not concrete classes) follows the Dependency Injection pattern in ASP.NET Core. The actual implementations are registered in DI container and can be swapped without changing consuming code.
+**Cross-domain references (shown as mini-boxes):**
+- AppUser → ProductReview: 1:* (a user writes many reviews — from Part 1)
+- AppUser → Order: 1:* (by email — from Part 2)
+- WishlistItem → Product: FK reference (from Part 1)
 
 ### Русский
-**Часть 3 диаграммы классов** — 3 сервисных интерфейса:
-
-1. **IAdaptiveRecommendationService** — главный интерфейс рекомендаций: адаптивные, популярные, коллаборативные и контентные рекомендации.
-2. **IUserInteractionService** — отслеживание действий: запись, получение истории, топ товаров.
-3. **IProductEmbeddingService** — управление ИИ-эмбеддингами: генерация, получение, регенерация.
-
-**Пунктирные стрелки:** зависимости между сервисами и сущностями (создаёт, читает, возвращает, обогащает).
-
-**Почему интерфейсы?** Паттерн Dependency Injection в ASP.NET Core — реализации можно менять без изменения вызывающего кода.
+**Часть 3** — домен пользователя: AppUser (наследует IdentityUser), Address (1:0..1), Wishlist/WishlistItem (избранное). Мини-ссылки на Product, ProductReview и Order из других частей.
 
 ### Français
-**Partie 3** — 3 interfaces de service : IAdaptiveRecommendationService (recommandations), IUserInteractionService (suivi des actions), IProductEmbeddingService (embeddings IA). Les flèches en pointillé montrent les dépendances vers les entités.
+**Partie 3** — domaine utilisateur : AppUser (hérite IdentityUser), Address, Wishlist/WishlistItem. Références croisées aux parties 1 et 2.
 
 ## Что писать в дипломе
 
-> **Раздел: «Проектирование классов» (продолжение)**
+> **Раздел: «Проектирование классов» (часть 3 — пользователь)**
 
-На рисунке 09в представлены интерфейсы сервисов, отвечающих за генерацию рекомендаций и сбор данных о поведении пользователей.
+На рисунке 09в представлен домен пользователя. Класс AppUser наследует от IdentityUser (ASP.NET Identity), добавляя поля FirstName, LastName и DateRegistered. Первичный ключ — строка формата GUID, унаследованная от IdentityUser.
 
-Интерфейс IAdaptiveRecommendationService является центральным компонентом рекомендательной системы. Метод GetAdaptiveRecommendationsAsync реализует полный гибридный алгоритм, описанный в разделе X. Методы GetPopularProductsAsync, GetCollaborativeRecommendationsAsync и GetContentBasedRecommendationsAsync предоставляют доступ к отдельным подалгоритмам, что позволяет использовать их как независимо, так и в составе гибридной модели.
+Класс Address хранит адрес пользователя (связь 1:0..1 — один пользователь может иметь один сохранённый адрес).
 
-Интерфейс IUserInteractionService отвечает за запись и извлечение данных о взаимодействиях пользователей. Метод TrackInteractionAsync вызывается при каждом значимом действии пользователя и создаёт запись в таблице UserInteractions.
+Система избранного реализована через классы Wishlist и WishlistItem. Wishlist связан с AppUser (1:0..1), а WishlistItem содержит внешние ключи на Wishlist (1:*) и Product.
 
-Интерфейс IProductEmbeddingService инкапсулирует работу с векторными представлениями товаров. Метод GenerateMissingEmbeddingsAsync выполняет пакетную генерацию эмбеддингов для всех товаров, у которых они отсутствуют, обращаясь к сервису Azure OpenAI.
-
-Использование интерфейсов вместо конкретных классов обеспечивает слабую связанность компонентов и позволяет применять паттерн внедрения зависимостей (Dependency Injection), поддерживаемый фреймворком ASP.NET Core.
+На диаграмме также показаны перекрёстные связи: AppUser → ProductReview (1:*, пользователь пишет отзывы), AppUser → Order (1:*, заказы по email).
 
 ## Что говорить на презентации
 
-«Здесь три ключевых интерфейса. IAdaptiveRecommendationService — это "мозг" системы, он запускает гибридный алгоритм и возвращает список рекомендованных товаров. IUserInteractionService записывает каждое действие пользователя. IProductEmbeddingService отвечает за генерацию ИИ-эмбеддингов через Azure OpenAI. Мы используем интерфейсы, а не конкретные классы, следуя принципу Dependency Injection.»
+«Третья часть — пользователь. AppUser наследует от ASP.NET Identity, что даёт нам аутентификацию, роли и JWT-токены из коробки. У пользователя есть адрес и список избранного. Мини-боксы показывают связи с другими доменами: отзывы, заказы, рекомендации.»
 
 ---
 
 # ═══════════════════════════════════════════════
-# 09г — Диаграмма классов: Интерфейсы (часть 2)
-# `09г_классы_AB_метрики.png`
+# 09г — Диаграмма классов: Рекомендации и A/B тестирование
+# `09г_классы_рекомендации.png`
 # ═══════════════════════════════════════════════
 
 ## Понимание диаграммы / Understanding the Diagram / Comprendre le diagramme
 
 ### English
-This is **Part 4 of the class diagram** showing 2 more **service interfaces** — for A/B testing and metrics.
+**Part 4 of the class diagram** — the **Recommendation and A/B testing domain**, the core of the thesis. Shows 4 entities, 3 enums, and cross-references to AppUser and Product.
 
-**Interfaces:**
-1. **IABTestService** — manages A/B test experiments:
-   - `GetActiveExperimentAsync()` — gets the currently running experiment (if any)
-   - `GetOrAssignUserAsync(userId, experimentId)` — assigns a user to a group (or returns existing assignment). This is where the 50/50 random split happens.
-   - `GetUserStrategyAsync(userId)` — returns which recommendation strategy a user should see (based on their group assignment)
-   - `CreateExperimentAsync(...)` — creates a new A/B test
-   - `EndExperimentAsync(experimentId)` — ends a running experiment
+**Entities:**
+- **UserInteraction** — records every user action (view, click, add to cart, purchase, etc.). FKs: UserId → AppUser (Cascade), ProductId → Product (Cascade).
+- **RecommendationEvent** — records what was recommended and what the user did with it. FKs: UserId → AppUser (Cascade), RecommendedProductId → Product (Restrict), ExperimentId → ABTestExperiment (SetNull — optional).
+- **ABTestExperiment** — defines an A/B test with control and treatment strategies, traffic split percentage, start/end dates.
+- **ABTestAssignment** — assigns a user to an experiment group. FKs: ExperimentId → ABTestExperiment (Cascade), UserId → AppUser (Cascade).
 
-2. **IRecommendationMetricsService** — records and retrieves metrics:
-   - `RecordImpressionAsync(...)` — logs when a recommendation is shown
-   - `RecordClickAsync(...)` — logs when a recommendation is clicked
-   - `RecordPurchaseAsync(...)` — logs when a recommended product is purchased
-   - `GetExperimentMetricsAsync(experimentId)` — calculates CTR, conversion for a specific experiment
-   - `GetSystemMetricsAsync(from, to)` — calculates overall system metrics for a date range
+**Enums:**
+- **InteractionType**: View, Click, AddToCart, Purchase, Wishlist, Search, RecommendationClick (7 values).
+- **RecommendationEventType**: Impression, Click, AddToCart, Purchase (4 values).
+- **RecommendationStrategy**: None, Popular, CollaborativeFiltering, ContentBased, Adaptive (5 values).
 
-**Dashed arrows show dependencies:**
-- IABTestService *manages* ABTestExperiment and *assigns* ABTestAssignment
-- IRecommendationMetricsService *writes* RecommendationEvent records
-
-**How these interfaces work together:** When a user visits the site, IABTestService determines their group. Then IAdaptiveRecommendationService (from Part 3) generates recommendations using the appropriate strategy. IRecommendationMetricsService records what was shown. Later, administrators use GetExperimentMetricsAsync to see the results.
+**Delete behaviors:**
+- AppUser → UserInteraction/RecommendationEvent/ABTestAssignment: Cascade (delete user → delete all their data)
+- Product → UserInteraction: Cascade
+- Product → RecommendationEvent: Restrict (can't delete product with recommendation history)
+- ABTestExperiment → ABTestAssignment: Cascade
+- ABTestExperiment → RecommendationEvent: SetNull (ending experiment keeps events, just nulls the link)
 
 ### Русский
-**Часть 4 диаграммы классов** — ещё 2 интерфейса: A/B тестирование и метрики.
+**Часть 4** — центральная для диплома: рекомендательная система и A/B тестирование. 4 сущности (UserInteraction, RecommendationEvent, ABTestExperiment, ABTestAssignment), 3 перечисления (InteractionType, RecommendationEventType, RecommendationStrategy).
 
-1. **IABTestService** — управление A/B тестами: получение активного эксперимента, назначение пользователя в группу (50/50), определение стратегии пользователя, создание и завершение экспериментов.
-2. **IRecommendationMetricsService** — метрики: запись показов, кликов, покупок; расчёт метрик эксперимента (CTR, конверсия); системные метрики за период.
-
-**Как все 5 интерфейсов работают вместе:** IABTestService определяет группу → IAdaptiveRecommendationService генерирует рекомендации нужной стратегией → IRecommendationMetricsService записывает результаты → IUserInteractionService фиксирует действия → IProductEmbeddingService обновляет эмбеддинги.
+**Правила удаления:** Cascade (AppUser → все дочерние), Restrict (нельзя удалить Product с историей рекомендаций), SetNull (ABTestExperiment → RecommendationEvent).
 
 ### Français
-**Partie 4** — 2 interfaces : IABTestService (gestion des tests A/B, assignation 50/50) et IRecommendationMetricsService (enregistrement et calcul des métriques CTR/conversion).
+**Partie 4** — recommandations et tests A/B : 4 entités, 3 enums. Comportements de suppression : Cascade, Restrict, SetNull. C'est le cœur du mémoire.
 
 ## Что писать в дипломе
 
-> **Раздел: «Проектирование классов» (завершение)**
+> **Раздел: «Проектирование классов» (часть 4 — рекомендации)**
 
-На рисунке 09г представлены интерфейсы, обеспечивающие функционирование модуля A/B тестирования и сбора метрик.
+На рисунке 09г представлен домен рекомендательной системы — ключевая часть архитектуры платформы.
 
-Интерфейс IABTestService реализует полный жизненный цикл A/B экспериментов. Метод GetOrAssignUserAsync при первом обращении пользователя к рекомендациям выполняет случайное распределение в контрольную или экспериментальную группу с заданным процентом разделения трафика. Последующие обращения возвращают ранее сохранённое назначение, что гарантирует консистентность эксперимента. Метод GetUserStrategyAsync возвращает стратегию рекомендаций для конкретного пользователя на основе его назначения в группу.
+Класс UserInteraction хранит каждое действие пользователя на платформе: просмотр, клик, добавление в корзину, покупку и т.д. Перечисление InteractionType определяет 7 типов взаимодействий. Поля UserId и ProductId являются внешними ключами к AppUser и Product соответственно, с каскадным удалением.
 
-Интерфейс IRecommendationMetricsService отвечает за сбор и агрегацию метрик. Методы RecordImpressionAsync, RecordClickAsync и RecordPurchaseAsync создают записи в таблице RecommendationEvents. Метод GetExperimentMetricsAsync вычисляет ключевые показатели (CTR, конверсия) для конкретного эксперимента, а GetSystemMetricsAsync — общесистемные метрики за произвольный временной период.
+Класс RecommendationEvent фиксирует каждый факт выдачи рекомендации, включая идентификатор рекомендованного товара, стратегию алгоритма, позицию в списке и опциональную привязку к эксперименту A/B. Перечисление RecommendationStrategy определяет 5 стратегий: None, Popular, CollaborativeFiltering, ContentBased и Adaptive (гибридный алгоритм). В A/B тестировании контрольная группа использует Popular, экспериментальная — Adaptive.
 
-В совокупности пять интерфейсов (09в и 09г) образуют замкнутый цикл: IABTestService определяет стратегию → IAdaptiveRecommendationService генерирует рекомендации → IRecommendationMetricsService фиксирует показы и клики → IUserInteractionService записывает дальнейшие действия → IProductEmbeddingService обеспечивает актуальность векторных представлений.
+Классы ABTestExperiment и ABTestAssignment реализуют модель данных для A/B тестирования. Эксперимент определяет контрольную и экспериментальную стратегии, процент распределения трафика, даты начала и окончания. Назначение связывает пользователя с экспериментом и группой.
+
+Правила каскадного поведения обеспечивают целостность данных: удаление пользователя каскадно удаляет все его взаимодействия и назначения, но удаление товара с историей рекомендаций запрещено (Restrict), а завершение эксперимента сохраняет события с обнулением ссылки (SetNull).
 
 ## Что говорить на презентации
 
-«И последняя часть диаграммы классов — два интерфейса для A/B тестирования и метрик. IABTestService назначает пользователя в группу и определяет, какую стратегию рекомендаций он увидит. IRecommendationMetricsService записывает все показы и клики и вычисляет CTR. Вместе все пять интерфейсов из частей 3 и 4 образуют замкнутый цикл: определение стратегии, генерация рекомендаций, сбор метрик, обучение на действиях пользователя.»
+«Четвёртая часть — сердце диплома: рекомендательная система. UserInteraction записывает каждое действие пользователя — 7 типов от просмотра до клика по рекомендации. RecommendationEvent фиксирует каждый показ рекомендации с указанием стратегии алгоритма. ABTestExperiment и ABTestAssignment — модель данных A/B тестов. Обратите внимание на правила удаления: Cascade, Restrict и SetNull — они обеспечивают целостность данных при любых операциях.»
+
+---
+
+# ═══════════════════════════════════════════════
+# 09д — Диаграмма классов: Купоны и CMS
+# `09д_классы_купоны_CMS.png`
+# ═══════════════════════════════════════════════
+
+## Понимание диаграммы / Understanding the Diagram / Comprendre le diagramme
+
+### English
+**Part 5 of the class diagram** — **Coupons and CMS (Content Management System)** entities.
+
+**Coupon subsystem:**
+- **Coupon** — discount coupon with Code, AmountOff/PercentOff, validity dates, usage limits, and flags (FirstTimeCustomerOnly, LimitOnePerCustomer).
+- **CouponProduct** — join table for M:M between Coupon and Product (composite PK: CouponId + ProductId).
+- **CouponUsage** — tracks which user used which coupon and when. FKs: CouponId, AppUserId.
+
+**CMS entities (independent, no FK relationships):**
+- **ContentBlock** — editable content sections (Key, Title, Content, IsHtml).
+- **HeroSlide** — homepage banner slides (ImageUrl, Title, Subtext, ButtonLink, DisplayOrder, IsActive).
+- **SiteSetting** — key-value site configuration.
+- **FaqItem** — FAQ entries (Question, Answer, DisplayOrder, IsPublished).
+- **EmailTemplate** — email templates (Name, Subject, Body).
+
+### Русский
+**Часть 5** — купоны (Coupon, CouponProduct, CouponUsage) и CMS-сущности (ContentBlock, HeroSlide, SiteSetting, FaqItem, EmailTemplate). CMS-сущности независимы — не имеют внешних ключей к другим таблицам.
+
+### Français
+**Partie 5** — coupons (Coupon, CouponProduct, CouponUsage) et entités CMS (ContentBlock, HeroSlide, SiteSetting, FaqItem, EmailTemplate). Les entités CMS sont indépendantes.
+
+## Что писать в дипломе
+
+> **Раздел: «Проектирование классов» (часть 5 — купоны и CMS)**
+
+На рисунке 09д представлены подсистемы купонов и управления контентом.
+
+Класс Coupon реализует функциональность скидочных купонов с гибкой настройкой: фиксированная скидка (AmountOff) или процентная (PercentOff), ограничение по датам действия, лимит использований, флаги «только для новых покупателей» и «одно использование на клиента». Связующая таблица CouponProduct (составной PK: CouponId + ProductId) позволяет ограничить действие купона определёнными товарами. Класс CouponUsage ведёт учёт использования купонов.
+
+Блок CMS (Content Management System) включает пять самостоятельных сущностей: ContentBlock для редактируемых текстовых блоков, HeroSlide для баннеров главной страницы, SiteSetting для пар «ключ-значение» настроек, FaqItem для раздела «Часто задаваемые вопросы» и EmailTemplate для шаблонов электронных писем. Эти сущности не имеют внешних ключей к другим таблицам и управляются через административную панель.
+
+## Что говорить на презентации
+
+«Последняя часть — купоны и CMS. Система купонов поддерживает фиксированные и процентные скидки с различными ограничениями. CMS-блок — пять независимых сущностей для управления контентом сайта через админ-панель без привлечения разработчика.»
 
 ---
 
@@ -798,7 +804,7 @@ This is **Part 4 of the class diagram** showing 2 more **service interfaces** �
 
 1. **Нумерация рисунков:** Замените «рисунок X» на фактический номер в вашем документе.
 2. **Порядок размещения:** Рекомендуемый порядок в дипломе:
-   - Глава «Проектирование»: 01 (архитектура) → 08 (use case) → 02 (ER) → 09а–09г (классы)
+   - Глава «Проектирование»: 01 (архитектура) → 08 (use case) → 02 (ER) → 09а–09д (классы)
    - Глава «Алгоритмы»: 03 (алгоритм) → 04 (формула)
    - Глава «Экспериментальная оценка»: 05 (A/B тест) → 06 (CTR) → 07 (воронка)
 3. **Размер:** Все диаграммы в высоком разрешении (150 DPI). В Word вставляйте на ширину страницы.
@@ -810,7 +816,7 @@ This is **Part 4 of the class diagram** showing 2 more **service interfaces** �
 2. **Минимум текста на слайде** — диаграмма говорит сама за себя, вы объясняете устно.
 3. **Ключевые цифры:** 87.5% улучшение CTR и 5× рост покупок — это ваши главные аргументы.
 4. **Порядок для презентации:** 01 → 03 → 04 → 05 → 06 → 07 (результаты в конце = сильный финал).
-5. **Для диаграмм 09а–09г:** Можно показать одну общую и одну детальную, не обязательно все четыре.
+5. **Для диаграмм 09а–09д:** Можно показать 2–3 наиболее важные (09а товары, 09г рекомендации), не обязательно все пять.
 
 ## General Notes / Общие замечания / Notes générales
 
