@@ -1,10 +1,10 @@
 [
   {
-    "Name": "Angular Speedster Board 2000",
+    "Name": "AlpineX Карвинг 160",
     "Description": "Высокоскоростная доска для профессионалов. Карбоновая основа обеспечивает лёгкость и маневренность на любых склонах.",
     "Price": 18000,
     "Type": "Доски",
-    "Brand": "Angular",
+    "Brand": "AlpineX",
     "Category": "Снаряжение",
     "QuantityInStock": 82,
     "Images": [
@@ -19,11 +19,11 @@
     ]
   },
   {
-    "Name": "Green Angular Board 3000",
+    "Name": "AlpineX Фрирайд 155",
     "Description": "Универсальная доска для фрирайда. Подходит как для начинающих, так и для опытных райдеров.",
     "Price": 13500,
     "Type": "Доски",
-    "Brand": "Angular",
+    "Brand": "AlpineX",
     "Category": "Снаряжение",
     "QuantityInStock": 75,
     "Images": [
@@ -38,13 +38,13 @@
     ]
   },
   {
-    "Name": "Core Board Speed Rush 3",
+    "Name": "NordWave Скоростной Спуск 162",
     "Description": "Доска для скоростного спуска. Жёсткая конструкция и уникальный дизайн для максимального контроля.",
     "Price": 16200,
     "Type": "Доски",
-    "Brand": "NetCore",
+    "Brand": "NordWave",
     "QuantityInStock": 3,
-    "Category": "Одежда",
+    "Category": "Снаряжение",
     "Images": [
       {
         "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095217/products/sb-core1_brkgbw.webp",
@@ -57,13 +57,13 @@
     ]
   },
   {
-    "Name": "Net Core Super Board",
+    "Name": "NordWave Фристайл Про 158",
     "Description": "Премиальная доска с усиленным кантом. Отличный выбор для фристайла и прыжков.",
     "Price": 27000,
     "Type": "Доски",
-    "Brand": "NetCore",
+    "Brand": "NordWave",
     "QuantityInStock": 52,
-    "Category": "Одежда",
+    "Category": "Снаряжение",
     "Images": [
       {
         "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095218/products/sb-core2_e1sf3d.webp",
@@ -72,13 +72,13 @@
     ]
   },
   {
-    "Name": "React Board Super Whizzy Fast",
+    "Name": "FrostLine Карвинг Элит 161",
     "Description": "Легендарная доска для карвинга. Новейшие технологии для плавных поворотов на высокой скорости.",
     "Price": 22500,
     "Type": "Доски",
-    "Brand": "React",
+    "Brand": "FrostLine",
     "QuantityInStock": 97,
-    "Category": "Аксессуары",
+    "Category": "Снаряжение",
     "Images": [
       {
         "Url": "https://res.cloudinary.com/dyzeuqi75/image/upload/v1753095218/products/sb-react1_vlnrq7.webp",
@@ -87,12 +87,12 @@
     ]
   },
   {
-    "Name": "Typescript Entry Board",
+    "Name": "Summit Базовая 150",
     "Description": "Доска для начинающих райдеров. Мягкий прогиб и прощающий флекс помогут освоить первые повороты.",
     "Price": 10800,
     "Type": "Доски",
-    "Brand": "Typescript",
-    "Category": "Аксессуары",
+    "Brand": "Summit",
+    "Category": "Снаряжение",
     "QuantityInStock": 37,
     "Images": [
       {
@@ -102,12 +102,12 @@
     ]
   },
   {
-    "Name": "Core Blue Hat",
+    "Name": "NordWave Шапка Мерино",
     "Description": "Стильная шапка из мериносовой шерсти. Сохраняет тепло даже в сильный мороз.",
     "Price": 900,
     "Type": "Шапки",
-    "Brand": "NetCore",
-    "Category": "Электроника",
+    "Brand": "NordWave",
+    "Category": "Одежда",
     "QuantityInStock": 32,
     "Images": [
       {
@@ -117,12 +117,12 @@
     ]
   },
   {
-    "Name": "Blue Code Gloves",
+    "Name": "StormRider Перчатки Сенсор",
     "Description": "Тёплые перчатки с сенсорными кончиками. Идеальны для использования смартфона на морозе.",
     "Price": 1620,
     "Type": "Перчатки",
-    "Brand": "VS Code",
-    "Category": "Защита",
+    "Brand": "StormRider",
+    "Category": "Аксессуары",
     "QuantityInStock": 74,
     "Images": [
       {
@@ -132,12 +132,12 @@
     ]
   },
   {
-    "Name": "Green Code Gloves",
+    "Name": "StormRider Перчатки Мембрана GTX",
     "Description": "Влагостойкие перчатки для активного отдыха. Мембрана Gore-Tex защищает от ветра и снега.",
     "Price": 1350,
     "Type": "Перчатки",
-    "Brand": "VS Code",
-    "Category": "Обслуживание",
+    "Brand": "StormRider",
+    "Category": "Аксессуары",
     "QuantityInStock": 19,
     "Images": [
       {
@@ -147,12 +147,12 @@
     ]
   },
   {
-    "Name": "Purple React Gloves",
+    "Name": "FrostLine Перчатки Спорт",
     "Description": "Спортивные перчатки с усиленной ладонью. Отличное сцепление и защита от ударов.",
     "Price": 1440,
     "Type": "Перчатки",
-    "Brand": "React",
-    "Category": "Обслуживание",
+    "Brand": "FrostLine",
+    "Category": "Аксессуары",
     "QuantityInStock": 77,
     "Images": [
       {
@@ -162,12 +162,12 @@
     ]
   },
   {
-    "Name": "Green React Gloves",
+    "Name": "FrostLine Перчатки Кожа Премиум",
     "Description": "Утеплённые перчатки из натуральной кожи. Элегантный дизайн и высокое качество материалов.",
     "Price": 1260,
     "Type": "Перчатки",
-    "Brand": "React",
-    "Category": "Одежда",
+    "Brand": "FrostLine",
+    "Category": "Аксессуары",
     "QuantityInStock": 45,
     "Images": [
       {
@@ -177,12 +177,12 @@
     ]
   },
   {
-    "Name": "Redis Red Boots",
+    "Name": "PeakGuard Ботинки Термо BOA",
     "Description": "Водонепроницаемые ботинки для сноуборда. BOA-шнуровка и термоизоляция Thinsulate.",
     "Price": 22500,
     "Type": "Ботинки",
-    "Brand": "Redis",
-    "Category": "Одежда",
+    "Brand": "PeakGuard",
+    "Category": "Снаряжение",
     "QuantityInStock": 49,
     "Images": [
       {
@@ -192,12 +192,12 @@
     ]
   },
   {
-    "Name": "Core Red Boots",
+    "Name": "NordWave Ботинки Универсал",
     "Description": "Ботинки средней жёсткости для универсального катания. Анатомическая стелька и система быстрой шнуровки.",
     "Price": 17100,
     "Type": "Ботинки",
-    "Brand": "NetCore",
-    "Category": "Защита",
+    "Brand": "NordWave",
+    "Category": "Снаряжение",
     "QuantityInStock": 28,
     "Images": [
       {
@@ -207,12 +207,12 @@
     ]
   },
   {
-    "Name": "Core Purple Boots",
+    "Name": "NordWave Ботинки Агрессив",
     "Description": "Жёсткие ботинки для агрессивного катания. Рассчитаны на высокие скорости и крутые склоны.",
     "Price": 18000,
     "Type": "Ботинки",
-    "Brand": "NetCore",
-    "Category": "Электроника",
+    "Brand": "NordWave",
+    "Category": "Снаряжение",
     "QuantityInStock": 69,
     "Images": [
       {
@@ -222,12 +222,12 @@
     ]
   },
   {
-    "Name": "Angular Purple Boots",
+    "Name": "AlpineX Ботинки Парк",
     "Description": "Лёгкие ботинки для паркового катания. Гибкая подошва и мягкий внутренник.",
     "Price": 13500,
     "Type": "Ботинки",
-    "Brand": "Angular",
-    "Category": "Электроника",
+    "Brand": "AlpineX",
+    "Category": "Снаряжение",
     "QuantityInStock": 35,
     "Images": [
       {
@@ -237,12 +237,12 @@
     ]
   },
   {
-    "Name": "Angular Blue Boots",
+    "Name": "AlpineX Ботинки Комфорт Auto-Fit",
     "Description": "Комфортные ботинки для длительного катания. Технология Auto-Fit адаптирует внутренник под ногу.",
     "Price": 16200,
     "Type": "Ботинки",
-    "Brand": "Angular",
-    "Category": "Защита",
+    "Brand": "AlpineX",
+    "Category": "Снаряжение",
     "QuantityInStock": 27,
     "Images": [
       {

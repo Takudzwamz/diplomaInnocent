@@ -69,7 +69,7 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         var settings = await _siteSettings.GetSettingsAsync();
-        var storeName = settings.GetValueOrDefault("StoreName", "Devs Store");
+        var storeName = settings.GetValueOrDefault("StoreName", "СпортПик");
         var logoUrl = settings.GetValueOrDefault("StoreLogoUrl", ""); // Use logo as default image
 
         ViewData["Title"] = $"{storeName} — Качественные товары и аксессуары онлайн";

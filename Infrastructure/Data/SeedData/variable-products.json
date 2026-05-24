@@ -1,10 +1,10 @@
 [
   {
-    "Name": "React Woolen Hat",
+    "Name": "FrostLine Шапка Шерстяная",
     "Description": "Тёплая шерстяная шапка на каждый день. Доступна в нескольких цветах.",
     "Price": 1080,
     "Type": "Шапки",
-    "Brand": "React",
+    "Brand": "FrostLine",
     "Category": "Одежда",
     "Options": [
       "Цвет"
@@ -29,12 +29,12 @@
     ]
   },
   {
-    "Name": "VS Code Gloves",
-    "Description": "Премиальные перчатки для работы и активного отдыха. Доступны в разных цветах и размерах.",
+    "Name": "StormRider Перчатки Про",
+    "Description": "Премиальные перчатки для активного отдыха. Доступны в разных цветах и размерах.",
     "Price": 1440,
     "Type": "Перчатки",
-    "Brand": "VS Code",
-    "Category": "Обслуживание",
+    "Brand": "StormRider",
+    "Category": "Аксессуары",
     "Options": [
       "Цвет",
       "Размер"
@@ -97,12 +97,12 @@
     ]
   },
   {
-    "Name": "React Performance Gloves",
+    "Name": "FrostLine Перчатки Спорт Актив",
     "Description": "Высокопроизводительные перчатки для спорта. Несколько вариантов цвета и размера.",
     "Price": 1350,
     "Type": "Перчатки",
-    "Brand": "React",
-    "Category": "Одежда",
+    "Brand": "FrostLine",
+    "Category": "Аксессуары",
     "Options": [
       "Цвет",
       "Размер"
@@ -165,12 +165,12 @@
     ]
   },
   {
-    "Name": "NetCore Developer Boots",
+    "Name": "NordWave Ботинки Профи",
     "Description": "Профессиональные ботинки для сноуборда. Доступны в нескольких размерах.",
     "Price": 17550,
     "Type": "Ботинки",
-    "Brand": "NetCore",
-    "Category": "Защита",
+    "Brand": "NordWave",
+    "Category": "Снаряжение",
     "Options": [
       "Размер"
     ],
@@ -210,12 +210,12 @@
     ]
   },
   {
-    "Name": "Angular Pro Boots",
+    "Name": "AlpineX Ботинки Продвинутые",
     "Description": "Ботинки для продвинутых райдеров. Усиленная конструкция и максимальный отклик.",
     "Price": 14850,
     "Type": "Ботинки",
-    "Brand": "Angular",
-    "Category": "Одежда",
+    "Brand": "AlpineX",
+    "Category": "Снаряжение",
     "Options": [
       "Размер"
     ],
@@ -255,12 +255,12 @@
     ]
   },
   {
-    "Name": "Core Performance Hat",
+    "Name": "NordWave Шапка Спорт",
     "Description": "Спортивная шапка с технологией отвода влаги. Лёгкая и дышащая.",
     "Price": 900,
     "Type": "Шапки",
-    "Brand": "NetCore",
-    "Category": "Аксессуары",
+    "Brand": "NordWave",
+    "Category": "Одежда",
     "Options": [
       "Цвет"
     ],
@@ -284,12 +284,12 @@
     ]
   },
   {
-    "Name": "Redis Premium Boots",
+    "Name": "PeakGuard Ботинки Премиум Термо",
     "Description": "Премиальные ботинки с системой подогрева стельки. Максимальный комфорт в любую погоду.",
     "Price": 22500,
     "Type": "Ботинки",
-    "Brand": "Redis",
-    "Category": "Одежда",
+    "Brand": "PeakGuard",
+    "Category": "Снаряжение",
     "Options": [
       "Размер"
     ],

@@ -455,7 +455,7 @@ public class StoreContextSeed
         var allSettings = new List<SiteSetting>
         {
             // General
-            new() { Key = "StoreName", Value = "Devs Store" },
+            new() { Key = "StoreName", Value = "СпортПик" },
             new() { Key = "StoreLogoUrl", Value = "" },
             new() { Key = "StoreFaviconUrl", Value = "" },
             new() { Key = "PublicUrl", Value = "http://localhost:5106" },
@@ -650,7 +650,7 @@ public class StoreContextSeed
                                     {ButtonText}
                                 </a>
                             </div>
-                            <p style="margin-top: 30px;">Приятных покупок,<br><strong>Команда Devs Store</strong></p>
+                            <p style="margin-top: 30px;">Приятных покупок,<br><strong>Команда СпортПик</strong></p>
                         </div>
                     </div>
                     """
@@ -707,7 +707,7 @@ public class StoreContextSeed
                 new()
                 {
                     Name = "Объявление магазина",
-                    Subject = "Важное обновление от Devs Store",
+                    Subject = "Важное обновление от СпортПик",
                     Body = """
                     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
                         <div style="background-color: #6c757d; color: #ffffff; padding: 20px; text-align: center;">
@@ -717,7 +717,7 @@ public class StoreContextSeed
                             <p>Здравствуйте,</p>
                             <p>{BodyText}</p>
                             <p>Если у вас есть вопросы, не стесняйтесь обращаться к нам.</p>
-                            <p>С уважением,<br><strong>Команда Devs Store</strong></p>
+                            <p>С уважением,<br><strong>Команда СпортПик</strong></p>
                         </div>
                     </div>
                     """

@@ -21,7 +21,7 @@ public class EmailSender : IEmailSender
         
         var settings = _siteSettings.GetSettingsAsync().Result;
         _apiKey = settings.GetValueOrDefault("SendGrid_ApiKey") ?? string.Empty;
-        _storeName = settings.GetValueOrDefault("StoreName", "Devs Store") ?? "Devs Store";
+        _storeName = settings.GetValueOrDefault("StoreName", "СпортПик") ?? "СпортПик";
         _adminEmail = settings.GetValueOrDefault("AdminNotificationEmail", "sputnikdevs@sputnikdevs.com") ?? "sputnikdevs@sputnikdevs.com";
     }
 

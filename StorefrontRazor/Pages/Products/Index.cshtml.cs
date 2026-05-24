@@ -133,7 +133,7 @@ public class IndexModel : BasePageModel
         
         // --- 4. ADD THIS SEO BLOCK ---
         var settings = await _siteSettings.GetSettingsAsync();
-        var storeName = settings.GetValueOrDefault("StoreName", "Devs Store");
+        var storeName = settings.GetValueOrDefault("StoreName", "СпортПик");
         var logoUrl = settings.GetValueOrDefault("StoreLogoUrl", ""); // Use logo as default image
 
         var title = "All Products";
@@ -316,7 +316,7 @@ public class IndexModel : BasePageModel
 
         // Set SEO metadata for AI search
         var settings = await _siteSettings.GetSettingsAsync();
-        var storeName = settings.GetValueOrDefault("StoreName", "Devs Store");
+        var storeName = settings.GetValueOrDefault("StoreName", "СпортПик");
         ViewData["Title"] = $"AI Search: {SearchTerm} | {storeName}";
         ViewData["MetaDescription"] = $"AI-powered search results for '{SearchTerm}' at {storeName}.";
     }

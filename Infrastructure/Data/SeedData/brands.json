@@ -1,8 +1,8 @@
 [
-  { "Name": "Angular" },
-  { "Name": "NetCore" },
-  { "Name": "React" },
-  { "Name": "Typescript" },
-  { "Name": "VS Code" },
-  { "Name": "Redis" }
+  { "Name": "AlpineX" },
+  { "Name": "NordWave" },
+  { "Name": "FrostLine" },
+  { "Name": "Summit" },
+  { "Name": "StormRider" },
+  { "Name": "PeakGuard" }
 ]

@@ -1,10 +1,10 @@
-# Devs Store
+# СпортПик
 
-> An online storefront for quality products, accessories, and developer items.
+> Интернет-магазин спортивного снаряжения и экипировки для зимних видов спорта.
 
 ## About
 
-Devs Store is an e-commerce platform offering a curated selection of products across multiple categories and brands. We provide a seamless shopping experience with features including product search, filtering by brand/category/type, customer reviews, wishlists, and secure checkout.
+СпортПик is an e-commerce platform offering a curated selection of products across multiple categories and brands. We provide a seamless shopping experience with features including product search, filtering by brand/category/type, customer reviews, wishlists, and secure checkout.
 
 ## Key Pages
 
