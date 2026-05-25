@@ -488,3 +488,6 @@ $RECYCLE.BIN/
 
 # App settings with secrets
 **/appsettings.json
+
+**/bin/
+**/obj/
