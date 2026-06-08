@@ -388,47 +388,101 @@ def diagram_04_hybrid_formula():
 
 
 def diagram_05_ab_test():
-    """Диаграмма 5: Процесс A/B тестирования."""
-    dot_code = '''
-    digraph ABTest {
-        rankdir=TB;
-        nodesep=1.2;
-        ranksep=1.4;
-        pad="1.0,0.8";
-        node [shape=box, style="filled,rounded", fontname="DejaVu Sans", fontsize=22, margin="0.5,0.4"];
-        edge [fontname="DejaVu Sans", fontsize=18, penwidth=2.0];
-        
-        graph [label="Процесс A/B тестирования", 
-               labelloc=t, fontsize=30, fontname="DejaVu Sans Bold"];
-        
-        user [label="Новый пользователь\\nзаходит на сайт", fillcolor="#E3F2FD"];
-        split [label="Случайное распределение\\n50% / 50%", shape=diamond, fillcolor="#FFF9C4"];
-        
-        control [label="Группа А (контроль)\\n\\nАлгоритм: Popular\\nПросто популярные товары", fillcolor="#FFCDD2"];
-        treatment [label="Группа Б (эксперимент)\\n\\nАлгоритм: Adaptive\\nГибридная модель", fillcolor="#C8E6C9"];
-        
-        metrics [label="Записываем метрики:\\n• Показы рекомендаций\\n• Клики\\n• Добавления в корзину\\n• Покупки", fillcolor="#F5F5F5"];
-        
-        compare [label="Сравниваем CTR и конверсию\\nдвух групп", fillcolor="#E1BEE7"];
-        
-        result [label="Вывод: Adaptive эффективнее\\nCTR: 15% vs 8% (+87.5%)", fillcolor="#A5D6A7", style="filled,rounded,bold"];
-        
-        user -> split;
-        split -> control [label="  50%"];
-        split -> treatment [label="  50%"];
-        control -> metrics;
-        treatment -> metrics;
-        metrics -> compare;
-        compare -> result;
-    }
-    '''
-    
-    dot_path = OUTPUT_DIR / '_temp_ab.dot'
-    out_path = OUTPUT_DIR / '05_AB_тестирование.png'
-    dot_path.write_text(dot_code, encoding='utf-8')
-    subprocess.run(['dot', '-Tpng', f'-Gdpi={GRAPHVIZ_DPI}', str(dot_path), '-o', str(out_path)],
-                   check=True, capture_output=True)
-    dot_path.unlink()
+    """Диаграмма 5: Процесс A/B тестирования (matplotlib)."""
+    from matplotlib.patches import FancyBboxPatch
+
+    fig, ax = plt.subplots(1, 1, figsize=(16, 22))
+    ax.set_xlim(0, 16)
+    ax.set_ylim(0, 22)
+    ax.set_aspect('equal')
+    ax.axis('off')
+    ax.set_title('Процесс A/B тестирования', fontsize=28, fontweight='bold', pad=20)
+
+    def draw_rect(x, y, w, h, text, color, fontsize=14):
+        rect = FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.15",
+                              facecolor=color, edgecolor='#333333', linewidth=2)
+        ax.add_patch(rect)
+        ax.text(x + w/2, y + h/2, text, ha='center', va='center',
+                fontsize=fontsize, fontweight='bold', wrap=True)
+
+    def draw_diamond(cx, cy, w, h, text, color):
+        diamond = plt.Polygon([
+            (cx, cy + h/2),
+            (cx + w/2, cy),
+            (cx, cy - h/2),
+            (cx - w/2, cy),
+        ], closed=True, facecolor=color, edgecolor='#333333', linewidth=2)
+        ax.add_patch(diamond)
+        ax.text(cx, cy, text, ha='center', va='center', fontsize=13, fontweight='bold')
+
+    def arrow_down(x1, y1, x2, y2):
+        ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
+                    arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+
+    # ========== LAYOUT ==========
+    # Row 1: Start box (5, 19.5, 6, 1.2) → bottom 19.5, top 20.7
+    draw_rect(5, 19.5, 6, 1.2, 'Новый пользователь\nзаходит на сайт', '#E3F2FD', 14)
+
+    # Arrow: start bottom (19.5) → diamond top (17.3 + 1.0 = 18.3)
+    arrow_down(8, 19.5, 8, 18.3)
+
+    # Row 2: Diamond — center (8, 17.3), w=7, h=2 → top 18.3, bottom 16.3
+    draw_diamond(8, 17.3, 7, 2, 'Случайное распределение\n50% / 50%', '#FFF9C4')
+
+    # 50% left — diamond left (4.5) → control box top (15.6)
+    ax.plot([4.5, 3.5], [17.3, 17.3], color='#333333', lw=2.5)
+    ax.plot([3.5, 3.5], [17.3, 15.75], color='#333333', lw=2.5)
+    ax.annotate('', xy=(3.5, 15.6), xytext=(3.5, 15.75),
+                arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+    ax.text(3.7, 16.2, '50%', fontsize=15, fontweight='bold', color='#333333')
+
+    # 50% right — diamond right (11.5) → treatment box top (15.6)
+    ax.plot([11.5, 12.5], [17.3, 17.3], color='#333333', lw=2.5)
+    ax.plot([12.5, 12.5], [17.3, 15.75], color='#333333', lw=2.5)
+    ax.annotate('', xy=(12.5, 15.6), xytext=(12.5, 15.75),
+                arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+    ax.text(11.7, 16.2, '50%', fontsize=15, fontweight='bold', color='#333333')
+
+    # Row 3: Control (left) and Treatment (right) — both bottom 13.4, top 15.6
+    draw_rect(0.8, 13.4, 5.5, 2.2,
+              'Группа А (контроль)\n\nАлгоритм: Popular\nПросто популярные товары', '#FFCDD2', 13)
+    draw_rect(9.7, 13.4, 5.5, 2.2,
+              'Группа Б (эксперимент)\n\nАлгоритм: Adaptive\nГибридная модель', '#C8E6C9', 13)
+
+    # Control bottom (13.4) → merge into metrics top (10.3 + 2.5 = 12.8)
+    # Left line: down then right
+    ax.plot([3.5, 3.5], [13.4, 12.0], color='#333333', lw=2.5)
+    ax.plot([3.5, 8], [12.0, 12.0], color='#333333', lw=2.5)
+    # Right line: down then left
+    ax.plot([12.5, 12.5], [13.4, 12.0], color='#333333', lw=2.5)
+    ax.plot([12.5, 8], [12.0, 12.0], color='#333333', lw=2.5)
+    # Arrow from merge point down to metrics top
+    ax.plot([8, 8], [12.0, 10.95], color='#333333', lw=2.5)
+    ax.annotate('', xy=(8, 10.8), xytext=(8, 10.95),
+                arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+
+    # Row 4: Metrics box (3.5, 8.3, 9, 2.5) → bottom 8.3, top 10.8
+    draw_rect(3.5, 8.3, 9, 2.5,
+              'Записываем метрики:\n• Показы рекомендаций\n• Клики\n• Добавления в корзину\n• Покупки', '#F5F5F5', 13)
+
+    # Arrow: metrics bottom (8.3) → compare top (6.3 + 1.5 = 7.8)
+    arrow_down(8, 8.3, 8, 7.8)
+
+    # Row 5: Compare box (3.5, 6.3, 9, 1.5) → bottom 6.3, top 7.8
+    draw_rect(3.5, 6.3, 9, 1.5,
+              'Сравниваем CTR и конверсию\nдвух групп', '#E1BEE7', 14)
+
+    # Arrow: compare bottom (6.3) → result top (3.8 + 1.5 = 5.3)
+    arrow_down(8, 6.3, 8, 5.3)
+
+    # Row 6: Result box (3.5, 3.8, 9, 1.5) → bottom 3.8, top 5.3
+    draw_rect(3.5, 3.8, 9, 1.5,
+              'Вывод: Adaptive эффективнее\nCTR: 15% vs 8% (+87.5%)', '#A5D6A7', 14)
+
+    plt.tight_layout()
+    plt.savefig(OUTPUT_DIR / '05_AB_тестирование.png', dpi=180, bbox_inches='tight',
+                facecolor='white', edgecolor='none')
+    plt.close()
     print("  ✓ 05_AB_тестирование.png")
 
 
