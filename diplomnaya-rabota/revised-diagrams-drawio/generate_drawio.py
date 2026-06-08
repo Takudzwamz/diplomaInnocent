@@ -207,12 +207,13 @@ def diagram_03_algorithm_flowchart():
         edge [fontname="DejaVu Sans", fontsize=18, penwidth=2.0];
         
         graph [label="Алгоритм генерации рекомендаций", 
-               labelloc=t, fontsize=30, fontname="DejaVu Sans Bold"];
+               labelloc=t, fontsize=30, fontname="DejaVu Sans Bold",
+               ordering=out];
         
         start [label="Пользователь\\nоткрывает страницу", fillcolor="#E3F2FD"];
-        check [label="Есть ли история\\nвзаимодействий?", shape=diamond, fillcolor="#FFF9C4"];
-        cold [label="Холодный старт:\\nпоказать популярные\\nтовары за 30 дней", fillcolor="#FFCCBC"];
+        check [label="Есть ли история\\nвзаимодействий?", shape=diamond, fillcolor="#FFF9C4", ordering=out];
         hybrid [label="Запустить гибридный\\nалгоритм", fillcolor="#C8E6C9"];
+        cold [label="Холодный старт:\\nпоказать популярные\\nтовары за 30 дней", fillcolor="#FFCCBC"];
         
         cf [label="Коллаборативная\\nфильтрация\\n(вес 0.40)", fillcolor="#BBDEFB"];
         cb [label="Контентный\\nанализ ИИ\\n(вес 0.35)", fillcolor="#C8E6C9"];
@@ -223,9 +224,14 @@ def diagram_03_algorithm_flowchart():
         filter [label="Убрать товары,\\nкоторые уже смотрел", fillcolor="#F5F5F5"];
         result [label="Выдать ТОП-8\\nрекомендаций", fillcolor="#A5D6A7", style="filled,rounded,bold"];
         
+        /* Layout: Да (main flow) on LEFT, Нет (cold start) on RIGHT */
+        { rank=same; hybrid; cold; }
+        { rank=same; cf; cb; trend; cat; }
+        
         start -> check;
-        check -> cold [label="  Нет"];
+        /* Да edge FIRST = placed LEFT */
         check -> hybrid [label="  Да"];
+        check -> cold [label="  Нет"];
         hybrid -> cf;
         hybrid -> cb;
         hybrid -> trend;
