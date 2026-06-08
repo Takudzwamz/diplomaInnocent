@@ -196,63 +196,135 @@ def diagram_02_er():
 
 
 def diagram_03_algorithm_flowchart():
-    """Диаграмма 3: Блок-схема алгоритма генерации рекомендаций."""
-    dot_code = '''
-    digraph Algorithm {
-        rankdir=TB;
-        nodesep=1.0;
-        ranksep=1.2;
-        pad="1.0,0.8";
-        splines=ortho;
-        node [shape=box, style="filled", fontname="DejaVu Sans", fontsize=22, margin="0.5,0.4"];
-        edge [fontname="DejaVu Sans", fontsize=18, penwidth=2.0];
-        
-        graph [label="Алгоритм генерации рекомендаций", 
-               labelloc=t, fontsize=30, fontname="DejaVu Sans Bold",
-               ordering=out];
-        
-        start [label="Пользователь\\nоткрывает страницу", fillcolor="#E3F2FD", style="filled,rounded"];
-        check [label="Есть ли история\\nвзаимодействий?", shape=diamond, fillcolor="#FFF9C4", width=4, height=2.5, ordering=out];
-        hybrid [label="Запустить гибридный\\nалгоритм", fillcolor="#C8E6C9"];
-        cold [label="Холодный старт:\\nпоказать популярные\\nтовары за 30 дней", fillcolor="#FFCCBC"];
-        
-        cf [label="Коллаборативная\\nфильтрация\\n(вес 0.40)", fillcolor="#BBDEFB"];
-        cb [label="Контентный\\nанализ ИИ\\n(вес 0.35)", fillcolor="#C8E6C9"];
-        trend [label="Тренды\\n7 дней\\n(вес 0.15)", fillcolor="#FFF9C4"];
-        cat [label="Категории\\nпользователя\\n(вес 0.10)", fillcolor="#FFCCBC"];
-        
-        sum [label="Суммировать баллы\\nс учётом весов", fillcolor="#E1BEE7"];
-        filter [label="Убрать товары,\\nкоторые уже смотрел", fillcolor="#F5F5F5"];
-        result [label="Выдать ТОП-8\\nрекомендаций", fillcolor="#A5D6A7", style="filled,bold"];
-        
-        /* Layout: Да (main flow) on LEFT, Нет (cold start) on RIGHT */
-        { rank=same; hybrid; cold; }
-        { rank=same; cf; cb; trend; cat; }
-        
-        start -> check;
-        /* Да edge FIRST = placed LEFT */
-        check -> hybrid [xlabel="Да"];
-        check -> cold [xlabel="Нет"];
-        hybrid -> cf;
-        hybrid -> cb;
-        hybrid -> trend;
-        hybrid -> cat;
-        cf -> sum;
-        cb -> sum;
-        trend -> sum;
-        cat -> sum;
-        sum -> filter;
-        filter -> result;
-        cold -> result;
-    }
-    '''
-    
-    dot_path = OUTPUT_DIR / '_temp_algo.dot'
+    """Диаграмма 3: Блок-схема алгоритма генерации рекомендаций (matplotlib)."""
+    from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+    from matplotlib.path import Path
+    import matplotlib.patches as mpatches
+
+    fig, ax = plt.subplots(1, 1, figsize=(18, 22))
+    ax.set_xlim(0, 18)
+    ax.set_ylim(0, 22)
+    ax.set_aspect('equal')
+    ax.axis('off')
+    ax.set_title('Алгоритм генерации рекомендаций', fontsize=28, fontweight='bold', pad=20)
+
+    def draw_rect(x, y, w, h, text, color, fontsize=14):
+        rect = FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.15",
+                              facecolor=color, edgecolor='#333333', linewidth=2)
+        ax.add_patch(rect)
+        ax.text(x + w/2, y + h/2, text, ha='center', va='center',
+                fontsize=fontsize, fontweight='bold', wrap=True)
+
+    def draw_diamond(cx, cy, w, h, text, color):
+        diamond = plt.Polygon([
+            (cx, cy + h/2),      # top
+            (cx + w/2, cy),      # right
+            (cx, cy - h/2),      # bottom
+            (cx - w/2, cy),      # left
+        ], closed=True, facecolor=color, edgecolor='#333333', linewidth=2)
+        ax.add_patch(diamond)
+        ax.text(cx, cy, text, ha='center', va='center', fontsize=13, fontweight='bold')
+
+    def arrow_down(x1, y1, x2, y2):
+        ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
+                    arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+
+    def arrow_L(x1, y1, xmid, x2, y2):
+        """Orthogonal arrow: go down to y2, then horizontal to x2"""
+        ax.plot([x1, x1], [y1, y2], color='#333333', lw=2.5)
+        ax.plot([x1, x2], [y2, y2], color='#333333', lw=2.5)
+        ax.annotate('', xy=(x2, y2), xytext=(x2 - 0.01, y2),
+                    arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+
+    def arrow_ortho_down(x1, y1, x2, y2):
+        """Orthogonal arrow: go down then horizontal then down"""
+        ymid = (y1 + y2) / 2
+        ax.plot([x1, x1], [y1, ymid], color='#333333', lw=2.5)
+        ax.plot([x1, x2], [ymid, ymid], color='#333333', lw=2.5)
+        ax.plot([x2, x2], [ymid, y2 + 0.15], color='#333333', lw=2.5)
+        ax.annotate('', xy=(x2, y2), xytext=(x2, y2 + 0.15),
+                    arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+
+    # ========== POSITIONS ==========
+    # Row 1: Start
+    draw_rect(6.5, 19.5, 5, 1.2, 'Пользователь\nоткрывает страницу', '#E3F2FD', 14)
+
+    # Arrow down
+    arrow_down(9, 19.5, 9, 18.5)
+
+    # Row 2: Diamond
+    draw_diamond(9, 17.3, 6, 2, 'Есть ли история\nвзаимодействий?', '#FFF9C4')
+
+    # Да arrow (left) — from diamond left point to hybrid box
+    ax.plot([6, 5.5], [17.3, 17.3], color='#333333', lw=2.5)
+    ax.plot([5.5, 5.5], [17.3, 15.6 + 0.15], color='#333333', lw=2.5)
+    ax.annotate('', xy=(5.5, 15.6), xytext=(5.5, 15.6 + 0.15),
+                arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+    ax.text(5.7, 17.6, 'Да', fontsize=16, fontweight='bold', color='#333333')
+
+    # Нет arrow (right) — from diamond right point to cold start box
+    ax.plot([12, 14.5], [17.3, 17.3], color='#333333', lw=2.5)
+    ax.plot([14.5, 14.5], [17.3, 15.6 + 0.15], color='#333333', lw=2.5)
+    ax.annotate('', xy=(14.5, 15.6), xytext=(14.5, 15.6 + 0.15),
+                arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+    ax.text(12.3, 17.6, 'Нет', fontsize=16, fontweight='bold', color='#333333')
+
+    # Row 3: Hybrid box (left) and Cold start box (right)
+    draw_rect(3, 14, 5, 1.6, 'Запустить гибридный\nалгоритм', '#C8E6C9', 14)
+    draw_rect(12, 14, 5, 1.6, 'Холодный старт:\nпоказать популярные\nтовары за 30 дней', '#FFCCBC', 12)
+
+    # Fork from hybrid to 4 components — single line down then split
+    ax.plot([5.5, 5.5], [14, 12.8], color='#333333', lw=2.5)  # down from hybrid
+    ax.plot([1.5, 10], [12.8, 12.8], color='#333333', lw=2.5)  # horizontal bar
+
+    # 4 vertical arrows down from bar to each component
+    for cx in [1.5, 4, 6.5, 9.5]:
+        ax.plot([cx + 1, cx + 1], [12.8, 11.8 + 0.15], color='#333333', lw=2.5)
+        ax.annotate('', xy=(cx + 1, 11.8), xytext=(cx + 1, 11.8 + 0.15),
+                    arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+
+    # Row 4: Four component boxes
+    draw_rect(0.2, 10, 3.6, 1.8, 'Коллаборативная\nфильтрация\n(вес 0.40)', '#BBDEFB', 12)
+    draw_rect(4, 10, 3, 1.8, 'Контентный\nанализ ИИ\n(вес 0.35)', '#C8E6C9', 12)
+    draw_rect(7.3, 10, 2.5, 1.8, 'Тренды\n7 дней\n(вес 0.15)', '#FFF9C4', 12)
+    draw_rect(10.1, 10, 3, 1.8, 'Категории\nпользователя\n(вес 0.10)', '#FFCCBC', 12)
+
+    # Arrows down from 4 components to merge bar
+    ax.plot([2, 2], [10, 9.2], color='#333333', lw=2.5)
+    ax.plot([5.5, 5.5], [10, 9.2], color='#333333', lw=2.5)
+    ax.plot([8.55, 8.55], [10, 9.2], color='#333333', lw=2.5)
+    ax.plot([11.6, 11.6], [10, 9.2], color='#333333', lw=2.5)
+    # Merge horizontal bar
+    ax.plot([2, 11.6], [9.2, 9.2], color='#333333', lw=2.5)
+    # Single arrow down from merge point to sum box
+    ax.plot([6.5, 6.5], [9.2, 8.4 + 0.15], color='#333333', lw=2.5)
+    ax.annotate('', xy=(6.5, 8.4), xytext=(6.5, 8.4 + 0.15),
+                arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+
+    # Row 5: Sum box
+    draw_rect(4, 6.8, 5, 1.5, 'Суммировать баллы\nс учётом весов', '#E1BEE7', 14)
+
+    # Arrow down
+    arrow_down(6.5, 6.8, 6.5, 6.2)
+
+    # Row 6: Filter box
+    draw_rect(4, 4.8, 5, 1.3, 'Убрать товары,\nкоторые уже смотрел', '#F5F5F5', 13)
+
+    # Arrow down
+    arrow_down(6.5, 4.8, 6.5, 4.2)
+
+    # Row 7: Result box
+    draw_rect(4, 2.8, 5, 1.3, 'Выдать ТОП-8\nрекомендаций', '#A5D6A7', 15)
+
+    # Cold start arrow — goes down from cold box to result box
+    ax.plot([14.5, 14.5], [14, 3.4], color='#333333', lw=2.5)
+    ax.plot([14.5, 9 + 0.15], [3.4, 3.4], color='#333333', lw=2.5)
+    ax.annotate('', xy=(9, 3.4), xytext=(9 + 0.15, 3.4),
+                arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
+
     out_path = OUTPUT_DIR / '03_алгоритм_рекомендаций.png'
-    dot_path.write_text(dot_code, encoding='utf-8')
-    subprocess.run(['dot', '-Tpng', f'-Gdpi={GRAPHVIZ_DPI}', str(dot_path), '-o', str(out_path)],
-                   check=True, capture_output=True)
-    dot_path.unlink()
+    plt.savefig(out_path, dpi=200, bbox_inches='tight', facecolor='white', pad_inches=0.5)
+    plt.close()
     print("  ✓ 03_алгоритм_рекомендаций.png")
 
 
