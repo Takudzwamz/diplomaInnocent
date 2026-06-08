@@ -246,80 +246,81 @@ def diagram_03_algorithm_flowchart():
                     arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
 
     # ========== POSITIONS ==========
-    # Row 1: Start
+    # Row 1: Start — bottom at 19.5, top at 20.7
     draw_rect(6.5, 19.5, 5, 1.2, 'Пользователь\nоткрывает страницу', '#E3F2FD', 14)
 
-    # Arrow down
-    arrow_down(9, 19.5, 9, 18.5)
+    # Arrow: start bottom (19.5) → diamond top (17.3 + 1.0 = 18.3)
+    arrow_down(9, 19.5, 9, 18.3)
 
-    # Row 2: Diamond
+    # Row 2: Diamond — center at (9, 17.3), top 18.3, bottom 16.3, left 6.0, right 12.0
     draw_diamond(9, 17.3, 6, 2, 'Есть ли история\nвзаимодействий?', '#FFF9C4')
 
-    # Да arrow (left) — from diamond left point to hybrid box
+    # Да arrow (left) — from diamond left point (6.0) to hybrid box top (15.6)
     ax.plot([6, 5.5], [17.3, 17.3], color='#333333', lw=2.5)
-    ax.plot([5.5, 5.5], [17.3, 15.6 + 0.15], color='#333333', lw=2.5)
-    ax.annotate('', xy=(5.5, 15.6), xytext=(5.5, 15.6 + 0.15),
+    ax.plot([5.5, 5.5], [17.3, 15.75], color='#333333', lw=2.5)
+    ax.annotate('', xy=(5.5, 15.6), xytext=(5.5, 15.75),
                 arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
     ax.text(5.7, 17.6, 'Да', fontsize=16, fontweight='bold', color='#333333')
 
-    # Нет arrow (right) — from diamond right point to cold start box
+    # Нет arrow (right) — from diamond right point (12.0) to cold box top (15.6)
     ax.plot([12, 14.5], [17.3, 17.3], color='#333333', lw=2.5)
-    ax.plot([14.5, 14.5], [17.3, 15.6 + 0.15], color='#333333', lw=2.5)
-    ax.annotate('', xy=(14.5, 15.6), xytext=(14.5, 15.6 + 0.15),
+    ax.plot([14.5, 14.5], [17.3, 15.75], color='#333333', lw=2.5)
+    ax.annotate('', xy=(14.5, 15.6), xytext=(14.5, 15.75),
                 arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
     ax.text(12.3, 17.6, 'Нет', fontsize=16, fontweight='bold', color='#333333')
 
-    # Row 3: Hybrid box (left) and Cold start box (right)
+    # Row 3: Hybrid box (3,14,5,1.6) → bottom 14, top 15.6
+    #         Cold box   (12,14,5,1.6) → bottom 14, top 15.6
     draw_rect(3, 14, 5, 1.6, 'Запустить гибридный\nалгоритм', '#C8E6C9', 14)
     draw_rect(12, 14, 5, 1.6, 'Холодный старт:\nпоказать популярные\nтовары за 30 дней', '#FFCCBC', 12)
 
-    # Fork from hybrid to 4 components — single line down then split
+    # Fork from hybrid bottom (14) down to bar, then split to 4 components
     ax.plot([5.5, 5.5], [14, 12.8], color='#333333', lw=2.5)  # down from hybrid
-    ax.plot([1.5, 10], [12.8, 12.8], color='#333333', lw=2.5)  # horizontal bar
+    ax.plot([2, 11.6], [12.8, 12.8], color='#333333', lw=2.5)  # horizontal bar
 
-    # 4 vertical arrows down from bar to each component
-    for cx in [1.5, 4, 6.5, 9.5]:
-        ax.plot([cx + 1, cx + 1], [12.8, 11.8 + 0.15], color='#333333', lw=2.5)
-        ax.annotate('', xy=(cx + 1, 11.8), xytext=(cx + 1, 11.8 + 0.15),
+    # 4 vertical arrows down from bar to each component top (10 + 1.8 = 11.8)
+    for cx in [2, 5.5, 8.55, 11.6]:
+        ax.plot([cx, cx], [12.8, 11.95], color='#333333', lw=2.5)
+        ax.annotate('', xy=(cx, 11.8), xytext=(cx, 11.95),
                     arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
 
-    # Row 4: Four component boxes
+    # Row 4: Four component boxes — all bottom at 10, top at 11.8
     draw_rect(0.2, 10, 3.6, 1.8, 'Коллаборативная\nфильтрация\n(вес 0.40)', '#BBDEFB', 12)
     draw_rect(4, 10, 3, 1.8, 'Контентный\nанализ ИИ\n(вес 0.35)', '#C8E6C9', 12)
     draw_rect(7.3, 10, 2.5, 1.8, 'Тренды\n7 дней\n(вес 0.15)', '#FFF9C4', 12)
     draw_rect(10.1, 10, 3, 1.8, 'Категории\nпользователя\n(вес 0.10)', '#FFCCBC', 12)
 
-    # Arrows down from 4 components to merge bar
+    # Lines down from 4 components bottom (10) to merge bar (9.2)
     ax.plot([2, 2], [10, 9.2], color='#333333', lw=2.5)
     ax.plot([5.5, 5.5], [10, 9.2], color='#333333', lw=2.5)
     ax.plot([8.55, 8.55], [10, 9.2], color='#333333', lw=2.5)
     ax.plot([11.6, 11.6], [10, 9.2], color='#333333', lw=2.5)
     # Merge horizontal bar
     ax.plot([2, 11.6], [9.2, 9.2], color='#333333', lw=2.5)
-    # Single arrow down from merge point to sum box
-    ax.plot([6.5, 6.5], [9.2, 8.4 + 0.15], color='#333333', lw=2.5)
-    ax.annotate('', xy=(6.5, 8.4), xytext=(6.5, 8.4 + 0.15),
+    # Arrow from merge bar center down to sum box top (6.8 + 1.5 = 8.3)
+    ax.plot([6.5, 6.5], [9.2, 8.45], color='#333333', lw=2.5)
+    ax.annotate('', xy=(6.5, 8.3), xytext=(6.5, 8.45),
                 arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
 
-    # Row 5: Sum box
+    # Row 5: Sum box (4, 6.8, 5, 1.5) → bottom 6.8, top 8.3
     draw_rect(4, 6.8, 5, 1.5, 'Суммировать баллы\nс учётом весов', '#E1BEE7', 14)
 
-    # Arrow down
-    arrow_down(6.5, 6.8, 6.5, 6.2)
+    # Arrow: sum bottom (6.8) → filter top (4.8 + 1.3 = 6.1)
+    arrow_down(6.5, 6.8, 6.5, 6.1)
 
-    # Row 6: Filter box
+    # Row 6: Filter box (4, 4.8, 5, 1.3) → bottom 4.8, top 6.1
     draw_rect(4, 4.8, 5, 1.3, 'Убрать товары,\nкоторые уже смотрел', '#F5F5F5', 13)
 
-    # Arrow down
-    arrow_down(6.5, 4.8, 6.5, 4.2)
+    # Arrow: filter bottom (4.8) → result top (2.8 + 1.3 = 4.1)
+    arrow_down(6.5, 4.8, 6.5, 4.1)
 
-    # Row 7: Result box
+    # Row 7: Result box (4, 2.8, 5, 1.3) → bottom 2.8, top 4.1
     draw_rect(4, 2.8, 5, 1.3, 'Выдать ТОП-8\nрекомендаций', '#A5D6A7', 15)
 
-    # Cold start arrow — goes down from cold box to result box
+    # Cold start arrow — from cold box bottom (14) straight down, then right-angle to result box right side (9, 3.4)
     ax.plot([14.5, 14.5], [14, 3.4], color='#333333', lw=2.5)
-    ax.plot([14.5, 9 + 0.15], [3.4, 3.4], color='#333333', lw=2.5)
-    ax.annotate('', xy=(9, 3.4), xytext=(9 + 0.15, 3.4),
+    ax.plot([14.5, 9.15], [3.4, 3.4], color='#333333', lw=2.5)
+    ax.annotate('', xy=(9, 3.4), xytext=(9.15, 3.4),
                 arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
 
     out_path = OUTPUT_DIR / '03_алгоритм_рекомендаций.png'
