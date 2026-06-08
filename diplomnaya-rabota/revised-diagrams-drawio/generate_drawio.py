@@ -396,9 +396,9 @@ def diagram_05_ab_test():
     ax.set_ylim(0, 22)
     ax.set_aspect('equal')
     ax.axis('off')
-    ax.set_title('Процесс A/B тестирования', fontsize=28, fontweight='bold', pad=20)
+    ax.set_title('Процесс A/B тестирования', fontsize=36, fontweight='bold', pad=20)
 
-    def draw_rect(x, y, w, h, text, color, fontsize=14):
+    def draw_rect(x, y, w, h, text, color, fontsize=20):
         rect = FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.15",
                               facecolor=color, edgecolor='#333333', linewidth=2)
         ax.add_patch(rect)
@@ -413,7 +413,7 @@ def diagram_05_ab_test():
             (cx - w/2, cy),
         ], closed=True, facecolor=color, edgecolor='#333333', linewidth=2)
         ax.add_patch(diamond)
-        ax.text(cx, cy, text, ha='center', va='center', fontsize=13, fontweight='bold')
+        ax.text(cx, cy, text, ha='center', va='center', fontsize=18, fontweight='bold')
 
     def arrow_down(x1, y1, x2, y2):
         ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
@@ -421,7 +421,7 @@ def diagram_05_ab_test():
 
     # ========== LAYOUT ==========
     # Row 1: Start box (5, 19.5, 6, 1.2) → bottom 19.5, top 20.7
-    draw_rect(5, 19.5, 6, 1.2, 'Новый пользователь\nзаходит на сайт', '#E3F2FD', 14)
+    draw_rect(5, 19.5, 6, 1.2, 'Новый пользователь\nзаходит на сайт', '#E3F2FD', 20)
 
     # Arrow: start bottom (19.5) → diamond top (17.3 + 1.0 = 18.3)
     arrow_down(8, 19.5, 8, 18.3)
@@ -434,20 +434,20 @@ def diagram_05_ab_test():
     ax.plot([3.5, 3.5], [17.3, 15.75], color='#333333', lw=2.5)
     ax.annotate('', xy=(3.5, 15.6), xytext=(3.5, 15.75),
                 arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
-    ax.text(3.7, 16.2, '50%', fontsize=15, fontweight='bold', color='#333333')
+    ax.text(3.7, 16.2, '50%', fontsize=22, fontweight='bold', color='#333333')
 
     # 50% right — diamond right (11.5) → treatment box top (15.6)
     ax.plot([11.5, 12.5], [17.3, 17.3], color='#333333', lw=2.5)
     ax.plot([12.5, 12.5], [17.3, 15.75], color='#333333', lw=2.5)
     ax.annotate('', xy=(12.5, 15.6), xytext=(12.5, 15.75),
                 arrowprops=dict(arrowstyle='->', lw=2.5, color='#333333'))
-    ax.text(11.7, 16.2, '50%', fontsize=15, fontweight='bold', color='#333333')
+    ax.text(11.7, 16.2, '50%', fontsize=22, fontweight='bold', color='#333333')
 
     # Row 3: Control (left) and Treatment (right) — both bottom 13.4, top 15.6
     draw_rect(0.8, 13.4, 5.5, 2.2,
-              'Группа А (контроль)\n\nАлгоритм: Popular\nПросто популярные товары', '#FFCDD2', 13)
+              'Группа А (контроль)\n\nАлгоритм: Popular\nПросто популярные товары', '#FFCDD2', 17)
     draw_rect(9.7, 13.4, 5.5, 2.2,
-              'Группа Б (эксперимент)\n\nАлгоритм: Adaptive\nГибридная модель', '#C8E6C9', 13)
+              'Группа Б (эксперимент)\n\nАлгоритм: Adaptive\nГибридная модель', '#C8E6C9', 17)
 
     # Control bottom (13.4) → merge into metrics top (10.3 + 2.5 = 12.8)
     # Left line: down then right
@@ -463,21 +463,21 @@ def diagram_05_ab_test():
 
     # Row 4: Metrics box (3.5, 8.3, 9, 2.5) → bottom 8.3, top 10.8
     draw_rect(3.5, 8.3, 9, 2.5,
-              'Записываем метрики:\n• Показы рекомендаций\n• Клики\n• Добавления в корзину\n• Покупки', '#F5F5F5', 13)
+              'Записываем метрики:\n• Показы рекомендаций\n• Клики\n• Добавления в корзину\n• Покупки', '#F5F5F5', 17)
 
     # Arrow: metrics bottom (8.3) → compare top (6.3 + 1.5 = 7.8)
     arrow_down(8, 8.3, 8, 7.8)
 
     # Row 5: Compare box (3.5, 6.3, 9, 1.5) → bottom 6.3, top 7.8
     draw_rect(3.5, 6.3, 9, 1.5,
-              'Сравниваем CTR и конверсию\nдвух групп', '#E1BEE7', 14)
+              'Сравниваем CTR и конверсию\nдвух групп', '#E1BEE7', 20)
 
     # Arrow: compare bottom (6.3) → result top (3.8 + 1.5 = 5.3)
     arrow_down(8, 6.3, 8, 5.3)
 
     # Row 6: Result box (3.5, 3.8, 9, 1.5) → bottom 3.8, top 5.3
     draw_rect(3.5, 3.8, 9, 1.5,
-              'Вывод: Adaptive эффективнее\nCTR: 15% vs 8% (+87.5%)', '#A5D6A7', 14)
+              'Вывод: Adaptive эффективнее\nCTR: 15% vs 8% (+87.5%)', '#A5D6A7', 20)
 
     plt.tight_layout()
     plt.savefig(OUTPUT_DIR / '05_AB_тестирование.png', dpi=180, bbox_inches='tight',
