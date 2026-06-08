@@ -203,15 +203,16 @@ def diagram_03_algorithm_flowchart():
         nodesep=1.0;
         ranksep=1.2;
         pad="1.0,0.8";
-        node [shape=box, style="filled,rounded", fontname="DejaVu Sans", fontsize=22, margin="0.5,0.4"];
+        splines=ortho;
+        node [shape=box, style="filled", fontname="DejaVu Sans", fontsize=22, margin="0.5,0.4"];
         edge [fontname="DejaVu Sans", fontsize=18, penwidth=2.0];
         
         graph [label="Алгоритм генерации рекомендаций", 
                labelloc=t, fontsize=30, fontname="DejaVu Sans Bold",
                ordering=out];
         
-        start [label="Пользователь\\nоткрывает страницу", fillcolor="#E3F2FD"];
-        check [label="Есть ли история\\nвзаимодействий?", shape=diamond, fillcolor="#FFF9C4", ordering=out];
+        start [label="Пользователь\\nоткрывает страницу", fillcolor="#E3F2FD", style="filled,rounded"];
+        check [label="Есть ли история\\nвзаимодействий?", shape=diamond, fillcolor="#FFF9C4", width=4, height=2.5, ordering=out];
         hybrid [label="Запустить гибридный\\nалгоритм", fillcolor="#C8E6C9"];
         cold [label="Холодный старт:\\nпоказать популярные\\nтовары за 30 дней", fillcolor="#FFCCBC"];
         
@@ -222,7 +223,7 @@ def diagram_03_algorithm_flowchart():
         
         sum [label="Суммировать баллы\\nс учётом весов", fillcolor="#E1BEE7"];
         filter [label="Убрать товары,\\nкоторые уже смотрел", fillcolor="#F5F5F5"];
-        result [label="Выдать ТОП-8\\nрекомендаций", fillcolor="#A5D6A7", style="filled,rounded,bold"];
+        result [label="Выдать ТОП-8\\nрекомендаций", fillcolor="#A5D6A7", style="filled,bold"];
         
         /* Layout: Да (main flow) on LEFT, Нет (cold start) on RIGHT */
         { rank=same; hybrid; cold; }
@@ -230,8 +231,8 @@ def diagram_03_algorithm_flowchart():
         
         start -> check;
         /* Да edge FIRST = placed LEFT */
-        check -> hybrid [label="  Да"];
-        check -> cold [label="  Нет"];
+        check -> hybrid [xlabel="Да"];
+        check -> cold [xlabel="Нет"];
         hybrid -> cf;
         hybrid -> cb;
         hybrid -> trend;
